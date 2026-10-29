@@ -1,0 +1,65 @@
+# Dependencies and generated output
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+build/
+**/build/
+coverage/
+**/coverage/
+.turbo/
+.pnpm-store/
+
+# Local runtime configuration and database state
+.env
+.env.*
+!.env.example
+*.local
+infra/.data/
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.backup
+backups/
+
+# Private keys, certificates, signing material and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.mobileprovision
+credentials*.json
+secrets*.json
+
+# Flutter/Dart
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+apps/table_kiosk/android/local.properties
+*.iml
+
+# IDE and operating system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Temporary browser profiles used only for local visual captures
+design/mockups/**/.chrome-profile*/
+design/mockups/**/.edge-profile*/
+design/mockups/**/.capture-profile*/
+design/**/.chrome-profile*/
+design/**/.edge-profile*/
+design/**/.capture-profile*/
+
+# Internal visual references without verified redistribution rights
+design/reference/*.png
+
+# Review bundles contain internal references and generated duplicates
+/restaurant-os-*.zip
+/restaurant-os-*.zip.sha256

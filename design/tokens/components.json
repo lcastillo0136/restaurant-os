@@ -1,0 +1,19 @@
+{
+  "meta": { "status": "approved_theme_families_values_pending_visual_validation" },
+  "touch": {
+    "minimumTargetDp": 48
+  },
+  "button": {
+    "height": 48,
+    "radius": "md"
+  },
+  "card": {
+    "radius": "lg",
+    "padding": 24,
+    "elevation": "1"
+  },
+  "focus": {
+    "outlineWidth": 3,
+    "outlineOffset": 2
+  }
+}

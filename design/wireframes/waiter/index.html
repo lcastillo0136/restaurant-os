@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meseros · Wireframes Restaurant OS</title>
+    <link rel="stylesheet" href="../assets/wireframe.css">
+  </head>
+  <body>
+    <script>
+      window.WIREFRAME_CONFIG = {
+        kind: 'waiter', theme: 'customer-warm', environment: 'Meseros', shortName: 'Meseros', platform: 'Flutter Android · wireframe estático', reference: 'Sistema compartido · experiencia interna',
+        screens: [
+          { id: 'WAI-01', title: 'Acceso del empleado', route: '/mesero/login', role: 'Mesero', flows: 'F-01, F-02', permission: 'Autenticación + shifts.open', description: 'Acceso interno de empleado y apertura de turno. No reutiliza el acceso público de la tableta de mesa.' },
+          { id: 'WAI-02', title: 'Mesas asignadas', route: '/mesero/salon', role: 'Mesero', flows: 'F-05, F-14', permission: 'tables.read en área/sucursal autorizada', description: 'Vista operativa de salón con mesas asignadas, solicitudes de cliente y estados de servicio.' },
+          { id: 'WAI-03', title: 'Detalle de mesa', route: '/mesero/mesas/:tableId', role: 'Mesero', flows: 'F-05, F-13, F-15, F-20', permission: 'tables.read / acciones asignadas', description: 'Resumen de sesión, consumo y acciones de pedido/entrega. El mesero no abre caja ni modifica roles.' },
+          { id: 'WAI-04', title: 'Registro de pedidos', route: '/mesero/mesas/:tableId/pedido', role: 'Mesero', flows: 'F-08, F-09, F-10', permission: 'orders.create en mesa autorizada', description: 'Captura interna de pedido con carrito y revisión. La orden queda pendiente hasta ACK e idempotencia.' },
+          { id: 'WAI-05', title: 'Seguimiento de pedidos', route: '/mesero/pedidos', role: 'Mesero', flows: 'F-11, F-12, F-13', permission: 'orders.read / orders.deliver', description: 'Seguimiento de estados desde cocina y punto de entrada para la entrega registrada.' },
+          { id: 'WAI-06', title: 'Solicitudes de clientes', route: '/mesero/solicitudes', role: 'Mesero', flows: 'F-14', permission: 'attentions.read / attend', description: 'Bandeja de solicitudes por mesa con estado de recepción y atención; evita duplicación de alertas.' },
+          { id: 'WAI-07', title: 'Entrega de alimentos', route: '/mesero/pedidos/:orderId/entrega', role: 'Mesero', flows: 'F-13', permission: 'orders.deliver', description: 'Registro de entrega para ítems listos. La UI espera confirmación del servidor antes de cambiar el estado.' }
+        ]
+      };
+    </script>
+    <script src="../assets/wireframe.js"></script>
+  </body>
+</html>

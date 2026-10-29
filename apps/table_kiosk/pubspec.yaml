@@ -1,0 +1,21 @@
+name: table_kiosk
+description: "Shell estático Android de Fase 0.1 para la tableta de mesa."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_design_system:
+    path: ../../packages/flutter_design_system
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

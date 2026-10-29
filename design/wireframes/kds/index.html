@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KDS · Wireframes Restaurant OS</title>
+    <link rel="stylesheet" href="../assets/wireframe.css">
+  </head>
+  <body>
+    <script>
+      window.WIREFRAME_CONFIG = {
+        kind: 'kds', theme: 'kitchen-dark', environment: 'Cocina KDS', shortName: 'Cocina KDS', platform: 'React web · wireframe estático', reference: 'Referencia: 03-kds-aprobado.png',
+        screens: [
+          { id: 'KDS-01', title: 'Tablero principal', route: '/kds/tablero', role: ['Chef', 'Auxiliar de cocina'], flows: 'F-11, F-12', permission: 'kitchen.station.read + transición asignada', description: 'Tablero oscuro de tres columnas: pendiente, preparando y listo. Las tarjetas muestran mesa, tiempo, ítems y notas.' },
+          { id: 'KDS-02', title: 'Filtro por estación', route: '/kds/tablero?station=:stationId', role: ['Chef', 'Auxiliar de cocina'], flows: 'F-11, F-12', permission: 'Solo estación asignada', description: 'Selector de estación con el alcance efectivo del operador. No revela tickets de una estación no autorizada.' },
+          { id: 'KDS-03', title: 'Detalle de pedido', route: '/kds/pedidos/:ticketId', role: ['Chef', 'Auxiliar de cocina'], flows: 'F-11, F-12', permission: 'kitchen.ticket.read', description: 'Detalle de ticket sin perder el contexto de estación: ítems, notas, alérgenos y transición permitida.' },
+          { id: 'KDS-04', title: 'Inicio de preparación', route: '/kds/pedidos/:ticketId/iniciar', role: ['Chef', 'Auxiliar autorizado'], flows: 'F-12', permission: 'kitchen.ticket.start', description: 'Confirmación de transición Pendiente → En preparación. La tarjeta cambia de columna solo tras ACK/version.' },
+          { id: 'KDS-05', title: 'Pedido listo', route: '/kds/pedidos/:ticketId/listo', role: ['Chef', 'Auxiliar autorizado'], flows: 'F-12, F-13', permission: 'kitchen.ticket.ready', description: 'Confirmación de transición a listo para servicio; KDS no cobra ni cierra la mesa.' },
+          { id: 'KDS-06', title: 'Historial de pedidos atendidos', route: '/kds/historial', role: ['Chef', 'Auxiliar autorizado'], flows: 'F-11, F-12, F-13', permission: 'kitchen.history.read', description: 'Historial de consulta que preserva auditoría de atención y cancelación sin borrar trazas.' },
+          { id: 'KDS-07', title: 'Desconexión y recuperación', route: '/kds/recuperacion', role: ['Chef', 'Auxiliar de cocina'], flows: 'F-11, F-12', permission: 'Sesión de estación activa', description: 'Estado sin servidor y recuperación por snapshot de estación; las transiciones permanecen bloqueadas.' }
+        ]
+      };
+    </script>
+    <script src="../assets/wireframe.js"></script>
+  </body>
+</html>

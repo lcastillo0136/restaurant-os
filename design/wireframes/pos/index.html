@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>POS · Wireframes Restaurant OS</title>
+    <link rel="stylesheet" href="../assets/wireframe.css">
+  </head>
+  <body>
+    <script>
+      window.WIREFRAME_CONFIG = {
+        kind: 'pos', theme: 'pos-light', environment: 'Caja POS', shortName: 'Caja POS', platform: 'React web · wireframe estático', reference: 'Referencia: 04-pos-aprobado.png',
+        screens: [
+          { id: 'POS-01', title: 'Selección de mesa o cuenta', route: '/pos/cuentas', role: 'Cajero', flows: 'F-15, F-17', permission: 'cash.session.read', description: 'Entrada de caja con rail lateral compacto, cuentas autorizadas y resumen persistente a la derecha.' },
+          { id: 'POS-02', title: 'Detalle de consumo', route: '/pos/cuentas/:sessionId', role: ['Cajero', 'Gerente autorizado'], flows: 'F-15, F-17, F-18', permission: 'payments.read', description: 'Detalle de consumo con importe informativo, descuentos autorizados y transición al método de pago.' },
+          { id: 'POS-03', title: 'Selección de método de pago', route: '/pos/cuentas/:sessionId/pago', role: 'Cajero', flows: 'F-16, F-17', permission: 'payments.cash', description: 'Efectivo es el único flujo activo del MVP. Tarjeta y división se mantienen como extensiones no operativas.' },
+          { id: 'POS-04', title: 'Cobro en efectivo', route: '/pos/cuentas/:sessionId/efectivo', role: 'Cajero', flows: 'F-17', permission: 'payments.cash + turno de caja activo', description: 'Captura de efectivo recibido y cambio estimado. No genera movimiento ni recibo hasta ACK del servidor.' },
+          { id: 'POS-05', title: 'Registro de propina', route: '/pos/cuentas/:sessionId/propina', role: 'Cajero', flows: 'F-18', permission: 'tips.record', description: 'Propina voluntaria separada de la venta. Las reglas de reparto permanecen pendientes, sin suposición visual.' },
+          { id: 'POS-06', title: 'Confirmación de pago', route: '/pos/cuentas/:sessionId/confirmacion', role: 'Cajero', flows: 'F-17, F-18', permission: 'payments.cash', description: 'Estado de espera y reconciliación. Un timeout no libera cuenta, no confirma pago y no habilita ticket.' },
+          { id: 'POS-07', title: 'Ticket', route: '/pos/tickets/:receiptId', role: 'Cajero', flows: 'F-19', permission: 'tickets.print / tickets.reprint', description: 'Resultado de pago confirmado e impresión local. Un error de impresión no revierte el pago efectivo.' },
+          { id: 'POS-08', title: 'Apertura de caja', route: '/pos/apertura', role: 'Cajero', flows: 'F-02', permission: 'cash.open', description: 'Apertura de turno/caja con fondo inicial; la caja no está activa sin respuesta confirmatoria de servidor.' },
+          { id: 'POS-09', title: 'Cierre y arqueo de caja', route: '/pos/cierre', role: ['Cajero', 'Gerente cuando aplique'], flows: 'F-21', permission: 'cash.close', description: 'Arqueo, diferencias y borrador de cierre. La supervisión adicional sigue como decisión pendiente.' },
+          { id: 'POS-10', title: 'Errores y operaciones pendientes', route: '/pos/pendientes', role: 'Cajero', flows: 'F-17, F-19, F-21', permission: 'payments.read / cash.read', description: 'Cola visual para reconciliar cobros e impresión sin duplicar una intención ni ocultar incertidumbre.' }
+        ]
+      };
+    </script>
+    <script src="../assets/wireframe.js"></script>
+  </body>
+</html>

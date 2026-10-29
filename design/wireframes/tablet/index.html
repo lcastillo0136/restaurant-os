@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tableta cliente · Wireframes Restaurant OS</title>
+    <link rel="stylesheet" href="../assets/wireframe.css">
+  </head>
+  <body>
+    <script>
+      window.WIREFRAME_CONFIG = {
+        kind: 'tablet', theme: 'customer-warm', environment: 'Tableta de cliente', shortName: 'Tableta cliente', platform: 'Flutter Android · wireframe estático', reference: 'Referencia: 02-tablet-aprobado.png',
+        screens: [
+          { id: 'TAB-01', title: 'Bienvenida de mesa', route: '/bienvenida', role: ['Invitado', 'Cliente registrado futuro', 'Dispositivo de mesa'], flows: 'F-06, F-07', permission: 'Dispositivo vinculado a mesa activa', description: 'Entrada pública cálida; ofrece invitado y reserva un espacio no operativo para NFC/QR futuro.' },
+          { id: 'TAB-02', title: 'Acceso como invitado', route: '/acceso/invitado', role: 'Invitado', flows: 'F-06', permission: 'Sesión pública de mesa válida', description: 'Acceso rápido sin PII. Crear o recuperar el invitado requiere respuesta de servidor antes de abrir menú transaccional.' },
+          { id: 'TAB-03', title: 'Menú y categorías', route: '/menu', role: ['Invitado', 'Cliente registrado futuro'], flows: 'F-08', permission: 'Sesión pública autorizada', description: 'Exploración por categorías con catálogo y disponibilidad provenientes del último snapshot conocido.' },
+          { id: 'TAB-04', title: 'Búsqueda de productos', route: '/menu/buscar', role: ['Invitado', 'Cliente registrado futuro'], flows: 'F-08', permission: 'Sesión pública autorizada', description: 'Búsqueda y filtrado visual. Una coincidencia nunca reserva inventario ni crea una orden.' },
+          { id: 'TAB-05', title: 'Detalle de platillo', route: '/menu/:productId', role: ['Invitado', 'Cliente registrado futuro'], flows: 'F-08, F-09', permission: 'Producto disponible en catálogo', description: 'Descripción, precio informativo y advertencias; el usuario puede abrir personalización antes de añadir al carrito local.' },
+          { id: 'TAB-06', title: 'Selección de complementos', route: '/menu/:productId/complementos', role: ['Invitado', 'Cliente registrado futuro'], flows: 'F-09', permission: 'Modificadores autorizados por catálogo', description: 'Opciones y observaciones del platillo. Las reglas exactas las entrega el menú servidor, no este wireframe.' },
+          { id: 'TAB-07', title: 'Carrito', route: '/carrito', role: ['Invitado', 'Cliente registrado futuro'], flows: 'F-09, F-10', permission: 'Sesión pública activa', description: 'Borrador local visible. No existe pedido creado mientras el cliente no confirme explícitamente.' },
+          { id: 'TAB-08', title: 'Confirmación de pedido', route: '/pedido/confirmar', role: ['Invitado', 'Cliente registrado futuro'], flows: 'F-10', permission: 'Sesión pública activa', description: 'Revisión final y estado pendiente de ACK con clave de idempotencia. No se usa texto de éxito especulativo.' },
+          { id: 'TAB-09', title: 'Seguimiento del pedido', route: '/pedido/estado', role: ['Invitado', 'Cliente registrado futuro'], flows: 'F-11, F-12, F-13', permission: 'Solo pedidos de la mesa vinculada', description: 'Estado del pedido recibido desde servidor; separa recepción, preparación, listo y entrega.' },
+          { id: 'TAB-10', title: 'Consumo actual', route: '/consumo', role: ['Invitado', 'Cliente registrado futuro'], flows: 'F-15', permission: 'Solo sesión activa de la mesa', description: 'Resumen de solo lectura con hora de actualización. El importe final se confirma en caja.' },
+          { id: 'TAB-11', title: 'Solicitud de mesero', route: '/atencion', role: 'Invitado', flows: 'F-14', permission: 'Sesión pública activa', description: 'Una alerta por mesa; su envío se muestra como pendiente hasta que el backend confirme la creación.' },
+          { id: 'TAB-12', title: 'Cierre y reinicio de sesión pública', route: '/fin-de-visita', role: 'Dispositivo de mesa', flows: 'F-20', permission: 'devices.release / tables.close del personal', description: 'Pantalla segura tras cierre o liberación. El dispositivo no puede elegir ni navegar a otra mesa.' }
+        ]
+      };
+    </script>
+    <script src="../assets/wireframe.js"></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+import { spawn } from 'node:child_process';
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root=resolve(fileURLToPath(new URL('..',import.meta.url)));const port=4196;const server=spawn(process.execPath,[resolve(root,'scripts','serve-phase-0.5-review.mjs')],{cwd:root,env:{...process.env,PORT:String(port)},stdio:'ignore'});
+const paths=['/','/assets/tokens.css','/assets/prototype.css','/assets/demo-data.js','/assets/engine.js','/assets/screen-catalog.js','/assets/prototype.js','/admin/','/tablet/','/kds/','/pos/','/waiter/','/assets/screens/ADM-02.png','/assets/screens/TAB-03-horizontal.png','/assets/screens/WAI-07.png'];
+try{let ready=false;for(let i=0;i<30&&!ready;i+=1){try{ready=(await fetch(`http://127.0.0.1:${port}/`)).ok;}catch{}if(!ready)await new Promise(r=>setTimeout(r,100));}if(!ready)throw new Error('Servidor local no disponible');for(const path of paths){const response=await fetch(`http://127.0.0.1:${port}${path}`);if(!response.ok)throw new Error(`${path}: HTTP ${response.status}`);}const absent=await fetch(`http://127.0.0.1:${port}/ausente`);if(absent.status!==404)throw new Error(`404 esperado: ${absent.status}`);console.log(`HTTP Fase 0.5: ${paths.length} recursos en 200 y ruta ausente en 404.`);}finally{server.kill('SIGINT');}

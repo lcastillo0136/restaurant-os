@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "status": "approved_theme_families_values_pending_visual_validation",
+    "fontCandidate": "Inter",
+    "fallback": "system-ui, sans-serif",
+    "note": "Do not bundle Inter until its source and license are selected."
+  },
+  "families": {
+    "sans": ["Inter", "system-ui", "sans-serif"]
+  },
+  "weights": {
+    "regular": 400,
+    "medium": 500,
+    "semibold": 600,
+    "bold": 700
+  },
+  "scale": {
+    "label": { "size": 14, "lineHeight": 20, "weight": "semibold" },
+    "body": { "size": 16, "lineHeight": 24, "weight": "regular" },
+    "title": { "size": 24, "lineHeight": 32, "weight": "semibold" },
+    "headline": { "size": 32, "lineHeight": 40, "weight": "bold" },
+    "display": { "size": 48, "lineHeight": 52, "weight": "bold" }
+  },
+  "financial": {
+    "fontVariantNumeric": "tabular-nums"
+  }
+}

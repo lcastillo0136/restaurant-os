@@ -1,0 +1,12 @@
+{
+  "name": "restaurant-os",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "validate:scaffold": "node scripts/validate-scaffold.mjs",
+    "test": "pnpm validate:scaffold",
+    "dev:api": "pnpm --filter @restaurant-os/api start:dev",
+    "dev:admin": "pnpm --filter @restaurant-os/admin-web dev"
+  }
+}

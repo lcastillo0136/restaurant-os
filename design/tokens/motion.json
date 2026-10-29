@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "status": "approved_theme_families_values_pending_visual_validation",
+    "accessibility": "Respect user reduced-motion preferences. Kitchen workflows do not rely on animation."
+  },
+  "duration": {
+    "instant": 0,
+    "short": 120,
+    "medium": 200
+  },
+  "easing": {
+    "standard": "cubic-bezier(0.2, 0, 0, 1)"
+  }
+}

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Administración · Wireframes Restaurant OS</title>
+    <link rel="stylesheet" href="../assets/wireframe.css">
+  </head>
+  <body>
+    <script>
+      window.WIREFRAME_CONFIG = {
+        kind: 'admin', theme: 'admin-light', environment: 'Administración web', shortName: 'Administración', platform: 'React web · wireframe estático', reference: 'Referencia: 01-admin-aprobado.png',
+        screens: [
+          { id: 'ADM-01', title: 'Inicio de sesión', route: '/login', role: 'Empleado autorizado', flows: 'F-01', permission: 'Autenticación válida', nav: 'Acceso', description: 'Puerta de acceso para administrador, gerente, cajero, mesero, chef o auxiliar. No decide el destino sin una sesión validada.' },
+          { id: 'ADM-02', title: 'Dashboard general', route: '/dashboard', role: ['Administrador', 'Gerente'], flows: 'F-02, F-22', permission: 'reports.read / alcance por sucursal', nav: 'Dashboard', description: 'Resumen operativo con tarjetas, actividad y alertas. La barra horizontal conserva el patrón aprobado para administración.' },
+          { id: 'ADM-03', title: 'Gestión de mesas y áreas', route: '/mesas', role: ['Administrador', 'Gerente', 'Supervisor'], flows: 'F-05, F-20', permission: 'tables.read / tables.open según acción', nav: 'Mesas', description: 'Plano y lista de mesas por área. El estado visual nunca sustituye el snapshot/version del servidor.' },
+          { id: 'ADM-04', title: 'Detalle de mesa y sesión', route: '/mesas/:tableId', role: ['Administrador', 'Gerente', 'Supervisor'], flows: 'F-05, F-13, F-15, F-20', permission: 'tables.read / permiso específico para mutar', nav: 'Mesas', description: 'Contexto de una mesa: pedidos, consumo, entrega, limpieza y acciones críticas sujetas a autorización.' },
+          { id: 'ADM-05', title: 'Gestión de pedidos', route: '/pedidos', role: ['Administrador', 'Gerente', 'Supervisor'], flows: 'F-10, F-11, F-12', permission: 'orders.read / orders.cancel / orders.modify_sent', nav: 'Pedidos', description: 'Lista de pedidos y excepciones. Cancelar o cambiar una orden enviada no se representa como éxito sin ACK y auditoría.' },
+          { id: 'ADM-06', title: 'Menú y productos', route: '/menu', role: ['Administrador', 'Gerente autorizado'], flows: 'F-04', permission: 'menu.manage', nav: 'Menú', description: 'Catálogo, categorías, disponibilidad y editor de producto. Los valores son campos de wireframe, no cambios persistidos.' },
+          { id: 'ADM-07', title: 'Empleados, roles y horarios', route: '/personal', role: ['Administrador', 'Gerente delegado'], flows: 'F-01, F-02, F-03', permission: 'employees.manage / shifts.read', nav: 'Personal', description: 'Equipo, permisos delegados y referencias de turno por sucursal; no define una matriz RBAC nueva.' },
+          { id: 'ADM-08', title: 'Gestión de dispositivos', route: '/ajustes/dispositivos', role: ['Administrador', 'Gerente autorizado'], flows: 'F-06, F-07, F-20', permission: 'devices.manage / devices.release', nav: 'Ajustes', description: 'Inventario y vínculo mesa–dispositivo. Una tableta permanece separada de las cuentas de empleados.' },
+          { id: 'ADM-09', title: 'Reportes básicos', route: '/reportes', role: ['Administrador', 'Gerente autorizado'], flows: 'F-22', permission: 'reports.read', nav: 'Reportes', description: 'Lectura de ventas, ocupación, pedidos y productos con alcance visible y sin analítica o exportación avanzada.' },
+          { id: 'ADM-10', title: 'Configuración general', route: '/ajustes', role: 'Administrador', flows: 'F-03', permission: 'organization.manage / branch.manage', nav: 'Ajustes', description: 'Parámetros de sucursal y puntos de extensión futuros; pagos, CFDI y NFC/QR permanecen explícitamente inactivos.' }
+        ]
+      };
+    </script>
+    <script src="../assets/wireframe.js"></script>
+  </body>
+</html>

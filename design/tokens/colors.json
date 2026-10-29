@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "name": "Restaurant OS color tokens",
+    "phase": "0.1",
+    "status": "approved_theme_families_values_pending_visual_validation",
+    "source": "Official owner-provided reference PNGs in design/reference.",
+    "notes": "The four theme families are approved. Specific color values remain subject to visual validation."
+  },
+  "themes": {
+    "admin-light": {
+      "background": "#F5F6F8",
+      "surface": "#FFFFFF",
+      "surface-elevated": "#FFFFFF",
+      "text-primary": "#171D29",
+      "text-secondary": "#5F6673",
+      "border": "#DDE1E7",
+      "accent": "#A6532A",
+      "success": "#39805D",
+      "warning": "#B7791F",
+      "danger": "#C43C35",
+      "disabled": "#A3A9B3"
+    },
+    "customer-warm": {
+      "background": "#FAF6F0",
+      "surface": "#FFFFFF",
+      "surface-elevated": "#FFF9F2",
+      "text-primary": "#342C28",
+      "text-secondary": "#6E625C",
+      "border": "#E9DED3",
+      "accent": "#A6532A",
+      "success": "#39805D",
+      "warning": "#B7791F",
+      "danger": "#C43C35",
+      "disabled": "#ABA09A"
+    },
+    "kitchen-dark": {
+      "background": "#101820",
+      "surface": "#202D36",
+      "surface-elevated": "#2A3A46",
+      "text-primary": "#FFFFFF",
+      "text-secondary": "#C6D1D8",
+      "border": "#3A4C59",
+      "accent": "#40BDA7",
+      "success": "#63C174",
+      "warning": "#E9B44C",
+      "danger": "#EF6461",
+      "disabled": "#71808B"
+    },
+    "pos-light": {
+      "background": "#F5F6F8",
+      "surface": "#FFFFFF",
+      "surface-elevated": "#F9FAFC",
+      "text-primary": "#171D29",
+      "text-secondary": "#5F6673",
+      "border": "#DDE1E7",
+      "accent": "#5A26E8",
+      "success": "#39805D",
+      "warning": "#B7791F",
+      "danger": "#C43C35",
+      "disabled": "#A3A9B3"
+    }
+  }
+}

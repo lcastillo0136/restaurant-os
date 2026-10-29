@@ -1,0 +1,14 @@
+name: flutter_design_system
+description: Tokens y ThemeData compartidos para las aplicaciones Flutter de Restaurant OS.
+publish_to: none
+version: 0.0.0
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^6.0.0

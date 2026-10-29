@@ -1,0 +1,8 @@
+{
+  "meta": { "status": "approved_theme_families_values_pending_visual_validation" },
+  "elevation": {
+    "0": "none",
+    "1": "0 1px 2px rgba(23, 29, 41, 0.06), 0 8px 24px rgba(23, 29, 41, 0.04)",
+    "2": "0 8px 30px rgba(23, 29, 41, 0.10)"
+  }
+}

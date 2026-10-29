@@ -1,0 +1,6 @@
+{
+  "name": "restaurant-os-phase-0-5-prototype",
+  "private": true,
+  "type": "module",
+  "description": "Artefacto estático de demostración, sin dependencias ni código productivo."
+}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es-MX">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Índice estático de wireframes Fase 0.3 para Restaurant OS">
+    <title>Restaurant OS · Wireframes Fase 0.3</title>
+    <link rel="stylesheet" href="assets/wireframe.css">
+  </head>
+  <body>
+    <main class="index-page">
+      <div class="index-wrap">
+        <span class="screen-kicker">Restaurant OS · Fase 0.3</span>
+        <h1>Wireframes para revisar el MVP sin adelantar implementación.</h1>
+        <p>Visor local de pantallas, rutas previstas y estados UX. Cada entorno usa la familia de tokens aprobada y conserva las restricciones de rol, dispositivo y confirmación por servidor definidas en la Fase 0.2.</p>
+
+        <section class="environment-grid" aria-label="Entornos de wireframes">
+          <a class="environment-card" href="admin/index.html#ADM-01"><span class="swatch" style="background:#a6532a"></span><div><h2>Administración</h2><p>10 pantallas web para administrador y gerente, con barra superior horizontal.</p></div><footer>Ver ADM-01 a ADM-10 →</footer></a>
+          <a class="environment-card" href="tablet/index.html#TAB-01"><span class="swatch" style="background:#a6532a"></span><div><h2>Tableta cliente</h2><p>12 pantallas Flutter Android para la experiencia pública limitada a una mesa.</p></div><footer>Ver TAB-01 a TAB-12 →</footer></a>
+          <a class="environment-card" href="kds/index.html#KDS-01"><span class="swatch" style="background:#40bda7"></span><div><h2>Cocina KDS</h2><p>7 pantallas web oscuras por estación y columna operativa.</p></div><footer>Ver KDS-01 a KDS-07 →</footer></a>
+          <a class="environment-card" href="pos/index.html#POS-01"><span class="swatch" style="background:#5a26e8"></span><div><h2>Caja POS</h2><p>10 pantallas web con rail compacto y resumen persistente de cuenta.</p></div><footer>Ver POS-01 a POS-10 →</footer></a>
+          <a class="environment-card" href="waiter/index.html#WAI-01"><span class="swatch" style="background:#39805d"></span><div><h2>Meseros</h2><p>7 pantallas Flutter de operación, distintas de la experiencia pública.</p></div><footer>Ver WAI-01 a WAI-07 →</footer></a>
+        </section>
+
+        <aside class="index-note">
+          <strong>Alcance deliberadamente estático.</strong> El selector de pantalla y estado sirve para inspección de wireframes; no hay API, almacenamiento, autenticación, pago, NFC/QR ni navegación de producción. Una confirmación solo aparece como una muestra visual explícitamente etiquetada como ACK del servidor.
+        </aside>
+      </div>
+    </main>
+  </body>
+</html>

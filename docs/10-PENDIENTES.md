@@ -1,0 +1,17 @@
+# Decisiones aún pendientes (no bloquear scaffolding)
+- Nombre comercial definitivo, logotipo y fotos de productos; temas configurables.
+- Cantidad de mesas/tabletas, resoluciones, Android, orientación.
+- Hardware de impresoras, lector NFC/QR, cajón de dinero y su conectividad.
+- Proveedores electrónicos y proveedor PAC.
+- Política y reparto real de propinas, descuentos, horarios, impuestos y flujo fiscal.
+- Detalles de retención de datos personales y avisos de privacidad conforme leyes aplicables.
+- Segmentación VLAN, certificados locales y dominios LAN reales.
+- Validar visualmente en pantallas reales los valores concretos de color, tipografía, espaciado, radio, elevación y movimiento de `design/tokens/`.
+- Política de cancelación y modificación de pedidos enviados a cocina: estados permitidos, motivos obligatorios, quién autoriza y notificación a estación.
+- Política de descuentos: tipos, límites, motivos, doble autorización y roles con `discounts.apply`.
+- Política de arqueo/cierre de caja: tolerancias, tratamiento de diferencias y si requiere una segunda autorización.
+- Reglas de división de cuentas, pagos mixtos y reembolsos para la fase posterior; no exponerlos como operaciones disponibles antes de aprobarlas.
+- Ciclo de liberación de dispositivo de mesa: responsable, timeout de sesión pública y aviso visible al cliente.
+- Licencia del código para distribución pública. La publicación en GitHub no equivale a una licencia open source ni autoriza reutilización.
+- Autorización verificable para redistribuir las cuatro imágenes oficiales de `design/reference/`; hasta entonces permanecen fuera de Git y de paquetes públicos.
+- Reautenticación de GitHub CLI para crear y publicar el repositorio público `restaurant-os`.
