@@ -20,8 +20,8 @@ Fecha: 2026-10-29
 - [x] Preparación local de control de versiones autorizada para la línea base 0.1–0.5; rama principal `Master` y etiqueta `design-v0.5-approved` definidas.
 - [x] Repositorio público publicado en `https://github.com/lcastillo0136/restaurant-os`; `origin` usa SSH y la rama predeterminada es `Master`.
 - [x] Commit inicial `d984203a467c1a1a2329b6b569510dc0c0213955` y etiqueta anotada `design-v0.5-approved` verificados local y remotamente.
-- [x] Rama local `feature/phase-0.6-design-components` creada desde `Master`; no publicada y sin implementación de Fase 0.6.
-- [ ] Fase 0.6 no iniciada.
+- [x] Rama local `feature/phase-0.6-design-components` creada desde `Master`; no publicada.
+- [x] Fase 0.6 implementada y validada técnicamente en la rama local; pendiente de revisión y aprobación del propietario.
 - [ ] Fase 0.7 no iniciada.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
@@ -84,7 +84,14 @@ Fecha: 2026-10-29
 - SSH: el primer push se detuvo por host desconocido; se registró la clave ED25519 de `github.com` con `StrictHostKeyChecking=accept-new`, la autenticación respondió como `lcastillo0136` y el reintento fue correcto.
 - `flutter build apk --debug` y un segundo intento `gradlew assembleDebug --no-daemon`: no completaron por `Unable to establish loopback connection` de Gradle/JDK en este entorno. El fallo ocurre antes de compilar el proyecto; no se generó APK y requiere revisar la política de loopback local del equipo.
 - Docker/Compose: no instalados en el entorno, por lo que no se levantó PostgreSQL.
+- Fase 0.6: generador único desde los siete JSON canónicos hacia CSS y Dart; cuatro temas conservados y tokens originales sin cambios.
+- Fase 0.6 React: 21 componentes tipados, catálogo Vite con cuatro temas, 10 pruebas, typecheck, lint y build correctos. No contienen red, persistencia ni lógica de negocio.
+- Fase 0.6 Flutter: 16 componentes/widgets, cuatro `ThemeData`, catálogo Android y 7 pruebas de widget/tema/semántica/48 dp; `flutter analyze`, `flutter test` y analyze del ejemplo correctos.
+- Evidencia Fase 0.6: dos capturas reales de Microsoft Edge Chromium del catálogo React en `design/validation/phase-0.6/`. No se usaron imágenes artificiales.
+- Android Fase 0.6: `flutter build apk --debug` falló antes de compilar con `Unable to establish loopback connection` de Gradle/JDK. No se generó APK ni captura física y no se añadió Flutter Web.
+- `node scripts/validate-phase-0.6.mjs`: correcto; 7 tokens, 4 temas, paridad CSS/Flutter, inventarios, 48 px/dp, foco, semántica, reducción de movimiento, ausencia de red y hashes oficiales verificados.
+- Dependencias Fase 0.6: herramientas React de pruebas/lint bajo MIT, salvo TypeScript bajo Apache-2.0; detalle en `docs/design/COMPONENTES-FASE-0.6.md`. El repositorio continúa sin licencia open source aprobada.
 
 ## Próxima revisión
 
-La publicación de la línea base está cerrada. La rama local `feature/phase-0.6-design-components` queda preparada, pero la Fase 0.6 no inicia automáticamente. No publicar esta rama ni iniciar Fase 0.6, Fase 0.7, desarrollo funcional, módulos de negocio o integraciones hasta una instrucción expresa.
+La publicación de la línea base 0.1–0.5 está cerrada. La Fase 0.6 queda técnicamente completa en la rama local `feature/phase-0.6-design-components`, pendiente de aprobación. No publicar ni fusionar esta rama, y no iniciar Fase 0.7, desarrollo funcional, módulos de negocio o integraciones hasta una instrucción expresa.
