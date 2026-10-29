@@ -1,0 +1,137 @@
+@import "@restaurant-os/web-design-tokens/styles.css";
+
+.ros-scope {
+  color: var(--color-text-primary);
+  background: var(--color-background);
+  font-family: var(--font-sans);
+  font-size: var(--font-body-size);
+  line-height: var(--font-body-line);
+}
+
+.ros-scope *, .ros-scope *::before, .ros-scope *::after { box-sizing: border-box; }
+.ros-scope button, .ros-scope input, .ros-scope select { font: inherit; }
+.ros-scope :focus-visible { outline: var(--focus-width) solid var(--color-accent); outline-offset: var(--focus-offset); }
+
+.ros-button, .ros-icon-button, .ros-nav-item {
+  min-width: var(--target-min); min-height: var(--target-min); border: 1px solid transparent; border-radius: var(--radius-md);
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); font-weight: var(--font-weight-semibold);
+  cursor: pointer; transition: background var(--duration-short) var(--easing-standard), transform var(--duration-short) var(--easing-standard);
+}
+.ros-button:active:not(:disabled), .ros-icon-button:active:not(:disabled), .ros-nav-item:active:not(:disabled) { transform: translateY(1px); }
+.ros-button:disabled, .ros-icon-button:disabled, .ros-nav-item:disabled { cursor: not-allowed; opacity: .58; }
+.ros-button { padding: var(--space-3) var(--space-5); }
+.ros-button--primary { color: var(--color-surface); background: var(--color-accent); }
+.ros-button--secondary { color: var(--color-text-primary); background: var(--color-surface); border-color: var(--color-border); }
+.ros-button--ghost { color: var(--color-text-primary); background: transparent; }
+.ros-button--danger { color: #fff; background: var(--color-danger); }
+.ros-button--full { width: 100%; }
+.ros-icon-button { padding: var(--space-2); color: var(--color-text-primary); background: var(--color-surface); border-color: var(--color-border); }
+.ros-icon-button.is-selected { color: var(--color-surface); background: var(--color-accent); }
+
+.ros-card { padding: var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-lg); color: var(--color-text-primary); background: var(--color-surface); }
+.ros-card--elevated { box-shadow: var(--elevation-1); }
+.ros-card.is-selected { border-color: var(--color-accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 20%, transparent); }
+.ros-kpi-card { display: grid; gap: var(--space-2); min-width: 220px; }
+.ros-kpi-card__top { display: flex; justify-content: space-between; gap: var(--space-3); color: var(--color-text-secondary); }
+.ros-kpi-card > strong { font-size: var(--font-headline-size); line-height: var(--font-headline-line); }
+.ros-kpi-card > small { color: var(--color-text-secondary); }
+.ros-badge { border-radius: var(--radius-pill); padding: 2px var(--space-2); font-size: var(--font-label-size); }
+
+.ros-field { display: grid; gap: var(--space-2); }
+.ros-field > label { font-size: var(--font-label-size); font-weight: var(--font-label-weight); }
+.ros-field > small { color: var(--color-text-secondary); }
+.ros-field.has-error > small { color: var(--color-danger); }
+.ros-input, .ros-select { width: 100%; min-height: var(--target-min); padding: var(--space-3) var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-md); color: var(--color-text-primary); background: var(--color-surface); }
+.ros-input[aria-invalid="true"], .ros-select[aria-invalid="true"] { border-color: var(--color-danger); box-shadow: 0 0 0 1px var(--color-danger); }
+.ros-form-section { margin: 0; padding: var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
+.ros-form-section > legend { padding: 0 var(--space-2); font-size: var(--font-title-size); font-weight: var(--font-title-weight); }
+.ros-form-section > p { color: var(--color-text-secondary); }
+.ros-form-section__content { display: grid; gap: var(--space-4); }
+
+.ros-horizontal-nav, .ros-compact-rail { display: flex; align-items: center; gap: var(--space-2); }
+.ros-nav-item { padding: var(--space-3) var(--space-4); color: var(--color-text-primary); background: transparent; text-decoration: none; }
+.ros-nav-item.is-active { color: var(--color-surface); background: var(--color-text-primary); }
+.ros-nav-item.is-disabled { pointer-events: none; opacity: .55; }
+.ros-compact-rail { width: 80px; flex-direction: column; padding: var(--space-3); border-right: 1px solid var(--color-border); background: var(--color-surface); }
+.ros-nav-item--compact { width: 56px; flex-direction: column; padding: var(--space-2); font-size: 11px; }
+.ros-nav-item--compact.is-active { color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface)); }
+
+.ros-table-wrap { overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); }
+.ros-table { width: 100%; border-collapse: collapse; }
+.ros-table caption { padding: var(--space-4); text-align: left; font-size: var(--font-title-size); font-weight: var(--font-title-weight); }
+.ros-table th, .ros-table td { padding: var(--space-3) var(--space-4); border-top: 1px solid var(--color-border); text-align: left; }
+.ros-table th { color: var(--color-text-secondary); font-size: var(--font-label-size); }
+.ros-table .is-numeric { text-align: right; font-variant-numeric: var(--font-financial-numeric); }
+.ros-table__empty { color: var(--color-text-secondary); text-align: center !important; }
+
+.ros-alert { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-3); min-height: var(--target-min); padding: var(--space-3) var(--space-4); border: 1px solid currentColor; border-radius: var(--radius-md); background: var(--color-surface); }
+.ros-alert__mark { width: 28px; height: 28px; border: 1px solid currentColor; border-radius: 50%; display: grid; place-items: center; font-weight: var(--font-weight-bold); }
+.ros-empty { padding: var(--space-10); text-align: center; border: 1px dashed var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); }
+.ros-empty__icon { width: 56px; height: 56px; margin: 0 auto; display: grid; place-items: center; border-radius: 50%; background: var(--color-background); }
+.ros-empty p { color: var(--color-text-secondary); }
+.ros-connection { min-height: 32px; display: inline-flex; align-items: center; gap: var(--space-2); font-weight: var(--font-weight-semibold); }
+.ros-connection i { width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+.ros-connection small { color: var(--color-text-secondary); font-weight: var(--font-weight-regular); }
+.ros-connection--online { color: var(--color-success); }
+.ros-connection--offline { color: var(--color-danger); }
+.ros-connection--reconnecting { color: var(--color-warning); }
+.ros-loading { min-height: 120px; display: grid; place-items: center; align-content: center; gap: var(--space-3); }
+.ros-loading--inline { min-height: var(--target-min); display: inline-flex; }
+.ros-spinner { width: 20px; height: 20px; display: inline-block; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: ros-spin var(--duration-medium) linear infinite; }
+@keyframes ros-spin { to { transform: rotate(360deg); } }
+
+.ros-modal-backdrop { position: fixed; inset: 0; z-index: 100; padding: var(--space-6); display: grid; place-items: center; background: rgb(16 24 32 / .62); }
+.ros-modal { position: relative; width: min(520px, 100%); margin: 0; padding: var(--space-6); border: 0; border-radius: var(--radius-xl); color: var(--color-text-primary); background: var(--color-surface); box-shadow: var(--elevation-2); }
+.ros-modal h2 { margin-top: 0; }
+.ros-modal__body { color: var(--color-text-secondary); }
+.ros-modal footer { display: flex; justify-content: flex-end; gap: var(--space-3); margin-top: var(--space-6); }
+
+.ros-kitchen-column { min-width: 300px; min-height: 500px; padding: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); }
+.ros-kitchen-column > header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-2); }
+.ros-kitchen-column > header h2 { font-size: var(--font-title-size); }
+.ros-kitchen-column > header span { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: currentColor; color: var(--color-background); }
+.ros-kitchen-column > div { display: grid; gap: var(--space-3); }
+.ros-kds-card { padding: var(--space-4); border-left: 5px solid var(--color-accent); }
+.ros-kds-card--preparing { border-left-color: var(--color-warning); }
+.ros-kds-card--ready { border-left-color: var(--color-success); }
+.ros-kds-card header { display: grid; grid-template-columns: 1fr auto; }
+.ros-kds-card h3 { grid-column: 1 / -1; margin: var(--space-2) 0; font-size: var(--font-title-size); }
+.ros-kds-card ul { padding-left: var(--space-5); }
+.ros-kds-card__note { padding: var(--space-2); border-radius: var(--radius-sm); color: var(--color-danger); background: color-mix(in srgb, var(--color-danger) 12%, var(--color-surface)); }
+.ros-kds-card footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); border-top: 1px solid var(--color-border); padding-top: var(--space-3); }
+.ros-status-label { font-size: var(--font-label-size); font-weight: var(--font-label-weight); }
+
+.ros-table-card, .ros-payment-option { min-height: 152px; position: relative; padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-lg); color: var(--color-text-primary); background: var(--color-surface); text-align: left; cursor: pointer; }
+.ros-table-card { display: grid; align-content: start; gap: var(--space-1); }
+.ros-table-card > span { width: 36px; height: 36px; display: grid; place-items: center; border-radius: var(--radius-md); background: var(--color-background); }
+.ros-table-card > small { color: var(--color-text-secondary); }
+.ros-table-card > b { position: absolute; right: var(--space-4); bottom: var(--space-4); }
+.ros-table-card.is-selected, .ros-payment-option.is-selected { border-color: var(--color-accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent) 16%, transparent); }
+.ros-payment-option { min-height: 220px; display: grid; align-content: start; gap: var(--space-3); }
+.ros-payment-option:disabled { cursor: not-allowed; color: var(--color-disabled); }
+.ros-payment-option__icon { width: 56px; height: 56px; display: grid; place-items: center; border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface)); }
+.ros-payment-option > i { position: absolute; top: var(--space-4); right: var(--space-4); width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid var(--color-border); border-radius: 50%; }
+
+.ros-account-summary { min-width: 320px; padding: var(--space-6); color: var(--color-text-primary); background: var(--color-surface); }
+.ros-account-summary header { position: relative; }
+.ros-account-summary header > span { text-transform: uppercase; letter-spacing: .08em; font-size: var(--font-label-size); }
+.ros-account-summary header > strong { position: absolute; right: 0; top: 0; padding: var(--space-2); border-radius: var(--radius-sm); color: var(--color-accent); background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface)); }
+.ros-account-summary ul { list-style: none; margin: var(--space-6) 0; padding: 0; }
+.ros-account-summary li { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border); }
+.ros-account-summary li > b { color: var(--color-accent); }
+.ros-account-summary li span { display: grid; }
+.ros-account-summary dl > div { display: flex; justify-content: space-between; }
+.ros-account-summary__total { margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--color-border); font-size: var(--font-title-size); font-weight: var(--font-title-weight); font-variant-numeric: var(--font-financial-numeric); }
+.ros-tip { display: grid; gap: var(--space-1); padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); }
+.ros-tip--pending { border-color: var(--color-warning); }
+.ros-tip--confirmed { border-color: var(--color-success); }
+
+.ros-tone--neutral { color: var(--color-text-primary); }
+.ros-tone--accent { color: var(--color-accent); }
+.ros-tone--success { color: var(--color-success); }
+.ros-tone--warning { color: var(--color-warning); }
+.ros-tone--danger { color: var(--color-danger); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ros-scope *, .ros-scope *::before, .ros-scope *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: 0ms !important; }
+}
