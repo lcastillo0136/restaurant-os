@@ -57,9 +57,9 @@ El workflow `.github/workflows/validation.yml` conserva trabajos independientes 
 
 ## Paquete de revisión
 
-`restaurant-os-fase-1.1-revision.zip` reúne 61 archivos versionados de esta entrega: configuración de entorno/Compose, API y pruebas técnicas, scripts, workflow, documentación y guía de revisión. Se verificó su extracción y la ausencia de dependencias instaladas, cachés, builds, APK, `.env`, credenciales, volúmenes y PNG internos de `design/reference/`.
+`restaurant-os-fase-1.1-windows-revision.zip` reúne 74 archivos versionados de esta entrega: modo nativo Windows, alternativa Compose, API y pruebas técnicas, scripts, workflow, documentación y guía de revisión. Se verificó su extracción y la ausencia de dependencias instaladas, cachés, builds, APK, `.env`, credenciales, volúmenes y PNG internos de `design/reference/`.
 
-El SHA-256 se entrega en el archivo adyacente `restaurant-os-fase-1.1-revision.zip.sha256`, fuera del ZIP para evitar una referencia circular. Los commits locales de la entrega se conservan en `feature/phase-1-foundation`; la rama no se publicó ni se abrió Pull Request.
+El SHA-256 se entrega en el archivo adyacente `restaurant-os-fase-1.1-windows-revision.zip.sha256`, fuera del ZIP para evitar una referencia circular. Los commits locales de la entrega se conservan en `feature/phase-1-foundation`; la rama no se publicó ni se abrió Pull Request.
 
 ## Recomendación
 
