@@ -3,8 +3,10 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, extname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { verifyOfficialReferences } from './official-reference-policy.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const reviewPackage = process.argv.includes('--review-package');
 const wireframesRoot = resolve(root, 'design', 'wireframes');
 const canonicalPath = resolve(root, 'docs', 'design', 'WIREFRAMES.md');
 const mapPath = resolve(root, 'docs', 'design', 'MAPA-PANTALLAS.md');
@@ -187,11 +189,7 @@ if (JSON.stringify(tokenFiles) !== JSON.stringify([...expectedTokenFiles].sort()
 }
 for (const tokenFile of tokenFiles) JSON.parse(read(resolve(tokenRoot, tokenFile)));
 
-for (const [file, expectedHash] of expectedReferenceHashes) {
-  const buffer = readFileSync(resolve(root, 'design', 'reference', file));
-  const actualHash = createHash('sha256').update(buffer).digest('hex');
-  if (actualHash !== expectedHash) fail(`Referencia alterada: ${file} (${actualHash})`);
-}
+const referenceResult = verifyOfficialReferences(root, reviewPackage);
 
 console.log('Fase 0.3 validada:');
 console.log('- 46 IDs canónicos, nombres, entornos y rutas consistentes entre WIREFRAMES, MAPA y visor.');
@@ -199,4 +197,4 @@ console.log('- 5 entornos y recursos locales completos; JavaScript sintácticame
 console.log('- Tableta vertical principal + variante horizontal adaptable.');
 console.log('- Targets táctiles y legibilidad KDS verificados.');
 console.log('- Estados ACK, KDS desconectado y resumen POS contextual verificados.');
-console.log('- 7 tokens JSON válidos y 4 referencias oficiales SHA-256 intactas.');
+console.log(`- 7 tokens JSON válidos. ${referenceResult}`);

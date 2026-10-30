@@ -2,8 +2,10 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { verifyOfficialReferences } from './official-reference-policy.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const reviewPackage = process.argv.includes('--review-package');
 const read = (relative) => readFileSync(resolve(root, relative), 'utf8');
 const fail = (message) => { throw new Error(message); };
 const requireFile = (relative) => {
@@ -99,17 +101,7 @@ for (const component of flutterComponents) {
   if (!flutterSources.includes(component)) fail(`Componente Flutter ausente: ${component}`);
 }
 
-const referenceHashes = new Map([
-  ['01-admin-aprobado.png', 'b816382c0cfea84469885ea017c6ade6b7b161a6c831e9dfc4266e7dc6bb54c3'],
-  ['02-tablet-aprobado.png', '36a87f4e58f83aea107278c431dc46f989a8c9cca772378591674644e5c357e7'],
-  ['03-kds-aprobado.png', '076cd7b14599c003c9afb5521a1dbf0de5cdfc7505e7af1d09787075f9196fdd'],
-  ['04-pos-aprobado.png', '0d326b5789506961793faa867b0138439eb26ade6cddfb69b426f038351a3c0e'],
-]);
-for (const [name, expected] of referenceHashes) {
-  const absolute = requireFile(`design/reference/${name}`);
-  const actual = createHash('sha256').update(readFileSync(absolute)).digest('hex');
-  if (actual !== expected) fail(`Referencia oficial alterada: ${name}`);
-}
+const referenceResult = verifyOfficialReferences(root, reviewPackage);
 
 const relativeLuminance = (hex) => {
   const channels = hex.match(/[a-f\d]{2}/gi).map((value) => Number.parseInt(value, 16) / 255)
@@ -137,6 +129,6 @@ console.log(`- ${canonicalIds.length}/46 IDs canónicos presentes en wireframes,
 console.log(`- ${captures.length}/47 capturas de mockups y variante horizontal verificadas.`);
 console.log('- 7/7 tokens JSON, 4/4 temas y objetivo táctil de 48 dp verificados.');
 console.log(`- ${reactComponents.length}/21 componentes React y ${flutterComponents.length}/16 Flutter inventariados.`);
-console.log('- 4/4 referencias visuales oficiales conservan sus SHA-256 originales.');
+console.log(`- ${referenceResult}`);
 console.log(`- Hallazgos de contraste que requieren decisión/corrección: ${contrastFindings.join('; ')}.`);
 console.log('- READINESS: BLOQUEADO hasta corregir los hallazgos P1/P2 documentados en VALIDACION-FASE-0.7.md.');

@@ -1,17 +1,15 @@
 import { access, readFile, readdir } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
+import { verifyOfficialReferences } from './official-reference-policy.mjs';
 
 const root = process.cwd();
+const reviewPackage = process.argv.includes('--review-package');
 const requiredPaths = [
   'AGENTS.md',
   'docs/00-FUENTE-DE-VERDAD.md',
   'docs/design/REFERENCIAS-VISUALES.md',
   'design/tokens.json',
-  'design/reference/01-admin-aprobado.png',
-  'design/reference/02-tablet-aprobado.png',
-  'design/reference/03-kds-aprobado.png',
-  'design/reference/04-pos-aprobado.png',
   'design/tokens/colors.json',
   'design/tokens/typography.json',
   'design/tokens/spacing.json',
@@ -35,35 +33,20 @@ const requiredPaths = [
   'design/validation/phase-0.1/04-pos-react.png',
 ];
 
+if (!reviewPackage) {
+  requiredPaths.splice(4, 0,
+    'design/reference/01-admin-aprobado.png',
+    'design/reference/02-tablet-aprobado.png',
+    'design/reference/03-kds-aprobado.png',
+    'design/reference/04-pos-aprobado.png',
+  );
+}
+
 for (const relativePath of requiredPaths) {
   await access(resolve(root, relativePath));
 }
 
-const expectedReferenceFiles = [
-  '01-admin-aprobado.png',
-  '02-tablet-aprobado.png',
-  '03-kds-aprobado.png',
-  '04-pos-aprobado.png',
-];
-const expectedReferenceHashes = {
-  '01-admin-aprobado.png': 'B816382C0CFEA84469885EA017C6ADE6B7B161A6C831E9DFC4266E7DC6BB54C3',
-  '02-tablet-aprobado.png': '36A87F4E58F83AEA107278C431DC46F989A8C9CCA772378591674644E5C357E7',
-  '03-kds-aprobado.png': '076CD7B14599C003C9AFB5521A1DBF0DE5CDFC7505E7AF1D09787075F9196FDD',
-  '04-pos-aprobado.png': '0D326B5789506961793FAA867B0138439EB26ADE6CDDFB69B426F038351A3C0E',
-};
-const actualReferenceFiles = (await readdir(resolve(root, 'design/reference')))
-  .filter((fileName) => fileName.endsWith('.png'))
-  .sort();
-if (JSON.stringify(actualReferenceFiles) !== JSON.stringify(expectedReferenceFiles)) {
-  throw new Error('design/reference must contain exactly the four official PNG files.');
-}
-for (const referenceFile of expectedReferenceFiles) {
-  const bytes = await readFile(resolve(root, 'design/reference', referenceFile));
-  const actualHash = createHash('sha256').update(bytes).digest('hex').toUpperCase();
-  if (actualHash !== expectedReferenceHashes[referenceFile]) {
-    throw new Error(`Official visual reference integrity check failed for ${referenceFile}.`);
-  }
-}
+const referenceResult = verifyOfficialReferences(root, reviewPackage);
 
 const requiredThemes = ['admin-light', 'customer-warm', 'kitchen-dark', 'pos-light'];
 const tokenFiles = [
@@ -202,5 +185,5 @@ for (const relativePath of staticSamplePaths) {
 }
 
 console.log(
-  `Phase 0.1 scaffold validated: ${requiredPaths.length} required paths, 7 canonical token files, and 4 synchronized themes.`,
+  `Phase 0.1 scaffold validated: ${requiredPaths.length} required paths, 7 canonical token files, and 4 synchronized themes. ${referenceResult}`,
 );

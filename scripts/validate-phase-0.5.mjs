@@ -5,8 +5,10 @@ import { fileURLToPath } from 'node:url';
 import { ALL_SCREENS, SCREEN_GROUPS } from '../design/prototypes/phase-0.5/assets/screen-catalog.js';
 import { INITIAL_DEMO_DATA } from '../design/prototypes/phase-0.5/assets/demo-data.js';
 import { UX_STATES } from '../design/prototypes/phase-0.5/assets/engine.js';
+import { verifyOfficialReferences } from './official-reference-policy.mjs';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const reviewPackage=process.argv.includes('--review-package');
 const proto=resolve(root,'design','prototypes','phase-0.5');
 const mockups=resolve(root,'design','mockups','phase-0.4');
 const read=path=>{if(!existsSync(path))throw new Error(`Ausente: ${path}`);return readFileSync(path,'utf8');};
@@ -39,7 +41,7 @@ if(INITIAL_DEMO_DATA.products.some(x=>typeof x.price!=='number'))fail('Importes 
 function localRefs(html,path){for(const match of html.matchAll(/(?:href|src)="([^"]+)"/g)){const ref=match[1];if(/^(?:https?:)?\/\//.test(ref))fail(`Recurso externo: ${path} -> ${ref}`);const part=ref.split(/[?#]/)[0];if(part&&!existsSync(resolve(dirname(path),part)))fail(`Referencia rota: ${path} -> ${ref}`);}}
 for(const page of ['index.html','admin/index.html','tablet/index.html','kds/index.html','pos/index.html','waiter/index.html']){const path=resolve(proto,page);localRefs(read(path),path);}
 
-const references=new Map([['01-admin-aprobado.png','b816382c0cfea84469885ea017c6ade6b7b161a6c831e9dfc4266e7dc6bb54c3'],['02-tablet-aprobado.png','36a87f4e58f83aea107278c431dc46f989a8c9cca772378591674644e5c357e7'],['03-kds-aprobado.png','076cd7b14599c003c9afb5521a1dbf0de5cdfc7505e7af1d09787075f9196fdd'],['04-pos-aprobado.png','0d326b5789506961793faa867b0138439eb26ade6cddfb69b426f038351a3c0e']]);for(const [file,hash] of references)if(sha(resolve(root,'design','reference',file))!==hash)fail(`Referencia oficial alterada: ${file}`);
+const referenceResult=verifyOfficialReferences(root,reviewPackage);
 const captures=['INDEX.png','ADM-03.png','TAB-08.png','KDS-04.png','POS-06.png','WAI-04.png','ACK-SIMULADO.png','TICKET-DEMO.png'];
 function png(path){const buffer=readFileSync(path);return buffer.subarray(0,8).toString('hex')==='89504e470d0a1a0a'&&buffer.readUInt32BE(16)>=1200&&buffer.readUInt32BE(20)>=800;}
 for(const file of captures){const path=resolve(proto,'captures',file);if(!existsSync(path)||!statSync(path).isFile()||!png(path))fail(`Captura real inválida o ausente: ${file}`);}
@@ -49,5 +51,5 @@ console.log('- 46/46 destinos, títulos, rutas e imágenes coinciden con los moc
 console.log('- 5 entornos, 11 estados UX y acciones con ACK simulado verificados.');
 console.log('- Datos ficticios centralizados, MXN, reinicio y bloqueo offline verificados.');
 console.log('- Sin backend, persistencia, recursos externos ni operaciones financieras reales.');
-console.log('- 47 superficies visuales aprobadas y 4 referencias oficiales intactas.');
+console.log(`- 47 superficies visuales aprobadas. ${referenceResult}`);
 console.log('- 8 capturas reales del prototipo verificadas.');
