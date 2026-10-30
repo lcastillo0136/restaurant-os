@@ -1,6 +1,10 @@
 @import "@restaurant-os/web-design-tokens/styles.css";
 
 .ros-scope {
+  --ros-color-control-border: color-mix(in srgb, var(--color-border) 35%, var(--color-text-primary));
+  --ros-color-warning-contrast: color-mix(in srgb, var(--color-warning) 72%, var(--color-text-primary));
+  --ros-color-danger-contrast: color-mix(in srgb, var(--color-danger) 72%, var(--color-text-primary));
+  --ros-color-on-danger: var(--color-background);
   color: var(--color-text-primary);
   background: var(--color-background);
   font-family: var(--font-sans);
@@ -21,11 +25,11 @@
 .ros-button:disabled, .ros-icon-button:disabled, .ros-nav-item:disabled { cursor: not-allowed; opacity: .58; }
 .ros-button { padding: var(--space-3) var(--space-5); }
 .ros-button--primary { color: var(--color-surface); background: var(--color-accent); }
-.ros-button--secondary { color: var(--color-text-primary); background: var(--color-surface); border-color: var(--color-border); }
+.ros-button--secondary { color: var(--color-text-primary); background: var(--color-surface); border-color: var(--ros-color-control-border); }
 .ros-button--ghost { color: var(--color-text-primary); background: transparent; }
-.ros-button--danger { color: #fff; background: var(--color-danger); }
+.ros-button--danger { color: var(--ros-color-on-danger); background: var(--color-danger); }
 .ros-button--full { width: 100%; }
-.ros-icon-button { padding: var(--space-2); color: var(--color-text-primary); background: var(--color-surface); border-color: var(--color-border); }
+.ros-icon-button { padding: var(--space-2); color: var(--color-text-primary); background: var(--color-surface); border-color: var(--ros-color-control-border); }
 .ros-icon-button.is-selected { color: var(--color-surface); background: var(--color-accent); }
 
 .ros-card { padding: var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-lg); color: var(--color-text-primary); background: var(--color-surface); }
@@ -40,9 +44,9 @@
 .ros-field { display: grid; gap: var(--space-2); }
 .ros-field > label { font-size: var(--font-label-size); font-weight: var(--font-label-weight); }
 .ros-field > small { color: var(--color-text-secondary); }
-.ros-field.has-error > small { color: var(--color-danger); }
-.ros-input, .ros-select { width: 100%; min-height: var(--target-min); padding: var(--space-3) var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-md); color: var(--color-text-primary); background: var(--color-surface); }
-.ros-input[aria-invalid="true"], .ros-select[aria-invalid="true"] { border-color: var(--color-danger); box-shadow: 0 0 0 1px var(--color-danger); }
+.ros-field.has-error > small { color: var(--ros-color-danger-contrast); }
+.ros-input, .ros-select { width: 100%; min-height: var(--target-min); padding: var(--space-3) var(--space-4); border: 1px solid var(--ros-color-control-border); border-radius: var(--radius-md); color: var(--color-text-primary); background: var(--color-surface); }
+.ros-input[aria-invalid="true"], .ros-select[aria-invalid="true"] { border-color: var(--ros-color-danger-contrast); box-shadow: 0 0 0 1px var(--ros-color-danger-contrast); }
 .ros-form-section { margin: 0; padding: var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
 .ros-form-section > legend { padding: 0 var(--space-2); font-size: var(--font-title-size); font-weight: var(--font-title-weight); }
 .ros-form-section > p { color: var(--color-text-secondary); }
@@ -73,8 +77,8 @@
 .ros-connection i { width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
 .ros-connection small { color: var(--color-text-secondary); font-weight: var(--font-weight-regular); }
 .ros-connection--online { color: var(--color-success); }
-.ros-connection--offline { color: var(--color-danger); }
-.ros-connection--reconnecting { color: var(--color-warning); }
+.ros-connection--offline { color: var(--ros-color-danger-contrast); }
+.ros-connection--reconnecting { color: var(--ros-color-warning-contrast); }
 .ros-loading { min-height: 120px; display: grid; place-items: center; align-content: center; gap: var(--space-3); }
 .ros-loading--inline { min-height: var(--target-min); display: inline-flex; }
 .ros-spinner { width: 20px; height: 20px; display: inline-block; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: ros-spin var(--duration-medium) linear infinite; }
@@ -97,11 +101,11 @@
 .ros-kds-card header { display: grid; grid-template-columns: 1fr auto; }
 .ros-kds-card h3 { grid-column: 1 / -1; margin: var(--space-2) 0; font-size: var(--font-title-size); }
 .ros-kds-card ul { padding-left: var(--space-5); }
-.ros-kds-card__note { padding: var(--space-2); border-radius: var(--radius-sm); color: var(--color-danger); background: color-mix(in srgb, var(--color-danger) 12%, var(--color-surface)); }
+.ros-kds-card__note { padding: var(--space-2); border-radius: var(--radius-sm); color: var(--ros-color-danger-contrast); background: color-mix(in srgb, var(--color-danger) 12%, var(--color-surface)); }
 .ros-kds-card footer { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); border-top: 1px solid var(--color-border); padding-top: var(--space-3); }
 .ros-status-label { font-size: var(--font-label-size); font-weight: var(--font-label-weight); }
 
-.ros-table-card, .ros-payment-option { min-height: 152px; position: relative; padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-lg); color: var(--color-text-primary); background: var(--color-surface); text-align: left; cursor: pointer; }
+.ros-table-card, .ros-payment-option { min-height: 152px; position: relative; padding: var(--space-4); border: 1px solid var(--ros-color-control-border); border-radius: var(--radius-lg); color: var(--color-text-primary); background: var(--color-surface); text-align: left; cursor: pointer; }
 .ros-table-card { display: grid; align-content: start; gap: var(--space-1); }
 .ros-table-card > span { width: 36px; height: 36px; display: grid; place-items: center; border-radius: var(--radius-md); background: var(--color-background); }
 .ros-table-card > small { color: var(--color-text-secondary); }
@@ -110,7 +114,7 @@
 .ros-payment-option { min-height: 220px; display: grid; align-content: start; gap: var(--space-3); }
 .ros-payment-option:disabled { cursor: not-allowed; color: var(--color-disabled); }
 .ros-payment-option__icon { width: 56px; height: 56px; display: grid; place-items: center; border-radius: var(--radius-md); background: color-mix(in srgb, var(--color-accent) 12%, var(--color-surface)); }
-.ros-payment-option > i { position: absolute; top: var(--space-4); right: var(--space-4); width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid var(--color-border); border-radius: 50%; }
+.ros-payment-option > i { position: absolute; top: var(--space-4); right: var(--space-4); width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid var(--ros-color-control-border); border-radius: 50%; }
 
 .ros-account-summary { min-width: 320px; padding: var(--space-6); color: var(--color-text-primary); background: var(--color-surface); }
 .ros-account-summary header { position: relative; }
@@ -129,8 +133,8 @@
 .ros-tone--neutral { color: var(--color-text-primary); }
 .ros-tone--accent { color: var(--color-accent); }
 .ros-tone--success { color: var(--color-success); }
-.ros-tone--warning { color: var(--color-warning); }
-.ros-tone--danger { color: var(--color-danger); }
+.ros-tone--warning { color: var(--ros-color-warning-contrast); }
+.ros-tone--danger { color: var(--ros-color-danger-contrast); }
 
 @media (prefers-reduced-motion: reduce) {
   .ros-scope *, .ros-scope *::before, .ros-scope *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: 0ms !important; }

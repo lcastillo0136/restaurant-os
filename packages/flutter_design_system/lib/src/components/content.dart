@@ -143,9 +143,11 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => RestaurantCard(
     semanticLabel: '$name, $priceLabel',
-    child: Row(
-      children: [
-        SizedBox(
+    child: LayoutBuilder(
+      builder: (context, constraints) {
+        final textScale = MediaQuery.textScalerOf(context).scale(1);
+        final stacked = constraints.maxWidth < 420 || textScale > 1.5;
+        final productImage = SizedBox(
           width: 96,
           height: 96,
           child:
@@ -162,26 +164,49 @@ class ProductCard extends StatelessWidget {
                   semanticLabel: 'Ilustración de demostración',
                 ),
               ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(name, style: Theme.of(context).textTheme.titleLarge),
-              Text(description, maxLines: 2, overflow: TextOverflow.ellipsis),
-              const SizedBox(height: 8),
-              Text(priceLabel, style: Theme.of(context).textTheme.labelLarge),
-            ],
-          ),
-        ),
-        RestaurantButton(
+        );
+        final details = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(name, style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              description,
+              maxLines: stacked ? null : 2,
+              overflow: stacked ? TextOverflow.visible : TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
+            Text(priceLabel, style: Theme.of(context).textTheme.labelLarge),
+          ],
+        );
+        final action = RestaurantButton(
           label: 'Agregar',
           semanticLabel: 'Agregar $name',
           icon: Icons.add,
+          expanded: stacked,
           onPressed: available ? onAdd : null,
-        ),
-      ],
+        );
+        if (stacked) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Align(alignment: Alignment.centerLeft, child: productImage),
+              const SizedBox(height: 16),
+              details,
+              const SizedBox(height: 16),
+              action,
+            ],
+          );
+        }
+        return Row(
+          children: [
+            productImage,
+            const SizedBox(width: 16),
+            Expanded(child: details),
+            const SizedBox(width: 16),
+            action,
+          ],
+        );
+      },
     ),
   );
 }
@@ -206,27 +231,42 @@ class CartSummary extends StatelessWidget {
       top: false,
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text('Carrito local'),
-                  Text(
-                    '$itemCount artículos · $totalLabel',
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
-                ],
-              ),
-            ),
-            RestaurantButton(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final textScale = MediaQuery.textScalerOf(context).scale(1);
+            final stacked = constraints.maxWidth < 420 || textScale > 1.5;
+            final summary = Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Carrito local'),
+                Text(
+                  '$itemCount artículos · $totalLabel',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ],
+            );
+            final action = RestaurantButton(
               label: 'Ver carrito',
               loading: pending,
+              expanded: stacked,
               onPressed: onOpen,
-            ),
-          ],
+            );
+            if (stacked) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [summary, const SizedBox(height: 12), action],
+              );
+            }
+            return Row(
+              children: [
+                Expanded(child: summary),
+                const SizedBox(width: 12),
+                action,
+              ],
+            );
+          },
         ),
       ),
     ),

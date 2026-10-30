@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import {
   AccountSummary, ConnectionStatus, DataTable, HorizontalNavigation, KdsOrderCard, Modal,
@@ -40,13 +40,46 @@ describe('Restaurant OS React components', () => {
     expect(screen.getByText('Sin resultados')).toBeInTheDocument();
   });
 
-  it('closes modal with Escape and never confirms implicitly', () => {
+  it('closes modal with Escape and never confirms implicitly', async () => {
     const onClose = vi.fn();
     const onConfirm = vi.fn();
     render(<Modal open title="Confirmar" onClose={onClose} onConfirm={onConfirm}>Contenido</Modal>);
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Cancelar' })).toHaveFocus());
     fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
     expect(onClose).toHaveBeenCalledOnce();
     expect(onConfirm).not.toHaveBeenCalled();
+  });
+
+  it('contains modal focus and restores it to the opener when unmounted', async () => {
+    const opener = document.createElement('button');
+    opener.textContent = 'Abrir';
+    document.body.append(opener);
+    opener.focus();
+    const onClose = vi.fn();
+    const onConfirm = vi.fn();
+    const view = render(<Modal open title="Confirmar" onClose={onClose} onConfirm={onConfirm}>Contenido</Modal>);
+    const dialog = screen.getByRole('dialog');
+    const cancel = screen.getByRole('button', { name: 'Cancelar' });
+    const confirm = screen.getByRole('button', { name: 'Confirmar' });
+    await waitFor(() => expect(cancel).toHaveFocus());
+    confirm.focus();
+    fireEvent.keyDown(dialog, { key: 'Tab' });
+    expect(cancel).toHaveFocus();
+    fireEvent.keyDown(dialog, { key: 'Tab', shiftKey: true });
+    expect(confirm).toHaveFocus();
+    view.unmount();
+    expect(opener).toHaveFocus();
+    opener.remove();
+  });
+
+  it('keeps a pending modal open when Escape or cancel is requested', async () => {
+    const onClose = vi.fn();
+    render(<Modal open pending title="Confirmar" onClose={onClose} onConfirm={vi.fn()}>Contenido</Modal>);
+    const dialog = screen.getByRole('dialog');
+    await waitFor(() => expect(dialog).toHaveFocus());
+    fireEvent.keyDown(dialog, { key: 'Escape' });
+    fireEvent(dialog, new Event('cancel', { bubbles: false, cancelable: true }));
+    expect(onClose).not.toHaveBeenCalled();
   });
 
   it('distinguishes connection state with text, not color only', () => {
