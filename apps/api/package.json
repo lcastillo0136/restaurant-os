@@ -6,7 +6,10 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "build": "nest build",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "pnpm build && node --test test/unit/environment.test.mjs test/unit/system.controller.test.mjs test/integration/health.test.mjs",
+    "test:unit": "pnpm build && node --test test/unit/environment.test.mjs test/unit/system.controller.test.mjs",
+    "test:integration": "pnpm build && node --test test/integration/health.test.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
