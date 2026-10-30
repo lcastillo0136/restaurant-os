@@ -26,7 +26,7 @@ Fecha: 2026-10-30
 - [x] Fase 0.7 completada y aprobada formalmente por el propietario el 2026-10-30.
 - [x] Fase 0.7.1 completada y aprobada formalmente por el propietario el 2026-10-30; bloqueos obligatorios remediados.
 - [x] Fase 0 cerrada técnicamente y aprobada por el propietario el 2026-10-30; esto no equivale a preparación productiva.
-- [ ] Integración Git del cierre de Fase 0: pendiente de revisión y aprobación del Pull Request; no fusionada.
+- [x] Integración Git del cierre de Fase 0 completada mediante el Pull Request #2 y merge commit `024975e0311140df79c0be201ac2c590ce6c7155`.
 - [ ] Fase 1: no iniciada.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
@@ -115,7 +115,9 @@ Fecha: 2026-10-30
 - Validador 0.7.1 reproducible: el modo normal conserva la comprobación SHA-256 de las cuatro referencias privadas; `--review-package` valida el conjunto redistribuible, exige la ausencia de PNG privados y tiene pruebas positivas/negativas en `scripts/test-validate-phase-0.7.1.mjs`.
 - Repetición para cierre/PR (2026-10-30): web-ui typecheck/lint/build y 12/12 pruebas; builds Admin/KDS/POS; API typecheck/build; Flutter package analyze y 10/10 pruebas; ejemplo analyze; `table_kiosk` analyze y 1/1 prueba; validadores 0.1–0.7.1 y HTTP 15×`200` + `404` esperado, todos correctos.
 - Auditoría para cierre/PR: producción 0 vulnerabilidades; grafo completo 1 baja de `deepmerge` sin parche, solo tooling; peers sin incidencias. Inventario reproducible: 554 entradas en 13 categorías y ninguna categoría sin licencia declarada.
+- Integración oficial Fase 0 (2026-10-30): PR #2 (`https://github.com/lcastillo0136/restaurant-os/pull/2`) fusionado mediante merge commit, conservando los seis commits y la rama origen. `Master` local/remoto quedó en `024975e0311140df79c0be201ac2c590ce6c7155`; etiqueta anotada `design-v0.7.1-approved` publicada sobre ese commit.
+- Preparación Fase 1: rama local `feature/phase-1-foundation` creada desde el `Master` integrado; no publicada y sin implementación funcional.
 
 ## Próxima revisión
 
-La Fase 0 está cerrada técnicamente y aprobada. Su integración en `Master` permanece pendiente de revisión y aprobación del Pull Request. Fase 1, desarrollo funcional, módulos de negocio e integraciones continúan sin iniciar y requieren autorización expresa separada.
+La Fase 0 está cerrada, aprobada e integrada en `Master`, con línea base `design-v0.7.1-approved`. Fase 1, desarrollo funcional, módulos de negocio e integraciones continúan sin iniciar y requieren autorización expresa separada.

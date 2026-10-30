@@ -8,9 +8,12 @@
 - Integración: Pull Request revisado hacia `Master`.
 - Etiquetas aprobadas son inmutables; no se reescribe historial publicado.
 
-## Línea base de diseño
+## Líneas base de diseño
 
-La línea base aprobada de las Fases 0.1 a 0.5 se identifica mediante la etiqueta anotada `design-v0.5-approved`. La Fase 0.6 no forma parte de esta línea base.
+- `design-v0.5-approved`: línea base aprobada de las Fases 0.1 a 0.5, commit `d984203a467c1a1a2329b6b569510dc0c0213955`.
+- `design-v0.7.1-approved`: cierre completo y aprobado de las Fases 0.1 a 0.7.1, merge commit `024975e0311140df79c0be201ac2c590ce6c7155`.
+
+Ambas etiquetas son anotadas, publicadas e inmutables.
 
 ## Repositorio publicado
 
@@ -18,10 +21,12 @@ La línea base aprobada de las Fases 0.1 a 0.5 se identifica mediante la etiquet
 - Remoto SSH: `git@github.com:lcastillo0136/restaurant-os.git` (`origin`).
 - Rama principal y predeterminada: `Master`.
 - Commit inicial aprobado: `d984203a467c1a1a2329b6b569510dc0c0213955`.
-- Etiqueta anotada publicada: `design-v0.5-approved`.
-- Rama local de siguiente etapa: `feature/phase-0.6-design-components`, creada desde `Master` y no publicada.
+- Integración de Fase 0.6: Pull Request #1, merge commit `fada2e961cd15ae886ac719d8458afcd962653d7`.
+- Cierre de Fase 0: Pull Request #2, merge commit `024975e0311140df79c0be201ac2c590ce6c7155`.
+- Etiquetas anotadas publicadas: `design-v0.5-approved` y `design-v0.7.1-approved`.
+- Rama local preparada para la siguiente etapa: `feature/phase-1-foundation`, creada desde el cierre de Fase 0 y no publicada.
 
-La rama local de la siguiente etapa solo representa preparación de trabajo; no autoriza iniciar la Fase 0.6 ni modificar componentes.
+La rama local de la siguiente etapa solo representa preparación de trabajo; no autoriza iniciar Fase 1 ni implementar módulos funcionales.
 
 ## Lista previa a cada publicación
 
