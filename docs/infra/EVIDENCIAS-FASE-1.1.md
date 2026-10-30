@@ -22,16 +22,22 @@ Fecha de ejecución: 2026-10-30. Rama: `feature/phase-1-foundation`. Árbol inic
 
 Las pruebas React y HTTP se repitieron fuera del sandbox porque éste bloqueó respectivamente un renombrado temporal de Vitest (`EPERM`) y una conexión loopback (`EACCES`). Las repeticiones no aisladas son las que se registran como resultados válidos.
 
-## Bloqueo de Docker
+## Estado operativo de Docker Desktop — 2026-10-30
 
-`docker --version` y `Test-RestaurantRequirements.ps1 -RequireDocker` fallaron porque Docker no está instalado o no está disponible en el `PATH` de este equipo. Por esa razón no se ejecutaron ni se afirman como exitosos:
+El propietario autorizó instalar Docker Desktop, pero la inspección previa encontró Windows 11 Pro `10.0.26300` x64, AMD Ryzen 7 5700X, 31.92 GiB de RAM instalados y 17.86 GiB libres. La CPU expone SLAT y extensiones de monitor, pero la virtualización de firmware está desactivada. WSL no está instalado; `wsl --status` y `wsl --version` solicitaron `wsl --install`.
+
+No existe binario `docker` / `docker-compose`, ejecutable Docker Desktop ni servicio Docker. Winget identificó el instalador oficial `Docker.DockerDesktop` 4.97.0 de Docker Inc. y su SHA-256 publicado, sin descargarlo ni ejecutarlo. La consulta de características Windows para WSL y Virtual Machine Platform requiere elevación.
+
+No se modificaron BIOS/UEFI, virtualización, WSL, particiones, antivirus, firewall ni configuración global. Antes de continuar, el propietario debe habilitar la virtualización/SVM en BIOS/UEFI, reiniciar y autorizar la instalación elevada de WSL; después se podrá instalar Docker Desktop con backend WSL 2.
+
+Por esa razón no se ejecutaron ni se afirman como exitosos:
 
 - `docker compose config --quiet`;
 - build de la imagen API;
 - arranque de `api` y `postgres`;
 - healthchecks de Compose, `pg_isready`, persistencia, parada/reinicio o prueba sin WAN.
 
-No se instaló Docker, no se cambió virtualización, no se creó `.env` ni se modificó configuración global. Las comprobaciones estáticas sí verifican la estructura de Compose y los scripts para que estas pruebas se reproduzcan después.
+No se creó `.env`. Las comprobaciones estáticas sí verifican la estructura de Compose y los scripts para que estas pruebas se reproduzcan después.
 
 ## Seguridad y decisiones
 

@@ -1,10 +1,24 @@
 # Fase 1.1 — Entorno local y automatización
 
-**Estado:** implementado para revisión local. No equivale a preparación productiva ni autoriza la Fase 1.2.
+**Estado:** aprobado formalmente de manera condicionada por el propietario; el cierre operativo depende de ejecutar Docker Compose. No equivale a preparación productiva ni autoriza la Fase 1.2.
 
 ## Alcance autorizado
 
 Esta entrega prepara el entorno reproducible de desarrollo: Docker Compose, contenedor técnico de NestJS, PostgreSQL persistente preliminar, validación de variables, scripts PowerShell, CI y pruebas técnicas. No crea esquema, migraciones, entidades, usuarios, autenticación, pedidos, pagos, NFC/QR, CFDI, WebSockets productivos ni datos de negocio.
+
+## Comprobación de equipo — 2026-10-30
+
+| Comprobación | Resultado |
+| --- | --- |
+| Windows | Windows 11 Pro, versión `10.0.26300`, 64 bits |
+| CPU / memoria | AMD Ryzen 7 5700X x64, 31.92 GiB instalados y 17.86 GiB libres durante la inspección |
+| Capacidades CPU | Extensiones de monitor y SLAT disponibles |
+| Virtualización de firmware | **Desactivada** (`VirtualizationFirmwareEnabled: False`) |
+| WSL | No instalado; `wsl --status` y `wsl --version` indican que debe instalarse |
+| Docker Desktop / CLI | No instalado: no hay ejecutable, servicio ni binario `docker` / `docker-compose` |
+| Instalador oficial | Winget encuentra `Docker.DockerDesktop` 4.97.0, de Docker Inc.; no se descargó ni ejecutó |
+
+La edición de Windows, la CPU y la RAM satisfacen el perfil de Docker Desktop. Sin embargo, el backend WSL 2 requiere virtualización habilitada en BIOS/UEFI y WSL. La modificación de firmware, la elevación para `wsl --install` y el reinicio no se realizaron: requieren la intervención explícita del propietario. Las consultas de características opcionales de Windows también solicitaron elevación.
 
 ## Servicios y límites
 
