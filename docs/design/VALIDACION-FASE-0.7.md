@@ -143,3 +143,7 @@ Los bloqueos obligatorios anteriores fueron remediados en la misma rama y se ver
 La auditoría completa conserva únicamente `deepmerge 4.3.1`, vulnerabilidad baja de tooling sin parche publicado. Android físico permaneció **NO EVALUADO** por ausencia de dispositivo; el APK sí compiló.
 
 Dictamen actualizado por Fase 0.7.1: **GO técnico pendiente de aprobación del propietario**, sin cerrar Fase 0 ni autorizar Fase 1.
+
+## Aprobación formal — 2026-10-30
+
+El propietario aprobó formalmente la validación de Fase 0.7, la remediación 0.7.1 y el cierre técnico de Fase 0. Este registro sustituye el estado pendiente del dictamen anterior, pero no declara preparación productiva, no inicia Fase 1 y no autoriza fusionar automáticamente el Pull Request de cierre.

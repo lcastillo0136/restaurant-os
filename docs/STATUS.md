@@ -22,9 +22,12 @@ Fecha: 2026-10-30
 - [x] Commit inicial `d984203a467c1a1a2329b6b569510dc0c0213955` y etiqueta anotada `design-v0.5-approved` verificados local y remotamente.
 - [x] Rama `feature/phase-0.6-design-components` publicada y conservada después de la integración.
 - [x] Fase 0.6 implementada, validada, aprobada formalmente e integrada en `Master` mediante el Pull Request #1.
-- [x] Rama local `feature/phase-0.7-design-validation` creada desde `Master` actualizado; no publicada.
-- [x] Fase 0.7 ejecutada como validación integral documental/técnica; resultado no-go condicionado por hallazgos P1/P2, pendiente de corrección y aprobación del propietario.
-- [x] Fase 0.7.1 ejecutada: bloqueos obligatorios remediados, dictamen GO técnico pendiente de aprobación del propietario; Fase 0 no cerrada y Fase 1 no iniciada.
+- [x] Rama `feature/phase-0.7-design-validation` creada desde `Master` actualizado; publicación preparada para revisión mediante Pull Request.
+- [x] Fase 0.7 completada y aprobada formalmente por el propietario el 2026-10-30.
+- [x] Fase 0.7.1 completada y aprobada formalmente por el propietario el 2026-10-30; bloqueos obligatorios remediados.
+- [x] Fase 0 cerrada técnicamente y aprobada por el propietario el 2026-10-30; esto no equivale a preparación productiva.
+- [ ] Integración Git del cierre de Fase 0: pendiente de revisión y aprobación del Pull Request; no fusionada.
+- [ ] Fase 1: no iniciada.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
@@ -108,7 +111,11 @@ Fecha: 2026-10-30
 - Regresión Fase 0.7.1: web-ui typecheck/lint/build y 12/12 pruebas; Admin/KDS/POS builds; API typecheck/build; Flutter analyze y 10/10 pruebas; table_kiosk analyze y 1/1; validadores 0.1–0.7.1, HTTP y auditoría pública correctos.
 - Android Fase 0.7.1: sin dispositivo Android, validación física NO EVALUADA. APK del catálogo compilado: 165403862 bytes, SHA-256 `A0E8543CE8EA71F4C7296089A12ECE48CED80E6BB04D22594BF7559440A4B41F`.
 - Evidencia Fase 0.7.1: captura real Edge 1600×5000 en `design/validation/phase-0.7.1/react-catalog-remediated.png`; informe en `docs/design/REMEDIACION-FASE-0.7.1.md`.
+- Cierre formal Fase 0 (2026-10-30): el propietario aprobó las Fases 0.7 y 0.7.1 y autorizó documentar/publicar el Pull Request, sin autorizar su fusión ni el inicio de Fase 1. Informe consolidado: `docs/design/CIERRE-FASE-0.md`.
+- Validador 0.7.1 reproducible: el modo normal conserva la comprobación SHA-256 de las cuatro referencias privadas; `--review-package` valida el conjunto redistribuible, exige la ausencia de PNG privados y tiene pruebas positivas/negativas en `scripts/test-validate-phase-0.7.1.mjs`.
+- Repetición para cierre/PR (2026-10-30): web-ui typecheck/lint/build y 12/12 pruebas; builds Admin/KDS/POS; API typecheck/build; Flutter package analyze y 10/10 pruebas; ejemplo analyze; `table_kiosk` analyze y 1/1 prueba; validadores 0.1–0.7.1 y HTTP 15×`200` + `404` esperado, todos correctos.
+- Auditoría para cierre/PR: producción 0 vulnerabilidades; grafo completo 1 baja de `deepmerge` sin parche, solo tooling; peers sin incidencias. Inventario reproducible: 554 entradas en 13 categorías y ninguna categoría sin licencia declarada.
 
 ## Próxima revisión
 
-La publicación de la línea base 0.1–0.5 y la integración aprobada de Fase 0.6 están cerradas. Fase 0.7.1 remedia los bloqueos obligatorios y emite GO técnico pendiente de aprobación del propietario. Fase 0 no se cierra automáticamente; desarrollo funcional, módulos de negocio e integraciones permanecen sin iniciar hasta autorización expresa.
+La Fase 0 está cerrada técnicamente y aprobada. Su integración en `Master` permanece pendiente de revisión y aprobación del Pull Request. Fase 1, desarrollo funcional, módulos de negocio e integraciones continúan sin iniciar y requieren autorización expresa separada.

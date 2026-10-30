@@ -1,8 +1,12 @@
 # Decisiones aún pendientes (no bloquear scaffolding)
 - Nombre comercial definitivo, logotipo y fotos de productos; temas configurables.
+- Obtener fotografías gastronómicas con licencia y atribuciones compatibles con la distribución prevista.
+- Aprobar la fuente Inter definitiva, su origen, formato y condiciones de redistribución; mientras tanto se conserva el fallback documentado.
 - Cantidad de mesas/tabletas, resoluciones, Android, orientación.
 - Hardware de impresoras, lector NFC/QR, cajón de dinero y su conectividad.
+- Repetir pruebas sobre el hardware objetivo real: tabletas, monitor KDS, estación POS, impresoras y periféricos.
 - Proveedores electrónicos y proveedor PAC.
+- Pagos electrónicos y CFDI permanecen para etapas posteriores; no implementar ni declarar confirmaciones sin proveedor/PAC/SAT aprobados.
 - Política y reparto real de propinas, descuentos, horarios, impuestos y flujo fiscal.
 - Detalles de retención de datos personales y avisos de privacidad conforme leyes aplicables.
 - Segmentación VLAN, certificados locales y dominios LAN reales.

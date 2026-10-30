@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -9,6 +9,13 @@ const fail = (message) => { throw new Error(message); };
 const requireText = (content, expected, context) => {
   if (!content.includes(expected)) fail(`${context}: falta ${expected}`);
 };
+
+const supportedArguments = new Set(['--review-package']);
+const argumentsReceived = process.argv.slice(2);
+for (const argument of argumentsReceived) {
+  if (!supportedArguments.has(argument)) fail(`Argumento no soportado: ${argument}`);
+}
+const reviewPackage = argumentsReceived.includes('--review-package');
 
 const packageJson = JSON.parse(read('package.json'));
 const webPackage = JSON.parse(read('packages/web_ui/package.json'));
@@ -89,11 +96,21 @@ const referenceHashes = new Map([
   ['03-kds-aprobado.png', '076cd7b14599c003c9afb5521a1dbf0de5cdfc7505e7af1d09787075f9196fdd'],
   ['04-pos-aprobado.png', '0d326b5789506961793faa867b0138439eb26ade6cddfb69b426f038351a3c0e'],
 ]);
-for (const [name, expected] of referenceHashes) {
-  const relative = `design/reference/${name}`;
-  if (!existsSync(resolve(root, relative))) fail(`Referencia privada local ausente: ${name}`);
-  const actual = createHash('sha256').update(readFileSync(resolve(root, relative))).digest('hex');
-  if (actual !== expected) fail(`Referencia oficial alterada: ${name}`);
+const referenceDirectory = resolve(root, 'design/reference');
+if (reviewPackage) {
+  const packagedPrivateReferences = existsSync(referenceDirectory)
+    ? readdirSync(referenceDirectory).filter((name) => name.toLowerCase().endsWith('.png'))
+    : [];
+  if (packagedPrivateReferences.length > 0) {
+    fail(`El paquete redistribuible no debe incluir referencias PNG privadas: ${packagedPrivateReferences.join(', ')}`);
+  }
+} else {
+  for (const [name, expected] of referenceHashes) {
+    const relative = `design/reference/${name}`;
+    if (!existsSync(resolve(root, relative))) fail(`Referencia privada local ausente: ${name}`);
+    const actual = createHash('sha256').update(readFileSync(resolve(root, relative))).digest('hex');
+    if (actual !== expected) fail(`Referencia oficial alterada: ${name}`);
+  }
 }
 
 const capturePath = resolve(root, 'design/validation/phase-0.7.1/react-catalog-remediated.png');
@@ -110,5 +127,7 @@ console.log('- Multer 2.5.0, Vitest 4.1.12 y webpack 5.112.2 resueltos; versione
 console.log('- ProductCard y CartSummary adaptativos con pruebas 200 % a 320 dp.');
 console.log('- Modal con showModal, foco inicial, contención, Escape, cierre y restauración.');
 console.log(`- Contrastes locales WCAG verificados: ${ratios.join('; ')}.`);
-console.log('- Siete tokens canónicos no modificados y cuatro referencias oficiales intactas.');
+console.log(reviewPackage
+  ? '- Siete tokens canónicos no modificados; paquete redistribuible sin PNG privados.'
+  : '- Siete tokens canónicos no modificados y cuatro referencias oficiales intactas.');
 console.log('- Captura React real 1600×5000 verificada.');

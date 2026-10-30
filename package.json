@@ -9,6 +9,8 @@
     "validate:phase-0.6": "node scripts/validate-phase-0.6.mjs",
     "validate:phase-0.7": "node scripts/validate-phase-0.7.mjs",
     "validate:phase-0.7.1": "node scripts/validate-phase-0.7.1.mjs",
+    "validate:phase-0.7.1:review": "node scripts/validate-phase-0.7.1.mjs --review-package",
+    "test:phase-0.7.1-validator": "node scripts/test-validate-phase-0.7.1.mjs",
     "test:web-ui": "pnpm --filter @restaurant-os/web-ui test",
     "test": "pnpm validate:scaffold",
     "dev:api": "pnpm --filter @restaurant-os/api start:dev",

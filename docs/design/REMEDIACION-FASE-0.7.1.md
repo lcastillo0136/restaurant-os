@@ -123,3 +123,7 @@ La falta de dispositivo es una limitación de evidencia, no un defecto comprobad
 Todos los bloqueos obligatorios del NO-GO fueron corregidos y verificados. La única vulnerabilidad residual es baja, de tooling, sin parche publicado y fuera del grafo de producción. Por ello el dictamen de la remediación es **GO técnico pendiente de aprobación del propietario**.
 
 Este GO no cierra automáticamente la Fase 0, no inicia Fase 1 y no equivale a preparación para producción. La prueba física Android sigue pendiente como evidencia de hardware.
+
+## Aprobación formal — 2026-10-30
+
+El propietario aprobó la remediación técnica 0.7.1 y el cierre técnico de Fase 0. La integración en `Master` continúa sujeta a revisión del Pull Request; Fase 1 permanece sin iniciar. El modo normal de `scripts/validate-phase-0.7.1.mjs` conserva la comprobación de los cuatro hashes privados y `--review-package` valida el contenido redistribuible sin requerirlos, rechazando además cualquier PNG privado incluido por error.
