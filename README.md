@@ -1,6 +1,6 @@
 # Restaurant OS
 
-**Estado:** Fases de diseño 0.1 a 0.5 aprobadas. La Fase 0.6 no ha iniciado. **No es un sistema listo para producción ni contiene módulos transaccionales.**
+**Estado:** Fase 0 cerrada y aprobada. Fase 1.1 preparada para revisión, con verificación dinámica de Docker pendiente en un equipo que lo tenga disponible. **No es un sistema listo para producción ni contiene módulos transaccionales.**
 
 ## Inicio rápido
 
@@ -11,7 +11,7 @@
 5. Para revisar el prototipo aprobado, sirve `design/prototypes/phase-0.5/` mediante HTTP local y abre su `index.html`.
 6. Para las vistas de base: `pnpm dev:admin` y `cd apps/table_kiosk; flutter test`.
 
-Docker Compose está documentado en `infra/docker-compose.dev.yml`, pero necesita Docker instalado. No lo expongas a internet ni uses sus valores de ejemplo en producción.
+Docker Compose está documentado en `infra/docker-compose.dev.yml`, pero necesita Docker instalado. No lo expongas a internet ni uses sus valores de ejemplo en producción. Consulta `docs/infra/` para scripts, CI y evidencia ejecutada.
 
 ## Tecnologías aprobadas
 - **Flutter/Dart** obligatorio para tabletas Android en mesas y las apps móviles futuras. Para las pantallas de cocina en tabletas se utilizará Flutter; cocina en monitor puede usar React web.
@@ -21,7 +21,7 @@ Docker Compose está documentado en `infra/docker-compose.dev.yml`, pero necesit
 
 ## Estructura actual
 
-- `apps/api`: scaffold NestJS, únicamente `GET /api/v1/system/status` técnico.
+- `apps/api`: NestJS técnico, únicamente `GET /api/v1/system/health` y `GET /api/v1/system/status`; sin dominio de negocio ni conexión de base de datos.
 - `apps/admin_web`: shell React/Vite estática de identidad.
 - `apps/table_kiosk`: app Flutter Android estática de identidad.
 - `packages/*`: tokens CSS, tema Flutter, contratos y configuración base.
@@ -33,7 +33,7 @@ Docker Compose está documentado en `infra/docker-compose.dev.yml`, pero necesit
 
 ## Etapa actual
 
-La línea base de diseño 0.1–0.5 está aprobada. No iniciar la Fase 0.6 ni módulos funcionales sin instrucción expresa del propietario.
+La línea base de diseño 0.1–0.7.1 está aprobada. La Fase 1.1 prepara el entorno local y CI; no autoriza esquema de negocio, autenticación ni módulos funcionales. No iniciar la Fase 1.2 sin instrucción expresa del propietario.
 
 ## Recursos visuales y publicación
 

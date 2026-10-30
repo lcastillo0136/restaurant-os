@@ -27,7 +27,9 @@ Fecha: 2026-10-30
 - [x] Fase 0.7.1 completada y aprobada formalmente por el propietario el 2026-10-30; bloqueos obligatorios remediados.
 - [x] Fase 0 cerrada técnicamente y aprobada por el propietario el 2026-10-30; esto no equivale a preparación productiva.
 - [x] Integración Git del cierre de Fase 0 completada mediante el Pull Request #2 y merge commit `024975e0311140df79c0be201ac2c590ce6c7155`.
-- [ ] Fase 1: no iniciada.
+- [x] Fase 1.1 implementada para revisión: entorno local, Compose, PostgreSQL preliminar sin esquema, API técnica, scripts PowerShell, CI y documentación.
+- [ ] Fase 1.1: falta evidencia dinámica de Docker Compose (build, healthchecks, persistencia, parada/reinicio y prueba sin WAN) porque Docker no está disponible en el equipo de entrega; no se afirma como validada.
+- [ ] Fase 1.2 y siguientes: no autorizadas.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
