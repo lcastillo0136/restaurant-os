@@ -1,5 +1,5 @@
 # Estado de proyecto
-Fecha: 2026-10-29
+Fecha: 2026-10-30
 - [x] Documentación de fuente de verdad inicial preparada.
 - [x] Replanteo plataforma móvil/tablet como Flutter.
 - [x] Las cuatro referencias PNG son la fuente de verdad visual oficial; SHA-256 originales suministrados por el propietario y coincidentes, documentados en `docs/design/REFERENCIAS-VISUALES.md`.
@@ -20,9 +20,10 @@ Fecha: 2026-10-29
 - [x] Preparación local de control de versiones autorizada para la línea base 0.1–0.5; rama principal `Master` y etiqueta `design-v0.5-approved` definidas.
 - [x] Repositorio público publicado en `https://github.com/lcastillo0136/restaurant-os`; `origin` usa SSH y la rama predeterminada es `Master`.
 - [x] Commit inicial `d984203a467c1a1a2329b6b569510dc0c0213955` y etiqueta anotada `design-v0.5-approved` verificados local y remotamente.
-- [x] Rama local `feature/phase-0.6-design-components` creada desde `Master`; no publicada.
-- [x] Fase 0.6 implementada, validada y aprobada formalmente por el propietario el 2026-10-29; preparada para integración mediante Pull Request.
-- [ ] Fase 0.7 no iniciada.
+- [x] Rama `feature/phase-0.6-design-components` publicada y conservada después de la integración.
+- [x] Fase 0.6 implementada, validada, aprobada formalmente e integrada en `Master` mediante el Pull Request #1.
+- [x] Rama local `feature/phase-0.7-design-validation` creada desde `Master` actualizado; no publicada.
+- [ ] Fase 0.7 no iniciada; únicamente se preparó su rama local.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
@@ -92,7 +93,10 @@ Fecha: 2026-10-29
 - Validación física Android Fase 0.6 (2026-10-29): `flutter devices --machine` detectó un teléfono `NX809J` con Android 16/API 36. `flutter run --debug --no-resident --suppress-analytics` recompiló, instaló y sincronizó la aplicación correctamente. La captura nativa de `adb exec-out screencap -p` se verificó como PNG de 1216x2688, 183886 bytes, SHA-256 `498B158F63240FBCB4D04FCAF056EEC20C77463AD2942F9361213586364E6A5D`, en `design/validation/phase-0.6/table-kiosk-android-2026-10-29.png`; se inspeccionó visualmente y muestra la UI Flutter ejecutándose en el dispositivo. El identificador único del dispositivo no se documenta en el repositorio público.
 - `node scripts/validate-phase-0.6.mjs`: correcto; 7 tokens, 4 temas, paridad CSS/Flutter, inventarios, 48 px/dp, foco, semántica, reducción de movimiento, ausencia de red y hashes oficiales verificados.
 - Dependencias Fase 0.6: herramientas React de pruebas/lint bajo MIT, salvo TypeScript bajo Apache-2.0; detalle en `docs/design/COMPONENTES-FASE-0.6.md`. El repositorio continúa sin licencia open source aprobada.
+- Integración Fase 0.6 (2026-10-30): el Pull Request #1 (`https://github.com/lcastillo0136/restaurant-os/pull/1`) se fusionó mediante merge commit, sin squash, rebase, force push ni eliminación de la rama origen. Merge commit: `fada2e961cd15ae886ac719d8458afcd962653d7`.
+- `Master` local y `origin/Master` quedaron sincronizados en `fada2e961cd15ae886ac719d8458afcd962653d7`; la etiqueta `design-v0.5-approved` permanece en `d984203a467c1a1a2329b6b569510dc0c0213955`.
+- Preparación Fase 0.7 (2026-10-30): rama local `feature/phase-0.7-design-validation` creada desde el `Master` integrado. No se publicó y no contiene implementación de Fase 0.7.
 
 ## Próxima revisión
 
-La publicación de la línea base 0.1–0.5 está cerrada. La Fase 0.6 fue aprobada formalmente y se integra exclusivamente mediante Pull Request desde `feature/phase-0.6-design-components` hacia `Master`; no se fusiona automáticamente. Fase 0.7, desarrollo funcional, módulos de negocio e integraciones permanecen sin iniciar.
+La publicación de la línea base 0.1–0.5 y la integración aprobada de Fase 0.6 están cerradas. La rama local `feature/phase-0.7-design-validation` queda preparada desde `Master`, sin publicar y sin implementación. Fase 0.7, desarrollo funcional, módulos de negocio e integraciones permanecen sin iniciar hasta nueva autorización expresa.
