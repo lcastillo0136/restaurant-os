@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode } from 'react';
 import type { SemanticTone } from './types';
 import { RestaurantButton } from './primitives';
 import { classNames } from './utils';
@@ -38,14 +38,56 @@ export interface ModalProps {
 
 export function Modal({ open, title, children, confirmLabel = 'Confirmar', cancelLabel = 'Cancelar', destructive, pending, onConfirm, onClose }: ModalProps) {
   const titleId = useId();
+  const bodyId = useId();
   const dialogRef = useRef<HTMLDialogElement>(null);
-  useEffect(() => { if (open) dialogRef.current?.focus(); }, [open]);
+  const openerRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    if (!open) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+    else dialog.setAttribute('open', '');
+    const initialFocus = dialog.querySelector<HTMLElement>('button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])');
+    (initialFocus ?? dialog).focus();
+    return () => {
+      if (dialog.open && typeof dialog.close === 'function') dialog.close();
+      else dialog.removeAttribute('open');
+      openerRef.current?.focus();
+      openerRef.current = null;
+    };
+  }, [open]);
   if (!open) return null;
+  const handleKeyDown = (event: KeyboardEvent<HTMLDialogElement>) => {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      if (!pending) onClose();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const focusable = Array.from(dialog.querySelectorAll<HTMLElement>('button:not(:disabled), [href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])'));
+    if (focusable.length === 0) {
+      event.preventDefault();
+      dialog.focus();
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  };
   return (
     <div className="ros-modal-backdrop" role="presentation">
-      <dialog ref={dialogRef} className="ros-modal" open aria-modal="true" aria-labelledby={titleId} tabIndex={-1} onKeyDown={(event) => { if (event.key === 'Escape' && !pending) onClose(); }}>
+      <dialog ref={dialogRef} className="ros-modal" aria-modal="true" aria-labelledby={titleId} aria-describedby={bodyId} tabIndex={-1} onCancel={(event) => { event.preventDefault(); if (!pending) onClose(); }} onKeyDown={handleKeyDown}>
         <h2 id={titleId}>{title}</h2>
-        <div className="ros-modal__body">{children}</div>
+        <div id={bodyId} className="ros-modal__body">{children}</div>
         <footer><RestaurantButton variant="secondary" onClick={onClose} disabled={pending}>{cancelLabel}</RestaurantButton><RestaurantButton variant={destructive ? 'danger' : 'primary'} loading={pending} onClick={onConfirm}>{confirmLabel}</RestaurantButton></footer>
       </dialog>
     </div>

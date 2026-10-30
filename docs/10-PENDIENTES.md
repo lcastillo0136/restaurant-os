@@ -1,8 +1,12 @@
 # Decisiones aún pendientes (no bloquear scaffolding)
 - Nombre comercial definitivo, logotipo y fotos de productos; temas configurables.
+- Obtener fotografías gastronómicas con licencia y atribuciones compatibles con la distribución prevista.
+- Aprobar la fuente Inter definitiva, su origen, formato y condiciones de redistribución; mientras tanto se conserva el fallback documentado.
 - Cantidad de mesas/tabletas, resoluciones, Android, orientación.
 - Hardware de impresoras, lector NFC/QR, cajón de dinero y su conectividad.
+- Repetir pruebas sobre el hardware objetivo real: tabletas, monitor KDS, estación POS, impresoras y periféricos.
 - Proveedores electrónicos y proveedor PAC.
+- Pagos electrónicos y CFDI permanecen para etapas posteriores; no implementar ni declarar confirmaciones sin proveedor/PAC/SAT aprobados.
 - Política y reparto real de propinas, descuentos, horarios, impuestos y flujo fiscal.
 - Detalles de retención de datos personales y avisos de privacidad conforme leyes aplicables.
 - Segmentación VLAN, certificados locales y dominios LAN reales.
@@ -15,3 +19,5 @@
 - Licencia del código para distribución pública. La publicación en GitHub no equivale a una licencia open source ni autoriza reutilización.
 - Autorización verificable para redistribuir las cuatro imágenes oficiales de `design/reference/`; hasta entonces permanecen fuera de Git y de paquetes públicos.
 - La compilación Android dentro de sandboxes restringidos necesita acceso de escritura a la caché de Flutter; fuera del sandbox se verificaron APK e instalación física. Conservar esta condición en la automatización futura.
+- Fase 0.7.1: repetir validación física Android con orientación, TalkBack/teclado y los recorridos críticos; no se detectó dispositivo Android durante la remediación del 2026-10-30.
+- Fase 0.7.1: vigilar `deepmerge@4.3.1` (GHSA-gcqx-w48m-w2h4), vulnerabilidad baja transitiva de Nest CLI sin parche publicado; no afecta el grafo de producción y no se aplicó una sustitución no soportada.

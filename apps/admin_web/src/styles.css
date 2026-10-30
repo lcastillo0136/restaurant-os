@@ -1,6 +1,7 @@
 @import '@restaurant-os/web-design-tokens/styles.css';
 
 :root {
+  --app-color-warning-contrast: color-mix(in srgb, var(--color-warning) 72%, var(--color-text-primary));
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--color-text-primary);
   background: var(--color-background);
@@ -9,6 +10,7 @@
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; }
 button, input, select, textarea { font: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: var(--focus-width) solid var(--color-accent); outline-offset: var(--focus-offset); }
 
 .admin-shell { min-height: 100vh; padding: 24px clamp(24px, 6vw, 96px) 56px; background: var(--color-background); }
 .admin-nav { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 18px; max-width: 1240px; margin: 0 auto; padding: 12px 16px; border: 1px solid var(--color-border); border-radius: var(--radius-xl); background: var(--color-surface); box-shadow: var(--elevation-1); }
@@ -36,7 +38,7 @@ h1 { max-width: 730px; margin: 0; font-size: clamp(2.4rem, 5.5vw, 5rem); line-he
 .state-stack { display: grid; min-width: 220px; gap: 10px; }
 .state-badge { display: inline-flex; align-items: center; gap: 8px; border-radius: var(--radius-md); padding: 10px 12px; font-size: .875rem; font-weight: 600; }
 .state-ready { color: var(--color-success); background: color-mix(in srgb, var(--color-success) 10%, var(--color-surface)); }
-.state-attention { color: var(--color-warning); background: color-mix(in srgb, var(--color-warning) 12%, var(--color-surface)); }
+.state-attention { color: var(--app-color-warning-contrast); background: color-mix(in srgb, var(--color-warning) 12%, var(--color-surface)); }
 .sample-action { min-height: 48px; border: 0; border-radius: var(--radius-md); color: var(--color-surface); background: var(--color-accent); font-weight: 700; }
 @media (max-width: 880px) { .admin-nav { grid-template-columns: 1fr; justify-items: start; } .top-navigation { justify-content: flex-start; overflow-x: auto; width: 100%; } .foundation-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .showcase-panel { align-items: flex-start; flex-direction: column; } }
 @media (max-width: 560px) { .admin-shell { padding: 16px 20px 32px; } .foundation-grid { grid-template-columns: 1fr; } }

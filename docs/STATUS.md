@@ -1,5 +1,5 @@
 # Estado de proyecto
-Fecha: 2026-10-29
+Fecha: 2026-10-30
 - [x] Documentación de fuente de verdad inicial preparada.
 - [x] Replanteo plataforma móvil/tablet como Flutter.
 - [x] Las cuatro referencias PNG son la fuente de verdad visual oficial; SHA-256 originales suministrados por el propietario y coincidentes, documentados en `docs/design/REFERENCIAS-VISUALES.md`.
@@ -20,9 +20,14 @@ Fecha: 2026-10-29
 - [x] Preparación local de control de versiones autorizada para la línea base 0.1–0.5; rama principal `Master` y etiqueta `design-v0.5-approved` definidas.
 - [x] Repositorio público publicado en `https://github.com/lcastillo0136/restaurant-os`; `origin` usa SSH y la rama predeterminada es `Master`.
 - [x] Commit inicial `d984203a467c1a1a2329b6b569510dc0c0213955` y etiqueta anotada `design-v0.5-approved` verificados local y remotamente.
-- [x] Rama local `feature/phase-0.6-design-components` creada desde `Master`; no publicada.
-- [x] Fase 0.6 implementada, validada y aprobada formalmente por el propietario el 2026-10-29; preparada para integración mediante Pull Request.
-- [ ] Fase 0.7 no iniciada.
+- [x] Rama `feature/phase-0.6-design-components` publicada y conservada después de la integración.
+- [x] Fase 0.6 implementada, validada, aprobada formalmente e integrada en `Master` mediante el Pull Request #1.
+- [x] Rama `feature/phase-0.7-design-validation` creada desde `Master` actualizado; publicación preparada para revisión mediante Pull Request.
+- [x] Fase 0.7 completada y aprobada formalmente por el propietario el 2026-10-30.
+- [x] Fase 0.7.1 completada y aprobada formalmente por el propietario el 2026-10-30; bloqueos obligatorios remediados.
+- [x] Fase 0 cerrada técnicamente y aprobada por el propietario el 2026-10-30; esto no equivale a preparación productiva.
+- [ ] Integración Git del cierre de Fase 0: pendiente de revisión y aprobación del Pull Request; no fusionada.
+- [ ] Fase 1: no iniciada.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
@@ -92,7 +97,25 @@ Fecha: 2026-10-29
 - Validación física Android Fase 0.6 (2026-10-29): `flutter devices --machine` detectó un teléfono `NX809J` con Android 16/API 36. `flutter run --debug --no-resident --suppress-analytics` recompiló, instaló y sincronizó la aplicación correctamente. La captura nativa de `adb exec-out screencap -p` se verificó como PNG de 1216x2688, 183886 bytes, SHA-256 `498B158F63240FBCB4D04FCAF056EEC20C77463AD2942F9361213586364E6A5D`, en `design/validation/phase-0.6/table-kiosk-android-2026-10-29.png`; se inspeccionó visualmente y muestra la UI Flutter ejecutándose en el dispositivo. El identificador único del dispositivo no se documenta en el repositorio público.
 - `node scripts/validate-phase-0.6.mjs`: correcto; 7 tokens, 4 temas, paridad CSS/Flutter, inventarios, 48 px/dp, foco, semántica, reducción de movimiento, ausencia de red y hashes oficiales verificados.
 - Dependencias Fase 0.6: herramientas React de pruebas/lint bajo MIT, salvo TypeScript bajo Apache-2.0; detalle en `docs/design/COMPONENTES-FASE-0.6.md`. El repositorio continúa sin licencia open source aprobada.
+- Integración Fase 0.6 (2026-10-30): el Pull Request #1 (`https://github.com/lcastillo0136/restaurant-os/pull/1`) se fusionó mediante merge commit, sin squash, rebase, force push ni eliminación de la rama origen. Merge commit: `fada2e961cd15ae886ac719d8458afcd962653d7`.
+- `Master` local y `origin/Master` quedaron sincronizados en `fada2e961cd15ae886ac719d8458afcd962653d7`; la etiqueta `design-v0.5-approved` permanece en `d984203a467c1a1a2329b6b569510dc0c0213955`.
+- Preparación Fase 0.7 (2026-10-30): rama local `feature/phase-0.7-design-validation` creada desde el `Master` integrado. No se publicó y no contiene implementación de Fase 0.7.
+- Fase 0.7 (2026-10-30): inventarios cruzados correctos para 46 wireframes, 46 mockups, 47 capturas, 46 destinos de prototipo, siete tokens, cuatro temas, 21 componentes React y 16 Flutter. Los validadores de Fases 0.1/0.3/0.4/0.5/0.6 y el nuevo `scripts/validate-phase-0.7.mjs` pasaron; las cuatro referencias oficiales conservaron sus SHA-256.
+- Regresión Fase 0.7: web-ui typecheck/lint/build y 10/10 pruebas correctos; API typecheck/build correctos; builds Admin/KDS/POS correctos. Flutter package analyze y 7/7 pruebas, ejemplo analyze, table_kiosk analyze y 1/1 prueba correctos.
+- Android Fase 0.7: no hubo dispositivo Android disponible, por lo que no se declaró instalación o validación física nueva. El APK debug del catálogo se compiló tras limitar TEMP/TMP/java.io.tmpdir al proceso: 150403702 bytes, SHA-256 `32A0A8D50048360FB666C5BF4FCD683BB5493C29180BB7EEAF842BB72D80DDEE`.
+- Accesibilidad Fase 0.7: prueba a 320 dp/texto 200 % detectó overflow en `ProductCard` (104 px) y `CartSummary` (60 px); `AttentionRequestCard` pasó. La navegación real por teclado del catálogo React confirmó orden básico, pero el modal no contiene ni restaura el foco. Contraste insuficiente detectado en warning de temas claros, danger de KDS y bordes de controles.
+- Seguridad Fase 0.7: `pnpm audit` reportó siete vulnerabilidades; una alta de producción en `multer@2.4.0`, dos críticas de tooling en `tinypool` y cuatro adicionales. La auditoría de licencias de pnpm falló por índice local incompleto; el respaldo inspeccionó 607 manifiestos y detectó dos paquetes sin licencia declarada. No se añadieron dependencias ni se modificaron componentes.
+- Decisión Fase 0.7: **NO-GO condicionado** para iniciar módulos funcionales hasta remediar seguridad, reflow Flutter, foco modal y contraste mediante cambio aprobado, repetir Android físico y validar la propuesta de CI. Informe: `docs/design/VALIDACION-FASE-0.7.md`; CI propuesta: `docs/CI-FASE-0.7.md`.
+- Remediación Fase 0.7.1 (2026-10-30): `multer 2.5.0`, Vitest/@vitest 4.1.12 y webpack 5.112.2 resueltos mediante actualización directa y sustituciones exactas; auditoría de producción 0 vulnerabilidades, auditoría completa solo 1 baja sin parche en `deepmerge` de tooling y `pnpm peers check` sin incidencias.
+- Accesibilidad Fase 0.7.1: `ProductCard` y `CartSummary` pasan texto 200 % a 320 dp; modal React contiene/restaura foco, maneja Escape/cancel y estado pendiente. Contrastes locales warning/danger/borde/foco cumplen los umbrales calculados sin cambiar los siete tokens.
+- Regresión Fase 0.7.1: web-ui typecheck/lint/build y 12/12 pruebas; Admin/KDS/POS builds; API typecheck/build; Flutter analyze y 10/10 pruebas; table_kiosk analyze y 1/1; validadores 0.1–0.7.1, HTTP y auditoría pública correctos.
+- Android Fase 0.7.1: sin dispositivo Android, validación física NO EVALUADA. APK del catálogo compilado: 165403862 bytes, SHA-256 `A0E8543CE8EA71F4C7296089A12ECE48CED80E6BB04D22594BF7559440A4B41F`.
+- Evidencia Fase 0.7.1: captura real Edge 1600×5000 en `design/validation/phase-0.7.1/react-catalog-remediated.png`; informe en `docs/design/REMEDIACION-FASE-0.7.1.md`.
+- Cierre formal Fase 0 (2026-10-30): el propietario aprobó las Fases 0.7 y 0.7.1 y autorizó documentar/publicar el Pull Request, sin autorizar su fusión ni el inicio de Fase 1. Informe consolidado: `docs/design/CIERRE-FASE-0.md`.
+- Validador 0.7.1 reproducible: el modo normal conserva la comprobación SHA-256 de las cuatro referencias privadas; `--review-package` valida el conjunto redistribuible, exige la ausencia de PNG privados y tiene pruebas positivas/negativas en `scripts/test-validate-phase-0.7.1.mjs`.
+- Repetición para cierre/PR (2026-10-30): web-ui typecheck/lint/build y 12/12 pruebas; builds Admin/KDS/POS; API typecheck/build; Flutter package analyze y 10/10 pruebas; ejemplo analyze; `table_kiosk` analyze y 1/1 prueba; validadores 0.1–0.7.1 y HTTP 15×`200` + `404` esperado, todos correctos.
+- Auditoría para cierre/PR: producción 0 vulnerabilidades; grafo completo 1 baja de `deepmerge` sin parche, solo tooling; peers sin incidencias. Inventario reproducible: 554 entradas en 13 categorías y ninguna categoría sin licencia declarada.
 
 ## Próxima revisión
 
-La publicación de la línea base 0.1–0.5 está cerrada. La Fase 0.6 fue aprobada formalmente y se integra exclusivamente mediante Pull Request desde `feature/phase-0.6-design-components` hacia `Master`; no se fusiona automáticamente. Fase 0.7, desarrollo funcional, módulos de negocio e integraciones permanecen sin iniciar.
+La Fase 0 está cerrada técnicamente y aprobada. Su integración en `Master` permanece pendiente de revisión y aprobación del Pull Request. Fase 1, desarrollo funcional, módulos de negocio e integraciones continúan sin iniciar y requieren autorización expresa separada.

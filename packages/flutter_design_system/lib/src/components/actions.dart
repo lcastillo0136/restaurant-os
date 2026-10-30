@@ -32,13 +32,17 @@ class RestaurantButton extends StatelessWidget {
             child: CircularProgressIndicator(strokeWidth: 2),
           )
         : Row(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: expanded ? MainAxisSize.max : MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (icon != null) ...[
                 Icon(icon, size: 20),
                 const SizedBox(width: 8),
               ],
-              Text(label),
+              if (expanded)
+                Flexible(child: Text(label, textAlign: TextAlign.center))
+              else
+                Text(label),
             ],
           );
     final callback = loading ? null : onPressed;
