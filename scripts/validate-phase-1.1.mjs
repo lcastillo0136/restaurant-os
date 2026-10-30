@@ -62,7 +62,31 @@ for (const script of [
   'scripts/ops/Invoke-RestaurantValidation.ps1',
   'scripts/ops/Test-RestaurantCompose.ps1',
   'scripts/ops/Clear-RestaurantTemporaryFiles.ps1',
+  'scripts/ops/Native-Restaurant.Common.ps1',
+  'scripts/ops/Test-RestaurantNativeRequirements.ps1',
+  'scripts/ops/Start-RestaurantNativeApi.ps1',
+  'scripts/ops/Start-RestaurantNativeWeb.ps1',
+  'scripts/ops/Stop-RestaurantNativeProcesses.ps1',
+  'scripts/ops/Get-RestaurantNativeStatus.ps1',
+  'scripts/ops/Test-RestaurantNativePostgreSql.ps1',
+  'scripts/ops/Set-RestaurantNativePostgreSqlLoopback.ps1',
 ]) read(script);
+
+for (const [config, port] of [
+  ['apps/admin_web/vite.config.ts', '5173'],
+  ['apps/kitchen_web/vite.config.ts', '5174'],
+  ['apps/pos_web/vite.config.ts', '5175'],
+]) {
+  const content = read(config);
+  requireText(content, "host: '127.0.0.1'", config);
+  requireText(content, `port: ${port}`, config);
+  requireText(content, 'strictPort: true', config);
+}
+
+const nativePostgreSqlScript = read('scripts/ops/Test-RestaurantNativePostgreSql.ps1');
+for (const text of ['phase_1_1_technical_verification', "listenAddresses -ne '127.0.0.1'", 'DROP SCHEMA']) {
+  requireText(nativePostgreSqlScript, text, 'Prueba PostgreSQL nativa');
+}
 
 const operationalScripts = [
   'scripts/ops/Start-RestaurantServices.ps1',

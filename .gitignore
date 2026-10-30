@@ -9,6 +9,7 @@ coverage/
 **/coverage/
 .turbo/
 .pnpm-store/
+.tmp/
 
 # Local runtime configuration and database state
 .env

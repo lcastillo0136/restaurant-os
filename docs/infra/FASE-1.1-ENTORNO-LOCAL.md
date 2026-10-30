@@ -1,10 +1,10 @@
 # Fase 1.1 — Entorno local y automatización
 
-**Estado:** aprobado formalmente de manera condicionada por el propietario; el cierre operativo depende de ejecutar Docker Compose. No equivale a preparación productiva ni autoriza la Fase 1.2.
+**Estado:** aprobado formalmente de manera condicionada por el propietario. El modo oficial de cierre operativo es desarrollo nativo en Windows; Docker Compose queda como alternativa futura no obligatoria. No equivale a preparación productiva ni autoriza la Fase 1.2.
 
 ## Alcance autorizado
 
-Esta entrega prepara el entorno reproducible de desarrollo: Docker Compose, contenedor técnico de NestJS, PostgreSQL persistente preliminar, validación de variables, scripts PowerShell, CI y pruebas técnicas. No crea esquema, migraciones, entidades, usuarios, autenticación, pedidos, pagos, NFC/QR, CFDI, WebSockets productivos ni datos de negocio.
+Esta entrega prepara el entorno reproducible de desarrollo nativo: Node.js, PNPM, PostgreSQL como servicio local, API NestJS técnica, validación de variables, scripts PowerShell, CI y pruebas técnicas. Docker Compose y el contenedor técnico existente se conservan sin cambios como alternativa futura. No crea esquema, migraciones, entidades, usuarios, autenticación, pedidos, pagos, NFC/QR, CFDI, WebSockets productivos ni datos de negocio.
 
 ## Comprobación de equipo — 2026-10-30
 
@@ -13,34 +13,42 @@ Esta entrega prepara el entorno reproducible de desarrollo: Docker Compose, cont
 | Windows | Windows 11 Pro, versión `10.0.26300`, 64 bits |
 | CPU / memoria | AMD Ryzen 7 5700X x64, 31.92 GiB instalados y 17.86 GiB libres durante la inspección |
 | Capacidades CPU | Extensiones de monitor y SLAT disponibles |
-| Virtualización de firmware | **Desactivada** (`VirtualizationFirmwareEnabled: False`) |
-| WSL | No instalado; `wsl --status` y `wsl --version` indican que debe instalarse |
-| Docker Desktop / CLI | No instalado: no hay ejecutable, servicio ni binario `docker` / `docker-compose` |
-| Instalador oficial | Winget encuentra `Docker.DockerDesktop` 4.97.0, de Docker Inc.; no se descargó ni ejecutó |
+| Virtualización de firmware | Desactivada; no es requisito del modo nativo |
+| WSL / Docker Desktop | No instalados; por decisión del propietario no se instalan ni se solicitan cambios de BIOS/UEFI |
+| Node.js / PNPM | `24.20.0` / `11.25.0`, disponibles |
+| PostgreSQL nativo | No instalado: sin binario `psql`, servicio, registro de instalación ni escucha en `5432`/`5433` |
+| Puertos iniciales | `3000`, `5173`, `5174`, `5175`, `5432` y `5433` libres durante la inspección |
+| Instalador propuesto | PostgreSQL `17.11-5` oficial, `PostgreSQL.PostgreSQL.17` de Winget; SHA-256 `612c7f5400a003aaffa0372cb273eed52278f93c680ab911eb9cb2229e329072`; no descargado ni ejecutado |
 
-La edición de Windows, la CPU y la RAM satisfacen el perfil de Docker Desktop. Sin embargo, el backend WSL 2 requiere virtualización habilitada en BIOS/UEFI y WSL. La modificación de firmware, la elevación para `wsl --install` y el reinicio no se realizaron: requieren la intervención explícita del propietario. Las consultas de características opcionales de Windows también solicitaron elevación.
+El equipo satisface el perfil de PostgreSQL 17. La instalación gráfica oficial requiere privilegios de administrador y la contraseña inicial se debe introducir localmente, nunca en un archivo versionado ni en esta documentación. Antes de ejecutar el instalador elevado se requiere autorización adicional del propietario. Se prevé instalar sólo el servidor y herramientas de línea de comandos, en `C:\Program Files\PostgreSQL\17` con datos en `C:\Program Files\PostgreSQL\17\data`; el servicio y la escucha se verificarán y se restringirán a `127.0.0.1` antes de usarlo.
 
 ## Servicios y límites
 
 | Servicio | Estado en Fase 1.1 | Acceso |
 | --- | --- | --- |
-| `api` NestJS | Operativo técnicamente; sólo `GET /api/v1/system/health` y `GET /api/v1/system/status` | Host local `127.0.0.1:${API_PORT}` y red Compose interna |
-| `postgres` | Infraestructura preliminar persistente; sin cliente, esquema ni migraciones de negocio | Host local `127.0.0.1:${POSTGRES_PORT}` y red Compose interna |
+| `api` NestJS | Operativo técnicamente; sólo `GET /api/v1/system/health` y `GET /api/v1/system/status` | Host local `127.0.0.1:${API_PORT}` |
+| PostgreSQL nativo | Pendiente de instalación; sin esquema, migraciones ni datos de negocio | Sólo `127.0.0.1:5432` tras la configuración |
 
 El backend no declara una conexión o una base de datos lista: el estado informa literalmente `preliminary-infrastructure-only`. La futura autoridad transaccional seguirá siendo PostgreSQL, pero integrarla es trabajo de la Fase 1.2 autorizada por separado.
 
-## Red, persistencia y reinicio
+## Modos de instalación
 
-- La red `restaurant_internal` conecta API y PostgreSQL.
-- Los puertos publicados se limitan a `127.0.0.1`; no hay exposición pública por defecto.
-- El volumen nombrado `postgres_data` sobrevive a `Stop-RestaurantServices.ps1`, reinicios y recreación normal de contenedores.
-- Ningún script ejecuta `docker compose down -v`, borra el volumen ni modifica `.env` sin una instrucción explícita.
-- Ambos servicios usan `restart: unless-stopped` y healthchecks. La API inicia después de que PostgreSQL informe salud.
-- La instalación inicial puede descargar dependencias PNPM e imágenes Docker. Después, el Compose no depende de un SaaS, nube ni servicio WAN para sus funciones locales. La prueba real sin WAN queda pendiente de ejecutarse en un equipo con Docker.
+### Modo A — Desarrollo nativo Windows (oficial actualmente)
+
+- Node.js, PNPM y NestJS se ejecutan directamente en Windows; la API valida host, puerto, modo y CORS por variables de entorno.
+- PostgreSQL 17 será un servicio local de Windows y escuchará exclusivamente en `127.0.0.1:5432`; no se abrirán reglas de firewall ni accesos externos.
+- Administración, KDS y POS se ejecutan en `127.0.0.1:5173`, `127.0.0.1:5174` y `127.0.0.1:5175`, respectivamente. `strictPort` evita que Vite cambie de puerto sin dejar evidencia.
+- La prueba de persistencia crea el esquema temporal aislado `phase_1_1_technical_verification`, reinicia únicamente el servicio PostgreSQL detectado y elimina ese esquema sólo después de confirmar el marcador. No toca tablas de negocio.
+
+### Modo B — Docker Compose (alternativo, no obligatorio)
+
+- La red `restaurant_internal`, los puertos loopback, el volumen `postgres_data`, los healthchecks y los scripts Docker existentes se conservan sin cambios.
+- Ningún script Docker ejecuta `docker compose down -v`, borra el volumen ni modifica `.env` sin una instrucción explícita.
+- No se instaló Docker Desktop, WSL 2 ni se ejecutó Compose por decisión del propietario; sus pruebas dinámicas no se declaran realizadas.
 
 ## Variables
 
-Copiar `.env.example` a `.env` y definir un secreto local propio para `POSTGRES_PASSWORD` antes de usar Compose. No versionar `.env`.
+La API nativa usa `API_HOST=127.0.0.1`, `API_PORT=3000`, `API_EXECUTION_MODE=development` y CORS vacío por defecto. PostgreSQL nativo solicita su contraseña como `SecureString` al ejecutar pruebas administrativas; no se guarda en el repositorio. `.env.example` se conserva exclusivamente para el modo Compose.
 
 | Variable | Uso | Valor ejemplo seguro sólo para desarrollo |
 | --- | --- | --- |
@@ -57,8 +65,9 @@ La API rechaza puertos fuera de 1–65535, hosts con esquema/ruta, modos no perm
 
 ## Archivos principales
 
-- `infra/docker-compose.dev.yml`: composición local sin servicios cloud.
-- `apps/api/Dockerfile`: imagen no privilegiada que instala desde el lockfile y ejecuta sólo la API compilada.
+- `scripts/ops/Native-Restaurant.Common.ps1` y los scripts `*Native*`: operaciones nativas aisladas, con control de procesos iniciados por el proyecto y comprobaciones de loopback.
+- `infra/docker-compose.dev.yml`: composición local alternativa sin servicios cloud.
+- `apps/api/Dockerfile`: imagen alternativa no privilegiada que instala desde el lockfile y ejecuta sólo la API compilada.
 - `.dockerignore`: evita enviar secretos, cachés, datos, ZIP y referencias visuales internas al contexto de construcción.
 - `apps/api/src/environment.ts`: validación explícita del entorno.
 - `scripts/ops/`: operaciones PowerShell reproducibles.

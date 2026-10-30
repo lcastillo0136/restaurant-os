@@ -3,50 +3,68 @@
 ## Requisitos
 
 - Git, Node.js `24.20.0`, PNPM `11.25.0` y Flutter `3.47.7` para la tableta.
-- Docker Desktop con Docker Compose para ejecutar los servicios de contenedor. No instalarlo, cambiar virtualización ni solicitar privilegios administrativos como parte de estos scripts.
+- PostgreSQL 17 para el modo nativo oficial. Instalarlo sólo con autorización específica para el instalador elevado; el servidor debe quedar limitado a `127.0.0.1:5432`.
+- Docker Desktop y WSL 2 no se instalan para Fase 1.1. Docker Compose se conserva como alternativa futura y sus scripts permanecen separados.
 - Copia local de las cuatro referencias visuales internas sólo para validaciones locales; nunca se publica ni se incluye en el ZIP de revisión.
 
 Comprueba los requisitos sin modificar el sistema:
 
 ```powershell
 ./scripts/ops/Test-RestaurantRequirements.ps1 -IncludeFlutter
-./scripts/ops/Test-RestaurantRequirements.ps1 -RequireDocker
+./scripts/ops/Test-RestaurantNativeRequirements.ps1
+./scripts/ops/Test-RestaurantNativeRequirements.ps1 -RequirePostgreSql
 ```
 
-## Preparación
+## Modo A — Desarrollo nativo Windows
+
+```powershell
+pnpm install --frozen-lockfile
+./scripts/ops/Test-RestaurantNativeRequirements.ps1 -IncludeFlutter
+```
+
+La API tiene valores seguros por defecto (`127.0.0.1:3000`, modo `development`, CORS vacío). No guardar contraseñas de PostgreSQL en archivos versionados; los scripts técnicos la solicitan como valor seguro sólo durante su ejecución.
+
+### PostgreSQL nativo
+
+```powershell
+./scripts/ops/Get-RestaurantNativeStatus.ps1
+./scripts/ops/Test-RestaurantNativePostgreSql.ps1
+```
+
+Si la inspección confirma que PostgreSQL no escucha exactamente en `127.0.0.1`, un administrador puede aplicar el cambio deliberado y reiniciar únicamente ese servicio:
+
+```powershell
+./scripts/ops/Set-RestaurantNativePostgreSqlLoopback.ps1
+```
+
+Para verificar reinicio y persistencia sin objetos de negocio:
+
+```powershell
+./scripts/ops/Test-RestaurantNativePostgreSql.ps1 -VerifyPersistence
+```
+
+El script aborta si ya existe el esquema técnico temporal y sólo lo elimina después de una verificación exitosa. El reinicio requiere privilegios para el servicio PostgreSQL.
+
+### API y aplicaciones React
+
+```powershell
+./scripts/ops/Start-RestaurantNativeApi.ps1
+./scripts/ops/Start-RestaurantNativeWeb.ps1 -Application admin
+./scripts/ops/Start-RestaurantNativeWeb.ps1 -Application kitchen
+./scripts/ops/Start-RestaurantNativeWeb.ps1 -Application pos
+./scripts/ops/Get-RestaurantNativeStatus.ps1
+```
+
+La API técnica queda en `http://127.0.0.1:3000/api/v1/system/health`. Las aplicaciones web quedan en los puertos fijos `5173` (Administración), `5174` (KDS) y `5175` (POS); no se integran todavía con la API.
+
+## Modo B — Docker Compose (alternativo)
 
 ```powershell
 ./scripts/ops/Initialize-RestaurantEnvironment.ps1
-```
-
-El script crea `.env` sólo si no existe, por lo que no sobrescribe configuraciones locales. Edita después `POSTGRES_PASSWORD`; el placeholder de `.env.example` no permite iniciar Compose.
-
-## Iniciar y consultar contenedores
-
-```powershell
-./scripts/ops/Start-RestaurantServices.ps1
-./scripts/ops/Get-RestaurantServiceStatus.ps1
-```
-
-La API técnica queda en `http://127.0.0.1:3000/api/v1/system/health` con el puerto definido por `API_PORT`; PostgreSQL queda en `127.0.0.1:5433` con el puerto definido por `POSTGRES_PORT`. Si se cambia el puerto API, sustituye `3000` en la URL. PostgreSQL no contiene tablas ni datos de negocio.
-
-Para una prueba completa de Compose (configuración, arranque, health API y `pg_isready`), ejecuta:
-
-```powershell
 ./scripts/ops/Test-RestaurantCompose.ps1
 ```
 
-## Ejecutar aplicaciones sin Docker
-
-```powershell
-pnpm dev:api
-pnpm dev:admin
-pnpm dev:kitchen
-pnpm dev:pos
-pnpm dev:table-kiosk
-```
-
-Los tres comandos web conservan sus puertos de Vite y no realizan integración con la API. `dev:table-kiosk` requiere un emulador o Android físico seleccionado por Flutter; no transforma la tableta Android en una web app.
+No ejecutar este modo para cerrar Fase 1.1. Requiere Docker Desktop autorizado por separado; los scripts Docker no se eliminaron ni mezclan procesos con el modo nativo.
 
 ## Validar y compilar
 
@@ -64,16 +82,17 @@ pnpm test:api
 ## Detener y limpiar
 
 ```powershell
-./scripts/ops/Stop-RestaurantServices.ps1
+./scripts/ops/Stop-RestaurantNativeProcesses.ps1
 ./scripts/ops/Clear-RestaurantTemporaryFiles.ps1
 ```
 
-La parada usa `docker compose stop`; el volumen `postgres_data` permanece intacto. La limpieza sólo afecta `C:\Proyectos\Restaurantes\.tmp\phase-1.1` si existe, y nunca borra volúmenes, `.env`, builds o datos de PostgreSQL.
+La parada sólo actúa sobre PID y hora de inicio registrados por los scripts nativos; no detiene servicios ajenos. La limpieza sólo afecta `C:\Proyectos\Restaurantes\.tmp\phase-1.1` si existe, y nunca borra volúmenes, `.env`, builds o datos de PostgreSQL.
 
 ## Diagnóstico
 
-- **Docker no encontrado:** instala/activa Docker sólo con autorización independiente; mientras tanto usa `pnpm validate:infra` y las pruebas no Docker. No afirmar que Compose fue probado.
-- **`POSTGRES_PASSWORD` faltante:** define un valor local secreto en `.env`; Compose lo exige antes de crear servicios.
+- **PostgreSQL no encontrado:** solicita autorización específica antes de ejecutar el instalador oficial elevado. No declarar superadas pruebas de servicio, persistencia o exposición hasta instalarlo y ejecutarlas.
+- **PostgreSQL escucha fuera de loopback:** no abrir firewall ni interfaces. Ejecutar el script de configuración sólo con privilegios aprobados y verificar de nuevo.
+- **Docker no encontrado:** es esperado para el modo oficial actual. No afirmar que Compose fue probado.
 - **API no inicia:** revisa el mensaje de validación de `API_HOST`, `API_PORT`, `API_EXECUTION_MODE` u orígenes CORS. Nunca poner secretos en el mensaje ni en Git.
 - **Puerto ocupado:** asigna otro `API_PORT` o `POSTGRES_PORT` local y vuelve a ejecutar el inicio. No expongas un puerto a todas las interfaces para resolverlo.
 - **Flutter sin dispositivo:** `flutter analyze` y `flutter test` siguen siendo aplicables; una ejecución de UI Android exige emulador/dispositivo aprobado.

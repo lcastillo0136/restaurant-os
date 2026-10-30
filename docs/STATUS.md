@@ -27,9 +27,9 @@ Fecha: 2026-10-30
 - [x] Fase 0.7.1 completada y aprobada formalmente por el propietario el 2026-10-30; bloqueos obligatorios remediados.
 - [x] Fase 0 cerrada técnicamente y aprobada por el propietario el 2026-10-30; esto no equivale a preparación productiva.
 - [x] Integración Git del cierre de Fase 0 completada mediante el Pull Request #2 y merge commit `024975e0311140df79c0be201ac2c590ce6c7155`.
-- [x] Fase 1.1 aprobada formalmente por el propietario con condición operativa pendiente: entorno local, Compose, PostgreSQL preliminar sin esquema, API técnica, scripts PowerShell, CI y documentación preparados.
-- [x] Docker Desktop: instalación autorizada por el propietario el 2026-10-30, preferentemente con backend WSL 2.
-- [ ] Fase 1.1: pruebas dinámicas de Docker Compose (build, healthchecks, persistencia, parada/reinicio y prueba sin WAN) pendientes. La auditoría local detectó virtualización de firmware desactivada y WSL ausente; requieren intervención del propietario antes de instalar.
+- [x] Fase 1.1 aprobada formalmente por el propietario con condición operativa pendiente. El modo oficial de cierre es desarrollo nativo Windows; Docker Compose queda conservado como alternativa futura no obligatoria.
+- [x] ADR-010 aprobado: no instalar Docker Desktop ni WSL 2, ni solicitar cambios de BIOS/UEFI para Fase 1.1.
+- [ ] Fase 1.1: PostgreSQL nativo no está instalado todavía; la validación operativa nativa (servicio, healthcheck, reinicio, persistencia técnica y operación local) queda pendiente de autorización específica para el instalador elevado de PostgreSQL.
 - [ ] Fase 1.2 y siguientes: no autorizadas.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
