@@ -40,6 +40,12 @@ No se instaló Docker, no se cambió virtualización, no se creó `.env` ni se m
 - La vulnerabilidad baja transitiva conocida de `deepmerge@4.3.1` permanece documentada; no aparece en la auditoría de dependencias de producción y no se aplicó una sustitución no soportada.
 - No hay ADR nuevo: la red local, PostgreSQL único, NestJS, Flutter/React y la restricción de loopback derivan de decisiones ya aprobadas.
 
+## Paquete de revisión
+
+`restaurant-os-fase-1.1-revision.zip` reúne 61 archivos versionados de esta entrega: configuración de entorno/Compose, API y pruebas técnicas, scripts, workflow, documentación y guía de revisión. Se verificó su extracción y la ausencia de dependencias instaladas, cachés, builds, APK, `.env`, credenciales, volúmenes y PNG internos de `design/reference/`.
+
+El SHA-256 se entrega en el archivo adyacente `restaurant-os-fase-1.1-revision.zip.sha256`, fuera del ZIP para evitar una referencia circular. Los commits locales de la entrega se conservan en `feature/phase-1-foundation`; la rama no se publicó ni se abrió Pull Request.
+
 ## Recomendación
 
 Recomendar revisión de código y CI de la Fase 1.1. La aprobación técnica final debe quedar condicionada a ejecutar `Test-RestaurantCompose.ps1`, parada/reinicio y prueba de persistencia en un equipo autorizado con Docker disponible. No iniciar la Fase 1.2 hasta recibir la autorización expresa correspondiente.
