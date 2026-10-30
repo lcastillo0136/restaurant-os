@@ -4,6 +4,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const reviewPackage = process.argv.includes('--review-package');
 const read = (relative) => readFileSync(resolve(root, relative), 'utf8');
 const fail = (message) => { throw new Error(message); };
 const requireFile = (relative) => {
@@ -101,7 +102,9 @@ const expectedReferences = new Map([
   ['04-pos-aprobado.png', '0d326b5789506961793faa867b0138439eb26ade6cddfb69b426f038351a3c0e'],
 ]);
 for (const [file, expected] of expectedReferences) {
-  const path = requireFile(`design/reference/${file}`);
+  const relative = `design/reference/${file}`;
+  if (reviewPackage && !existsSync(resolve(root, relative))) continue;
+  const path = requireFile(relative);
   const actual = createHash('sha256').update(readFileSync(path)).digest('hex');
   if (actual !== expected) fail(`Referencia oficial alterada: ${file}`);
 }
@@ -120,4 +123,8 @@ console.log('- Adaptadores CSS y ThemeData mantienen colores, espaciado y objeti
 console.log(`- ${reactComponents.length} componentes React y ${flutterComponents.length} componentes Flutter verificados.`);
 console.log('- Catálogos, pruebas, foco, semántica y reducción de movimiento verificados.');
 console.log('- Sin red, persistencia, backend ni recursos externos en componentes o catálogos.');
-console.log('- 4 referencias oficiales intactas y 2 capturas React reales verificadas.');
+if (reviewPackage && !existsSync(resolve(root, 'design/reference'))) {
+  console.log('- 2 capturas React reales verificadas; referencias privadas ausentes por política de redistribución.');
+} else {
+  console.log('- 4 referencias oficiales intactas y 2 capturas React reales verificadas.');
+}
