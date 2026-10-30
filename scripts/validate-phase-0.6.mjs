@@ -117,6 +117,17 @@ for (const file of ['react-catalog.png', 'react-catalog-full.png']) {
   }
 }
 
+const androidCapture = readFileSync(requireFile('design/validation/phase-0.6/table-kiosk-android-2026-10-29.png'));
+if (androidCapture.subarray(0, 8).toString('hex') !== '89504e470d0a1a0a'
+  || androidCapture.readUInt32BE(16) !== 1216
+  || androidCapture.readUInt32BE(20) !== 2688) {
+  fail('Captura Flutter Android inválida.');
+}
+const androidCaptureHash = createHash('sha256').update(androidCapture).digest('hex');
+if (androidCaptureHash !== '498b158f63240fbcb4d04fcaf056eec20c77463ad2942f9361213586364e6a5d') {
+  fail('La captura Flutter Android no coincide con la evidencia inspeccionada.');
+}
+
 console.log('Fase 0.6 validada técnicamente:');
 console.log('- 7/7 JSON canónicos válidos y 4/4 temas presentes.');
 console.log('- Adaptadores CSS y ThemeData mantienen colores, espaciado y objetivo táctil de 48.');
@@ -124,7 +135,7 @@ console.log(`- ${reactComponents.length} componentes React y ${flutterComponents
 console.log('- Catálogos, pruebas, foco, semántica y reducción de movimiento verificados.');
 console.log('- Sin red, persistencia, backend ni recursos externos en componentes o catálogos.');
 if (reviewPackage && !existsSync(resolve(root, 'design/reference'))) {
-  console.log('- 2 capturas React reales verificadas; referencias privadas ausentes por política de redistribución.');
+  console.log('- 2 capturas React y 1 captura Flutter Android reales verificadas; referencias privadas ausentes por política de redistribución.');
 } else {
-  console.log('- 4 referencias oficiales intactas y 2 capturas React reales verificadas.');
+  console.log('- 4 referencias oficiales intactas; 2 capturas React y 1 captura Flutter Android reales verificadas.');
 }

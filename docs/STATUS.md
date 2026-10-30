@@ -21,7 +21,7 @@ Fecha: 2026-10-29
 - [x] Repositorio público publicado en `https://github.com/lcastillo0136/restaurant-os`; `origin` usa SSH y la rama predeterminada es `Master`.
 - [x] Commit inicial `d984203a467c1a1a2329b6b569510dc0c0213955` y etiqueta anotada `design-v0.5-approved` verificados local y remotamente.
 - [x] Rama local `feature/phase-0.6-design-components` creada desde `Master`; no publicada.
-- [x] Fase 0.6 implementada y validada técnicamente en la rama local; pendiente de revisión y aprobación del propietario.
+- [x] Fase 0.6 implementada, validada y aprobada formalmente por el propietario el 2026-10-29; preparada para integración mediante Pull Request.
 - [ ] Fase 0.7 no iniciada.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
@@ -82,16 +82,17 @@ Fecha: 2026-10-29
 - GitHub: `gh auth status` confirmó la cuenta `lcastillo0136`; el repositorio se creó vacío y público, sin README, licencia ni `.gitignore` generados por GitHub. `origin` quedó configurado como `git@github.com:lcastillo0136/restaurant-os.git`.
 - Publicación: `Master` y la etiqueta `design-v0.5-approved` se publicaron sin `--force`. GitHub reporta `Master` como rama predeterminada y el commit remoto coincide con `d984203a467c1a1a2329b6b569510dc0c0213955`.
 - SSH: el primer push se detuvo por host desconocido; se registró la clave ED25519 de `github.com` con `StrictHostKeyChecking=accept-new`, la autenticación respondió como `lcastillo0136` y el reintento fue correcto.
-- `flutter build apk --debug` y un segundo intento `gradlew assembleDebug --no-daemon`: no completaron por `Unable to establish loopback connection` de Gradle/JDK en este entorno. El fallo ocurre antes de compilar el proyecto; no se generó APK y requiere revisar la política de loopback local del equipo.
+- Intentos iniciales de `flutter build apk --debug` y `gradlew assembleDebug --no-daemon` no completaron por restricciones del entorno. La causa y su resolución posterior quedan registradas en la evidencia de Fase 0.6; este punto ya no bloquea su aprobación.
 - Docker/Compose: no instalados en el entorno, por lo que no se levantó PostgreSQL.
 - Fase 0.6: generador único desde los siete JSON canónicos hacia CSS y Dart; cuatro temas conservados y tokens originales sin cambios.
 - Fase 0.6 React: 21 componentes tipados, catálogo Vite con cuatro temas, 10 pruebas, typecheck, lint y build correctos. No contienen red, persistencia ni lógica de negocio.
 - Fase 0.6 Flutter: 16 componentes/widgets, cuatro `ThemeData`, catálogo Android y 7 pruebas de widget/tema/semántica/48 dp; `flutter analyze`, `flutter test` y analyze del ejemplo correctos.
 - Evidencia Fase 0.6: dos capturas reales de Microsoft Edge Chromium del catálogo React en `design/validation/phase-0.6/`. No se usaron imágenes artificiales.
-- Android Fase 0.6: `flutter build apk --debug` falló antes de compilar con `Unable to establish loopback connection` de Gradle/JDK. No se generó APK ni captura física y no se añadió Flutter Web.
+- Android Fase 0.6 (validación 2026-10-29): dentro del sandbox, Java abrió/aceptó una conexión `127.0.0.1` y Gradle 9.3.1 configuró el proyecto y conectó con su daemon; el bloqueo era Flutter intentando crear su lock/cache en `C:\dev\flutter\bin\cache`, fuera de las rutas escribibles del sandbox. Con autorización puntual fuera del sandbox y `TEMP`, `TMP` y `java.io.tmpdir` en `C:\jtmp`, `flutter build apk --debug --suppress-analytics` terminó correctamente. Artefacto verificado: `apps/table_kiosk/build/app/outputs/flutter-apk/app-debug.apk`, 150375893 bytes, SHA-256 `DE8BE6BA8E57184B70C97ECFFFBC68784E1DB7ECC90CE4809548726735938845`. No se añadió Flutter Web ni se modificó código, versiones o protecciones globales.
+- Validación física Android Fase 0.6 (2026-10-29): `flutter devices --machine` detectó un teléfono `NX809J` con Android 16/API 36. `flutter run --debug --no-resident --suppress-analytics` recompiló, instaló y sincronizó la aplicación correctamente. La captura nativa de `adb exec-out screencap -p` se verificó como PNG de 1216x2688, 183886 bytes, SHA-256 `498B158F63240FBCB4D04FCAF056EEC20C77463AD2942F9361213586364E6A5D`, en `design/validation/phase-0.6/table-kiosk-android-2026-10-29.png`; se inspeccionó visualmente y muestra la UI Flutter ejecutándose en el dispositivo. El identificador único del dispositivo no se documenta en el repositorio público.
 - `node scripts/validate-phase-0.6.mjs`: correcto; 7 tokens, 4 temas, paridad CSS/Flutter, inventarios, 48 px/dp, foco, semántica, reducción de movimiento, ausencia de red y hashes oficiales verificados.
 - Dependencias Fase 0.6: herramientas React de pruebas/lint bajo MIT, salvo TypeScript bajo Apache-2.0; detalle en `docs/design/COMPONENTES-FASE-0.6.md`. El repositorio continúa sin licencia open source aprobada.
 
 ## Próxima revisión
 
-La publicación de la línea base 0.1–0.5 está cerrada. La Fase 0.6 queda técnicamente completa en la rama local `feature/phase-0.6-design-components`, pendiente de aprobación. No publicar ni fusionar esta rama, y no iniciar Fase 0.7, desarrollo funcional, módulos de negocio o integraciones hasta una instrucción expresa.
+La publicación de la línea base 0.1–0.5 está cerrada. La Fase 0.6 fue aprobada formalmente y se integra exclusivamente mediante Pull Request desde `feature/phase-0.6-design-components` hacia `Master`; no se fusiona automáticamente. Fase 0.7, desarrollo funcional, módulos de negocio e integraciones permanecen sin iniciar.

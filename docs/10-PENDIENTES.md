@@ -14,5 +14,4 @@
 - Ciclo de liberación de dispositivo de mesa: responsable, timeout de sesión pública y aviso visible al cliente.
 - Licencia del código para distribución pública. La publicación en GitHub no equivale a una licencia open source ni autoriza reutilización.
 - Autorización verificable para redistribuir las cuatro imágenes oficiales de `design/reference/`; hasta entonces permanecen fuera de Git y de paquetes públicos.
-- Validación física del catálogo Flutter de Fase 0.6 en un dispositivo Android. Gradle/JDK no pudo establecer loopback durante `assembleDebug`; no existe APK ni captura física todavía.
-- Aprobación visual del propietario para la Fase 0.6 antes de publicar, fusionar o comenzar la Fase 0.7.
+- La compilación Android dentro de sandboxes restringidos necesita acceso de escritura a la caché de Flutter; fuera del sandbox se verificaron APK e instalación física. Conservar esta condición en la automatización futura.

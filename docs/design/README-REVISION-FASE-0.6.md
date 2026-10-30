@@ -43,12 +43,12 @@ cd example
 flutter run -d <android-device>
 ```
 
-No se creó Flutter Web. La generación de APK quedó bloqueada en el entorno de
-entrega porque Gradle/JDK no pudo establecer loopback; no se declara validación
-visual física.
+No se creó Flutter Web. El catálogo Android fue compilado, instalado y validado
+en un dispositivo físico. En sandboxes restringidos, Flutter necesita acceso de
+escritura a su caché; el build correcto se ejecutó con autorización puntual
+fuera del sandbox.
 
 ## Integridad y alcance
 
 El SHA-256 se entrega junto al ZIP en un archivo `.sha256` externo. La fase está
-pendiente de aprobación del propietario. No contiene lógica de negocio ni inicia
-la Fase 0.7.
+aprobada por el propietario. No contiene lógica de negocio ni inicia la Fase 0.7.

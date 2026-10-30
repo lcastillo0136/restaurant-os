@@ -1,6 +1,6 @@
 # Componentes — Fase 0.6
 
-Estado: implementación técnica completa; pendiente de revisión y aprobación del propietario.
+Estado: implementación técnica completa y aprobada formalmente por el propietario.
 
 Fecha: 2026-10-29.
 
@@ -132,8 +132,9 @@ MaterialApp(
   datos ficticios.
 
 No se usa backend, persistencia, WebSocket ni recursos HTTP externos. No se creó
-Flutter Web. La inspección visual física de Android permanece pendiente porque
-Gradle no pudo establecer loopback en este equipo.
+Flutter Web. El catálogo se compiló, instaló y verificó en un dispositivo
+Android 16/API 36; la evidencia nativa se conserva en
+`design/validation/phase-0.6/table-kiosk-android-2026-10-29.png`.
 
 ## Accesibilidad
 
@@ -165,7 +166,8 @@ Resultados reales del 2026-10-29:
 | `flutter analyze` (paquete) | correcto, sin incidencias |
 | `flutter test` (paquete) | 7/7 pruebas correctas |
 | `flutter analyze` (ejemplo Android) | correcto, sin incidencias |
-| `flutter build apk --debug` | bloqueado antes de compilar: `Unable to establish loopback connection` |
+| `flutter build apk --debug --suppress-analytics` | correcto fuera del sandbox restringido; APK verificado por SHA-256 |
+| `flutter run --debug --no-resident --suppress-analytics` | correcto en dispositivo Android físico |
 | Validadores Fases 0.1, 0.3, 0.4 Entrega 2 y 0.5 | correctos |
 | Builds admin/KDS/POS y typecheck API | correctos |
 | Analyze/test de `apps/table_kiosk` | correctos, 1/1 prueba |
@@ -225,10 +227,9 @@ fase.
 
 ## Decisiones y pendientes
 
-1. Validar catálogo Flutter en un dispositivo Android real y capturar evidencia.
-2. Resolver la política local de loopback de Gradle antes de declarar APK.
-3. Aprobar visualmente la Fase 0.6 antes de integrar o publicar la rama.
-4. No ajustar los valores concretos de tokens hasta recibir aprobación.
-5. Mantener cualquier política comercial/fiscal fuera de los componentes.
+1. Conservar acceso de escritura a la caché de Flutter al automatizar builds en sandboxes restringidos.
+2. Integrar la fase solo mediante Pull Request revisado, sin reescribir historial.
+3. No ajustar los valores concretos de tokens hasta recibir aprobación.
+4. Mantener cualquier política comercial/fiscal fuera de los componentes.
 
 Fase 0.7 no iniciada.
