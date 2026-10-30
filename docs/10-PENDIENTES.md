@@ -14,4 +14,4 @@
 - Ciclo de liberación de dispositivo de mesa: responsable, timeout de sesión pública y aviso visible al cliente.
 - Licencia del código para distribución pública. La publicación en GitHub no equivale a una licencia open source ni autoriza reutilización.
 - Autorización verificable para redistribuir las cuatro imágenes oficiales de `design/reference/`; hasta entonces permanecen fuera de Git y de paquetes públicos.
-- Reautenticación de GitHub CLI para crear y publicar el repositorio público `restaurant-os`.
+- La compilación Android dentro de sandboxes restringidos necesita acceso de escritura a la caché de Flutter; fuera del sandbox se verificaron APK e instalación física. Conservar esta condición en la automatización futura.

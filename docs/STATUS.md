@@ -18,8 +18,10 @@ Fecha: 2026-10-29
 - [x] Fase 0.5: cinco prototipos interactivos, 46 destinos, datos ficticios, 11 estados UX, pruebas y ocho capturas completados y validados técnicamente.
 - [x] Fase 0.5 aprobada formalmente por el propietario; la línea base de las Fases 0.1 a 0.5 queda cerrada.
 - [x] Preparación local de control de versiones autorizada para la línea base 0.1–0.5; rama principal `Master` y etiqueta `design-v0.5-approved` definidas.
-- [ ] Publicación GitHub pendiente: la credencial activa de `gh` para `lcastillo0136` es inválida y requiere reautenticación.
-- [ ] Fase 0.6 no iniciada.
+- [x] Repositorio público publicado en `https://github.com/lcastillo0136/restaurant-os`; `origin` usa SSH y la rama predeterminada es `Master`.
+- [x] Commit inicial `d984203a467c1a1a2329b6b569510dc0c0213955` y etiqueta anotada `design-v0.5-approved` verificados local y remotamente.
+- [x] Rama local `feature/phase-0.6-design-components` creada desde `Master`; no publicada.
+- [x] Fase 0.6 implementada, validada y aprobada formalmente por el propietario el 2026-10-29; preparada para integración mediante Pull Request.
 - [ ] Fase 0.7 no iniciada.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
@@ -54,7 +56,7 @@ Fecha: 2026-10-29
 - `node --check design/mockups/phase-0.4/assets/mockups.js`, `node --check scripts/validate-phase-0.4.mjs` y `node scripts/validate-phase-0.4.mjs`: correctos. Resultado: 6/6 mockups canónicos, cinco entornos, cuatro temas, siete tokens, objetivos táctiles, orientación, estados no engañosos, siete PNG y cuatro SHA-256 oficiales verificados.
 - Evidencia visual Fase 0.4: siete capturas reales de Microsoft Edge Chromium headless contra `127.0.0.1:4190` en `design/mockups/phase-0.4/captures/`. Chrome headless no produjo archivos en los primeros intentos y no se contabilizó como evidencia.
 - Limpieza Fase 0.4: 12 perfiles efímeros de Chrome/Edge inspeccionados y eliminados de `design/mockups/phase-0.4/`; `.gitignore` excluye perfiles de captura futuros. No se eliminaron fuentes ni capturas válidas.
-- Control de versiones: `git status --short` no pudo ejecutarse porque `C:\Proyectos\Restaurantes` no contiene metadata `.git`. El estado de Git queda como impedimento verificable, no como validación superada.
+- Registro histórico Fase 0.4: en aquel momento `git status --short` no pudo ejecutarse porque el directorio aún no contenía metadata `.git`. Este impedimento quedó resuelto al inicializar y publicar la línea base aprobada 0.1–0.5.
 - Paquete Fase 0.4 Entrega 1: `restaurant-os-fase-0.4-entrega-1-revision.zip` preparado con 20 archivos, sin dependencias, cachés, perfiles de navegador, secretos ni builds. Se extrajo en un directorio temporal y el índice, cinco entornos y una captura respondieron HTTP `200`; el SHA-256 se reporta en el informe externo porque incluirlo dentro del propio ZIP alteraría el hash.
 - Fase 0.4 Entrega 2: el visor se amplió mediante `assets/delivery-2.css`, `assets/delivery-2.js`, `assets/index-delivery-2.js` y cinco catálogos `delivery-2.html`, sin modificar los ocho archivos fuente ni las siete capturas de la Entrega 1. La portada recorre 46/46 IDs y conserva enlaces directos a los seis mockups aprobados.
 - Entrega 2 representa los 11 estados documentales (`normal`, vacío, carga, error, desconexión, pendiente ACK, ACK servidor, sin permiso, validación, conflicto y cancelación). Pedidos, cobros, cierres y transiciones KDS no se expresan como confirmados antes del ACK.
@@ -77,9 +79,20 @@ Fecha: 2026-10-29
 - Preparación Git pública: las cuatro referencias PNG oficiales se conservan localmente pero se excluyen del historial por no existir autorización comprobable de redistribución. También se excluyen los ZIP de revisión que contienen copias, dependencias, builds, perfiles, bases locales, secretos y material de firma.
 - Auditoría previa al commit: búsqueda de llaves privadas, tokens comunes, credenciales, correos incrustados y datos bancarios sin hallazgos reales; `.env.example` solo contiene placeholders. `gitleaks` no está instalado, por lo que se añadió una comprobación reproducible del conjunto preparado en `scripts/audit-public-baseline.mjs`.
 - Licencia pública: no se seleccionó ninguna licencia open source. La autorización de licencia del código y la redistribución de las cuatro referencias visuales quedan pendientes del propietario.
-- `flutter build apk --debug` y un segundo intento `gradlew assembleDebug --no-daemon`: no completaron por `Unable to establish loopback connection` de Gradle/JDK en este entorno. El fallo ocurre antes de compilar el proyecto; no se generó APK y requiere revisar la política de loopback local del equipo.
+- GitHub: `gh auth status` confirmó la cuenta `lcastillo0136`; el repositorio se creó vacío y público, sin README, licencia ni `.gitignore` generados por GitHub. `origin` quedó configurado como `git@github.com:lcastillo0136/restaurant-os.git`.
+- Publicación: `Master` y la etiqueta `design-v0.5-approved` se publicaron sin `--force`. GitHub reporta `Master` como rama predeterminada y el commit remoto coincide con `d984203a467c1a1a2329b6b569510dc0c0213955`.
+- SSH: el primer push se detuvo por host desconocido; se registró la clave ED25519 de `github.com` con `StrictHostKeyChecking=accept-new`, la autenticación respondió como `lcastillo0136` y el reintento fue correcto.
+- Intentos iniciales de `flutter build apk --debug` y `gradlew assembleDebug --no-daemon` no completaron por restricciones del entorno. La causa y su resolución posterior quedan registradas en la evidencia de Fase 0.6; este punto ya no bloquea su aprobación.
 - Docker/Compose: no instalados en el entorno, por lo que no se levantó PostgreSQL.
+- Fase 0.6: generador único desde los siete JSON canónicos hacia CSS y Dart; cuatro temas conservados y tokens originales sin cambios.
+- Fase 0.6 React: 21 componentes tipados, catálogo Vite con cuatro temas, 10 pruebas, typecheck, lint y build correctos. No contienen red, persistencia ni lógica de negocio.
+- Fase 0.6 Flutter: 16 componentes/widgets, cuatro `ThemeData`, catálogo Android y 7 pruebas de widget/tema/semántica/48 dp; `flutter analyze`, `flutter test` y analyze del ejemplo correctos.
+- Evidencia Fase 0.6: dos capturas reales de Microsoft Edge Chromium del catálogo React en `design/validation/phase-0.6/`. No se usaron imágenes artificiales.
+- Android Fase 0.6 (validación 2026-10-29): dentro del sandbox, Java abrió/aceptó una conexión `127.0.0.1` y Gradle 9.3.1 configuró el proyecto y conectó con su daemon; el bloqueo era Flutter intentando crear su lock/cache en `C:\dev\flutter\bin\cache`, fuera de las rutas escribibles del sandbox. Con autorización puntual fuera del sandbox y `TEMP`, `TMP` y `java.io.tmpdir` en `C:\jtmp`, `flutter build apk --debug --suppress-analytics` terminó correctamente. Artefacto verificado: `apps/table_kiosk/build/app/outputs/flutter-apk/app-debug.apk`, 150375893 bytes, SHA-256 `DE8BE6BA8E57184B70C97ECFFFBC68784E1DB7ECC90CE4809548726735938845`. No se añadió Flutter Web ni se modificó código, versiones o protecciones globales.
+- Validación física Android Fase 0.6 (2026-10-29): `flutter devices --machine` detectó un teléfono `NX809J` con Android 16/API 36. `flutter run --debug --no-resident --suppress-analytics` recompiló, instaló y sincronizó la aplicación correctamente. La captura nativa de `adb exec-out screencap -p` se verificó como PNG de 1216x2688, 183886 bytes, SHA-256 `498B158F63240FBCB4D04FCAF056EEC20C77463AD2942F9361213586364E6A5D`, en `design/validation/phase-0.6/table-kiosk-android-2026-10-29.png`; se inspeccionó visualmente y muestra la UI Flutter ejecutándose en el dispositivo. El identificador único del dispositivo no se documenta en el repositorio público.
+- `node scripts/validate-phase-0.6.mjs`: correcto; 7 tokens, 4 temas, paridad CSS/Flutter, inventarios, 48 px/dp, foco, semántica, reducción de movimiento, ausencia de red y hashes oficiales verificados.
+- Dependencias Fase 0.6: herramientas React de pruebas/lint bajo MIT, salvo TypeScript bajo Apache-2.0; detalle en `docs/design/COMPONENTES-FASE-0.6.md`. El repositorio continúa sin licencia open source aprobada.
 
 ## Próxima revisión
 
-Reautenticar GitHub CLI y repetir la verificación de publicación para crear el repositorio público `restaurant-os` y publicar `Master`/la etiqueta. La rama local `feature/phase-0.6-design-components` solo se preparará después de verificar la rama remota `Master`. No iniciar Fase 0.6, Fase 0.7, desarrollo funcional, módulos de negocio ni integraciones hasta una instrucción expresa.
+La publicación de la línea base 0.1–0.5 está cerrada. La Fase 0.6 fue aprobada formalmente y se integra exclusivamente mediante Pull Request desde `feature/phase-0.6-design-components` hacia `Master`; no se fusiona automáticamente. Fase 0.7, desarrollo funcional, módulos de negocio e integraciones permanecen sin iniciar.

@@ -147,15 +147,22 @@ const flutterTheme = await readFile(
   resolve(root, 'packages/flutter_design_system/lib/restaurant_theme.dart'),
   'utf8',
 );
+const flutterTokens = await readFile(
+  resolve(root, 'packages/flutter_design_system/lib/src/generated/design_tokens.g.dart'),
+  'utf8',
+);
+if (!flutterTheme.includes("src/generated/design_tokens.g.dart")) {
+  throw new Error('Flutter ThemeData must consume the generated canonical token adapter.');
+}
 const customerWarm = colors.themes['customer-warm'];
 for (const token of ['background', 'text-primary', 'accent', 'surface', 'border']) {
-  const flutterColor = `Color(0xFF${customerWarm[token].slice(1)})`;
-  if (!flutterTheme.includes(flutterColor)) {
+  const flutterColor = `Color(0xFF${customerWarm[token].slice(1).toUpperCase()})`;
+  if (!flutterTokens.includes(flutterColor)) {
     throw new Error(`Flutter customer-warm token mismatch for ${token}.`);
   }
 }
 const touchTarget = tokenDocuments.components.touch?.minimumTargetDp;
-if (!flutterTheme.includes(`minTouchTarget = ${touchTarget}.0`)) {
+if (!flutterTokens.includes(`minimumTouchTarget = ${touchTarget}.0`)) {
   throw new Error('Flutter minimum touch target does not match components.json.');
 }
 
