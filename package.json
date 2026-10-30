@@ -7,6 +7,7 @@
     "generate:design-tokens": "node scripts/generate-design-tokens.mjs",
     "validate:scaffold": "node scripts/validate-scaffold.mjs",
     "validate:phase-0.6": "node scripts/validate-phase-0.6.mjs",
+    "validate:phase-0.7": "node scripts/validate-phase-0.7.mjs",
     "test:web-ui": "pnpm --filter @restaurant-os/web-ui test",
     "test": "pnpm validate:scaffold",
     "dev:api": "pnpm --filter @restaurant-os/api start:dev",

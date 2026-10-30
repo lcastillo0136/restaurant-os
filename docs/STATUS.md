@@ -23,7 +23,7 @@ Fecha: 2026-10-30
 - [x] Rama `feature/phase-0.6-design-components` publicada y conservada después de la integración.
 - [x] Fase 0.6 implementada, validada, aprobada formalmente e integrada en `Master` mediante el Pull Request #1.
 - [x] Rama local `feature/phase-0.7-design-validation` creada desde `Master` actualizado; no publicada.
-- [ ] Fase 0.7 no iniciada; únicamente se preparó su rama local.
+- [x] Fase 0.7 ejecutada como validación integral documental/técnica; resultado no-go condicionado por hallazgos P1/P2, pendiente de corrección y aprobación del propietario.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
@@ -96,7 +96,13 @@ Fecha: 2026-10-30
 - Integración Fase 0.6 (2026-10-30): el Pull Request #1 (`https://github.com/lcastillo0136/restaurant-os/pull/1`) se fusionó mediante merge commit, sin squash, rebase, force push ni eliminación de la rama origen. Merge commit: `fada2e961cd15ae886ac719d8458afcd962653d7`.
 - `Master` local y `origin/Master` quedaron sincronizados en `fada2e961cd15ae886ac719d8458afcd962653d7`; la etiqueta `design-v0.5-approved` permanece en `d984203a467c1a1a2329b6b569510dc0c0213955`.
 - Preparación Fase 0.7 (2026-10-30): rama local `feature/phase-0.7-design-validation` creada desde el `Master` integrado. No se publicó y no contiene implementación de Fase 0.7.
+- Fase 0.7 (2026-10-30): inventarios cruzados correctos para 46 wireframes, 46 mockups, 47 capturas, 46 destinos de prototipo, siete tokens, cuatro temas, 21 componentes React y 16 Flutter. Los validadores de Fases 0.1/0.3/0.4/0.5/0.6 y el nuevo `scripts/validate-phase-0.7.mjs` pasaron; las cuatro referencias oficiales conservaron sus SHA-256.
+- Regresión Fase 0.7: web-ui typecheck/lint/build y 10/10 pruebas correctos; API typecheck/build correctos; builds Admin/KDS/POS correctos. Flutter package analyze y 7/7 pruebas, ejemplo analyze, table_kiosk analyze y 1/1 prueba correctos.
+- Android Fase 0.7: no hubo dispositivo Android disponible, por lo que no se declaró instalación o validación física nueva. El APK debug del catálogo se compiló tras limitar TEMP/TMP/java.io.tmpdir al proceso: 150403702 bytes, SHA-256 `32A0A8D50048360FB666C5BF4FCD683BB5493C29180BB7EEAF842BB72D80DDEE`.
+- Accesibilidad Fase 0.7: prueba a 320 dp/texto 200 % detectó overflow en `ProductCard` (104 px) y `CartSummary` (60 px); `AttentionRequestCard` pasó. La navegación real por teclado del catálogo React confirmó orden básico, pero el modal no contiene ni restaura el foco. Contraste insuficiente detectado en warning de temas claros, danger de KDS y bordes de controles.
+- Seguridad Fase 0.7: `pnpm audit` reportó siete vulnerabilidades; una alta de producción en `multer@2.4.0`, dos críticas de tooling en `tinypool` y cuatro adicionales. La auditoría de licencias de pnpm falló por índice local incompleto; el respaldo inspeccionó 607 manifiestos y detectó dos paquetes sin licencia declarada. No se añadieron dependencias ni se modificaron componentes.
+- Decisión Fase 0.7: **NO-GO condicionado** para iniciar módulos funcionales hasta remediar seguridad, reflow Flutter, foco modal y contraste mediante cambio aprobado, repetir Android físico y validar la propuesta de CI. Informe: `docs/design/VALIDACION-FASE-0.7.md`; CI propuesta: `docs/CI-FASE-0.7.md`.
 
 ## Próxima revisión
 
-La publicación de la línea base 0.1–0.5 y la integración aprobada de Fase 0.6 están cerradas. La rama local `feature/phase-0.7-design-validation` queda preparada desde `Master`, sin publicar y sin implementación. Fase 0.7, desarrollo funcional, módulos de negocio e integraciones permanecen sin iniciar hasta nueva autorización expresa.
+La publicación de la línea base 0.1–0.5 y la integración aprobada de Fase 0.6 están cerradas. Fase 0.7 completó la auditoría integral sin modificar diseños ni componentes y queda pendiente de corrección/aprobación por hallazgos P1/P2. Desarrollo funcional, módulos de negocio e integraciones permanecen sin iniciar hasta remediación y autorización expresa.
