@@ -1,7 +1,9 @@
 # Fase 0.7 — Validación integral del diseño
 
-Fecha de ejecución: 2026-10-30  
-Rama: `feature/phase-0.7-design-validation`  
+Fecha de ejecución: 2026-10-30
+
+Rama: `feature/phase-0.7-design-validation`
+
 Resultado: **validación completada; no-go condicionado para iniciar módulos funcionales**.
 
 ## Alcance y criterio
