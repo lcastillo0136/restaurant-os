@@ -128,3 +128,18 @@ No se recomienda iniciar módulos funcionales todavía. Condiciones mínimas par
 6. Ejecutar la propuesta de CI en un Pull Request y fijar checks obligatorios.
 
 Hasta entonces la línea aprobada permanece íntegra, pero la preparación para desarrollo funcional es **NO-GO condicionado**.
+
+## Addendum de remediación 0.7.1 — 2026-10-30
+
+Los bloqueos obligatorios anteriores fueron remediados en la misma rama y se verifican en `docs/design/REMEDIACION-FASE-0.7.1.md`:
+
+- Multer y las vulnerabilidades críticas/moderadas de Vitest/tinypool resueltas; auditoría de producción en cero.
+- Reflow Flutter a 320 dp y texto 200 % corregido y cubierto por pruebas.
+- Modal React con contención/restauración de foco y teclado cubierto por pruebas.
+- Contraste corregido localmente sin modificar tokens canónicos.
+- Peer mismatch webpack/schema-utils resuelto.
+- Inventario reproducible de 554 licencias sin entradas no declaradas.
+
+La auditoría completa conserva únicamente `deepmerge 4.3.1`, vulnerabilidad baja de tooling sin parche publicado. Android físico permaneció **NO EVALUADO** por ausencia de dispositivo; el APK sí compiló.
+
+Dictamen actualizado por Fase 0.7.1: **GO técnico pendiente de aprobación del propietario**, sin cerrar Fase 0 ni autorizar Fase 1.

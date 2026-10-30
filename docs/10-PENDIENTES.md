@@ -15,8 +15,5 @@
 - Licencia del código para distribución pública. La publicación en GitHub no equivale a una licencia open source ni autoriza reutilización.
 - Autorización verificable para redistribuir las cuatro imágenes oficiales de `design/reference/`; hasta entonces permanecen fuera de Git y de paquetes públicos.
 - La compilación Android dentro de sandboxes restringidos necesita acceso de escritura a la caché de Flutter; fuera del sandbox se verificaron APK e instalación física. Conservar esta condición en la automatización futura.
-- Fase 0.7: corregir la vulnerabilidad alta de producción de `multer@2.4.0` y las vulnerabilidades críticas de `tinypool`/Vitest antes de declarar preparación funcional; repetir `pnpm audit` después de actualizar mediante una rama autorizada.
-- Fase 0.7: adaptar `ProductCard` y `CartSummary` a 320 dp con texto al 200 %, y agregar pruebas de reflow/orientación sin cambiar las decisiones visuales aprobadas.
-- Fase 0.7: corregir contención y restauración de foco del modal React y someter los ajustes de contraste semántico (`warning`, `danger`, bordes) a ADR/aprobación visual antes de modificar tokens.
-- Fase 0.7: repetir validación física Android con orientación, TalkBack/teclado y los recorridos críticos; no se detectó dispositivo Android durante la auditoría del 2026-10-30.
-- Fase 0.7: regenerar inventario reproducible de licencias desde una instalación limpia y revisar `busboy@1.6.0` y `streamsearch@1.1.0`, cuyos manifiestos instalados no declaran licencia.
+- Fase 0.7.1: repetir validación física Android con orientación, TalkBack/teclado y los recorridos críticos; no se detectó dispositivo Android durante la remediación del 2026-10-30.
+- Fase 0.7.1: vigilar `deepmerge@4.3.1` (GHSA-gcqx-w48m-w2h4), vulnerabilidad baja transitiva de Nest CLI sin parche publicado; no afecta el grafo de producción y no se aplicó una sustitución no soportada.

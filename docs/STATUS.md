@@ -24,6 +24,7 @@ Fecha: 2026-10-30
 - [x] Fase 0.6 implementada, validada, aprobada formalmente e integrada en `Master` mediante el Pull Request #1.
 - [x] Rama local `feature/phase-0.7-design-validation` creada desde `Master` actualizado; no publicada.
 - [x] Fase 0.7 ejecutada como validación integral documental/técnica; resultado no-go condicionado por hallazgos P1/P2, pendiente de corrección y aprobación del propietario.
+- [x] Fase 0.7.1 ejecutada: bloqueos obligatorios remediados, dictamen GO técnico pendiente de aprobación del propietario; Fase 0 no cerrada y Fase 1 no iniciada.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
@@ -102,7 +103,12 @@ Fecha: 2026-10-30
 - Accesibilidad Fase 0.7: prueba a 320 dp/texto 200 % detectó overflow en `ProductCard` (104 px) y `CartSummary` (60 px); `AttentionRequestCard` pasó. La navegación real por teclado del catálogo React confirmó orden básico, pero el modal no contiene ni restaura el foco. Contraste insuficiente detectado en warning de temas claros, danger de KDS y bordes de controles.
 - Seguridad Fase 0.7: `pnpm audit` reportó siete vulnerabilidades; una alta de producción en `multer@2.4.0`, dos críticas de tooling en `tinypool` y cuatro adicionales. La auditoría de licencias de pnpm falló por índice local incompleto; el respaldo inspeccionó 607 manifiestos y detectó dos paquetes sin licencia declarada. No se añadieron dependencias ni se modificaron componentes.
 - Decisión Fase 0.7: **NO-GO condicionado** para iniciar módulos funcionales hasta remediar seguridad, reflow Flutter, foco modal y contraste mediante cambio aprobado, repetir Android físico y validar la propuesta de CI. Informe: `docs/design/VALIDACION-FASE-0.7.md`; CI propuesta: `docs/CI-FASE-0.7.md`.
+- Remediación Fase 0.7.1 (2026-10-30): `multer 2.5.0`, Vitest/@vitest 4.1.12 y webpack 5.112.2 resueltos mediante actualización directa y sustituciones exactas; auditoría de producción 0 vulnerabilidades, auditoría completa solo 1 baja sin parche en `deepmerge` de tooling y `pnpm peers check` sin incidencias.
+- Accesibilidad Fase 0.7.1: `ProductCard` y `CartSummary` pasan texto 200 % a 320 dp; modal React contiene/restaura foco, maneja Escape/cancel y estado pendiente. Contrastes locales warning/danger/borde/foco cumplen los umbrales calculados sin cambiar los siete tokens.
+- Regresión Fase 0.7.1: web-ui typecheck/lint/build y 12/12 pruebas; Admin/KDS/POS builds; API typecheck/build; Flutter analyze y 10/10 pruebas; table_kiosk analyze y 1/1; validadores 0.1–0.7.1, HTTP y auditoría pública correctos.
+- Android Fase 0.7.1: sin dispositivo Android, validación física NO EVALUADA. APK del catálogo compilado: 165403862 bytes, SHA-256 `A0E8543CE8EA71F4C7296089A12ECE48CED80E6BB04D22594BF7559440A4B41F`.
+- Evidencia Fase 0.7.1: captura real Edge 1600×5000 en `design/validation/phase-0.7.1/react-catalog-remediated.png`; informe en `docs/design/REMEDIACION-FASE-0.7.1.md`.
 
 ## Próxima revisión
 
-La publicación de la línea base 0.1–0.5 y la integración aprobada de Fase 0.6 están cerradas. Fase 0.7 completó la auditoría integral sin modificar diseños ni componentes y queda pendiente de corrección/aprobación por hallazgos P1/P2. Desarrollo funcional, módulos de negocio e integraciones permanecen sin iniciar hasta remediación y autorización expresa.
+La publicación de la línea base 0.1–0.5 y la integración aprobada de Fase 0.6 están cerradas. Fase 0.7.1 remedia los bloqueos obligatorios y emite GO técnico pendiente de aprobación del propietario. Fase 0 no se cierra automáticamente; desarrollo funcional, módulos de negocio e integraciones permanecen sin iniciar hasta autorización expresa.
