@@ -126,4 +126,4 @@ Este GO no cierra automáticamente la Fase 0, no inicia Fase 1 y no equivale a p
 
 ## Aprobación formal — 2026-10-30
 
-El propietario aprobó la remediación técnica 0.7.1 y el cierre técnico de Fase 0. La integración en `Master` continúa sujeta a revisión del Pull Request; Fase 1 permanece sin iniciar. El modo normal de `scripts/validate-phase-0.7.1.mjs` conserva la comprobación de los cuatro hashes privados y `--review-package` valida el contenido redistribuible sin requerirlos, rechazando además cualquier PNG privado incluido por error.
+El propietario aprobó la remediación técnica 0.7.1 y el cierre técnico de Fase 0. La integración se completó mediante el Pull Request #2 y merge commit `024975e0311140df79c0be201ac2c590ce6c7155`; la etiqueta `design-v0.7.1-approved` apunta a esa línea base. Fase 1 permanece sin iniciar. El modo normal de `scripts/validate-phase-0.7.1.mjs` conserva la comprobación de los cuatro hashes privados y `--review-package` valida el contenido redistribuible sin requerirlos, rechazando además cualquier PNG privado incluido por error.

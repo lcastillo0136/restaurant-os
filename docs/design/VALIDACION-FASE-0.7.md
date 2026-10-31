@@ -147,3 +147,5 @@ Dictamen actualizado por Fase 0.7.1: **GO técnico pendiente de aprobación del 
 ## Aprobación formal — 2026-10-30
 
 El propietario aprobó formalmente la validación de Fase 0.7, la remediación 0.7.1 y el cierre técnico de Fase 0. Este registro sustituye el estado pendiente del dictamen anterior, pero no declara preparación productiva, no inicia Fase 1 y no autoriza fusionar automáticamente el Pull Request de cierre.
+
+La autorización posterior de integración se ejecutó mediante el Pull Request #2 y merge commit `024975e0311140df79c0be201ac2c590ce6c7155`. La etiqueta `design-v0.7.1-approved` identifica esa línea base; Fase 1 permanece sin iniciar.

@@ -4,7 +4,9 @@ Fecha de aprobación: 30 de octubre de 2026
 
 Rama de cierre: `feature/phase-0.7-design-validation`
 
-Estado: **Fase 0 cerrada técnicamente y aprobada; integración en `Master` pendiente de aprobación del Pull Request**.
+Estado: **Fase 0 cerrada técnicamente, aprobada e integrada en `Master`**.
+
+Integración: Pull Request #2, merge commit `024975e0311140df79c0be201ac2c590ce6c7155`, etiqueta anotada `design-v0.7.1-approved`.
 
 Este cierre acredita la definición, diseño y validación técnica de la experiencia. No declara preparación productiva, no implementa procesos transaccionales y no autoriza iniciar Fase 1.
 

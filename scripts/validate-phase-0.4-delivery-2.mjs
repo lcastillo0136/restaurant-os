@@ -3,8 +3,10 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, extname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { verifyOfficialReferences } from './official-reference-policy.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const reviewPackage = process.argv.includes('--review-package');
 const mockupRoot = resolve(root, 'design', 'mockups', 'phase-0.4');
 const tokenRoot = resolve(root, 'design', 'tokens');
 const read = path => { if (!existsSync(path)) throw new Error(`Ausente: ${path}`); return readFileSync(path, 'utf8'); };
@@ -86,8 +88,7 @@ const colors=JSON.parse(read(resolve(tokenRoot,'colors.json'))); const tokensCss
 for(const [theme,values] of Object.entries(colors.themes)) for(const [name,value] of Object.entries(values)) if(!tokensCss.includes(`--${name}: ${value};`)) fail(`${theme}.${name} no está traducido`);
 if(!tokensCss.includes('--target-min: 48px;')) fail('Mínimo táctil distinto de 48 px.');
 
-const references=new Map([['01-admin-aprobado.png','b816382c0cfea84469885ea017c6ade6b7b161a6c831e9dfc4266e7dc6bb54c3'],['02-tablet-aprobado.png','36a87f4e58f83aea107278c431dc46f989a8c9cca772378591674644e5c357e7'],['03-kds-aprobado.png','076cd7b14599c003c9afb5521a1dbf0de5cdfc7505e7af1d09787075f9196fdd'],['04-pos-aprobado.png','0d326b5789506961793faa867b0138439eb26ade6cddfb69b426f038351a3c0e']]);
-for(const [file,expected] of references) if(sha(resolve(root,'design','reference',file))!==expected) fail(`Referencia oficial alterada: ${file}`);
+const referenceResult=verifyOfficialReferences(root,reviewPackage);
 
 function pngDimensions(path){ const b=readFileSync(path); if(b.subarray(0,8).toString('hex')!=='89504e470d0a1a0a') fail(`PNG inválido: ${path}`); return [b.readUInt32BE(16),b.readUInt32BE(20)]; }
 const approvedCaptureNames=[...approvedHashes.keys()].filter(x=>x.startsWith('captures/')).map(x=>x.slice(9));
@@ -103,4 +104,4 @@ console.log('- 15 fuentes/capturas aprobadas conservan su SHA-256.');
 console.log('- 47 PNG reales válidos (46 pantallas + variante horizontal TAB-03).');
 console.log('- 4 temas, 7 tokens, objetivos táctiles y recursos locales verificados.');
 console.log('- Estados UX/ACK, KDS desconectado y resúmenes POS contextuales verificados.');
-console.log('- 4 referencias oficiales conservan los SHA-256 originales.');
+console.log(`- ${referenceResult}`);

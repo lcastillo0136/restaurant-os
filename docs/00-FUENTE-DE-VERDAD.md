@@ -13,7 +13,7 @@
 ## Decisión de plataformas — ACTUALIZACIÓN
 - **Flutter + Dart** para **toda app móvil/tableta**, comenzando por `table_kiosk` Android. Incluye futuras apps de meseros y cocina en tableta. Android nativo/plugin o platform channel cuando se necesite NFC, QR, modo kiosco o periféricos; verificar hardware.
 - **React + TypeScript** para escritorio web: administración y POS; KDS web si monitor de cocina lo requiere.
-- **NestJS + TypeScript**, PostgreSQL, Prisma; API REST/WebSocket; Docker Compose local, proxy HTTPS.
+- **NestJS + TypeScript**, PostgreSQL, Prisma; API REST/WebSocket. En Fase 1.1 el desarrollo local oficial es nativo en Windows; Docker Compose se conserva como alternativa no obligatoria. El proxy HTTPS LAN se decide antes de exponer servicios fuera de loopback.
 - Reutilizar **tokens semánticos y contratos**, no widgets entre React y Flutter.
 
 ## Decisión visual UX/UI v1.0 — APROBADA 100%

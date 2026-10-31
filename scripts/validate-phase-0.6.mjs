@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { verifyOfficialReferences } from './official-reference-policy.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const reviewPackage = process.argv.includes('--review-package');
@@ -95,19 +96,7 @@ if (/\b(?:fetch|XMLHttpRequest|WebSocket|localStorage|sessionStorage|indexedDB)\
 }
 if (/https?:\/\//.test(productSources)) fail('Componentes o catálogos contienen recursos externos.');
 
-const expectedReferences = new Map([
-  ['01-admin-aprobado.png', 'b816382c0cfea84469885ea017c6ade6b7b161a6c831e9dfc4266e7dc6bb54c3'],
-  ['02-tablet-aprobado.png', '36a87f4e58f83aea107278c431dc46f989a8c9cca772378591674644e5c357e7'],
-  ['03-kds-aprobado.png', '076cd7b14599c003c9afb5521a1dbf0de5cdfc7505e7af1d09787075f9196fdd'],
-  ['04-pos-aprobado.png', '0d326b5789506961793faa867b0138439eb26ade6cddfb69b426f038351a3c0e'],
-]);
-for (const [file, expected] of expectedReferences) {
-  const relative = `design/reference/${file}`;
-  if (reviewPackage && !existsSync(resolve(root, relative))) continue;
-  const path = requireFile(relative);
-  const actual = createHash('sha256').update(readFileSync(path)).digest('hex');
-  if (actual !== expected) fail(`Referencia oficial alterada: ${file}`);
-}
+const referenceResult = verifyOfficialReferences(root, reviewPackage);
 
 for (const file of ['react-catalog.png', 'react-catalog-full.png']) {
   const buffer = readFileSync(requireFile(`design/validation/phase-0.6/${file}`));
@@ -134,8 +123,4 @@ console.log('- Adaptadores CSS y ThemeData mantienen colores, espaciado y objeti
 console.log(`- ${reactComponents.length} componentes React y ${flutterComponents.length} componentes Flutter verificados.`);
 console.log('- Catálogos, pruebas, foco, semántica y reducción de movimiento verificados.');
 console.log('- Sin red, persistencia, backend ni recursos externos en componentes o catálogos.');
-if (reviewPackage && !existsSync(resolve(root, 'design/reference'))) {
-  console.log('- 2 capturas React y 1 captura Flutter Android reales verificadas; referencias privadas ausentes por política de redistribución.');
-} else {
-  console.log('- 4 referencias oficiales intactas; 2 capturas React y 1 captura Flutter Android reales verificadas.');
-}
+console.log(`- 2 capturas React y 1 captura Flutter Android reales verificadas. ${referenceResult}`);
