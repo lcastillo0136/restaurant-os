@@ -34,8 +34,8 @@ Fecha: 2026-10-30
 - [x] Ajuste Fase 1.2 (2026-10-31): `user_roles` ahora identifica explícitamente su organización y exige por FK compuesta que una sucursal de alcance `BRANCH` pertenezca a ella. La corrección se entrega en la migración incremental `20261031000200_user_roles_organization_isolation`; no modifica la migración inicial. Typecheck, build y la prueba transaccional de aislamiento pasaron; esta última rechazó una sucursal de otra organización y revirtió sus datos técnicos, dejando `0 users`, `0 roles` y `0 user_roles`.
 - [x] Fase 1.1 aprobada por el propietario para integración mediante Pull Request hacia `Master`, en modo nativo Windows sin Docker. GitHub Actions del Pull Request #3 ejecutó y aprobó los jobs de integridad/diseño, React, API, Flutter y seguridad. La única limitación aceptada pendiente es la prueba física con WAN aislada; no autoriza Fase 1.2.
 - [x] Integración oficial de Fase 1.1: Pull Request #3 fusionado mediante merge commit `214d8920a46b50f658ac223abaff20ca7ba87a49`; `Master` local/remoto coinciden y la etiqueta anotada `foundation-v1.1-approved` fue publicada sobre ese merge. La rama origen `feature/phase-1-foundation` se conserva.
-- [x] Rama local `feature/phase-1.2-database` creada desde `Master` integrado; conserva la implementación local de Fase 1.2 y no se publicó.
-- [x] Fase 1.2: base PostgreSQL fundacional implementada localmente en `feature/phase-1.2-database`; pendiente de revisión del propietario, sin publicación, Pull Request ni integración.
+- [x] Rama `feature/phase-1.2-database` creada desde `Master` integrado; conserva la implementación aprobada de Fase 1.2 y está autorizada para publicarse mediante Pull Request.
+- [x] Fase 1.2 aprobada formalmente por el propietario el 2026-10-31. La integración GitHub permanece pendiente de Pull Request, checks reales y revisión; Fase 1.3 no ha iniciado.
 - [x] Migración Prisma inicial, seed ficticio idempotente y comprobación NestJS–PostgreSQL ejecutados contra `restaurant_dev` nativo en loopback.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
@@ -128,4 +128,4 @@ Fecha: 2026-10-30
 
 ## Próxima revisión
 
-La Fase 1.2 está implementada y validada localmente en `feature/phase-1.2-database`, pendiente de revisión expresa del propietario. No se publicó la rama ni se abrió Pull Request; no se iniciaron módulos comerciales ni Fase 1.3. La siguiente autorización deberá delimitar el módulo funcional posterior y las políticas RBAC/auditoría necesarias.
+La Fase 1.2 está aprobada y autorizada para revisión mediante Pull Request desde `feature/phase-1.2-database`. La integración en `Master` depende de checks reales y revisión posterior; no se iniciaron módulos comerciales ni Fase 1.3. La siguiente autorización deberá delimitar el módulo funcional posterior y las políticas RBAC/auditoría necesarias.
