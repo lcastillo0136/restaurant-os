@@ -87,6 +87,7 @@ const nativePostgreSqlScript = read('scripts/ops/Test-RestaurantNativePostgreSql
 for (const text of ['phase_1_1_technical_verification', "listenAddresses -ne '127.0.0.1'", 'DROP SCHEMA']) {
   requireText(nativePostgreSqlScript, text, 'Prueba PostgreSQL nativa');
 }
+requireText(read('scripts/ops/Native-Restaurant.Common.ps1'), 'Get-RestaurantPostgreSqlCommand', 'Comandos PostgreSQL nativos');
 
 const operationalScripts = [
   'scripts/ops/Start-RestaurantServices.ps1',

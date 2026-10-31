@@ -22,7 +22,7 @@ pnpm install --frozen-lockfile
 ./scripts/ops/Test-RestaurantNativeRequirements.ps1 -IncludeFlutter
 ```
 
-La API tiene valores seguros por defecto (`127.0.0.1:3000`, modo `development`, CORS vacío). No guardar contraseñas de PostgreSQL en archivos versionados; los scripts técnicos la solicitan como valor seguro sólo durante su ejecución.
+La API tiene valores seguros por defecto (`127.0.0.1:3000`, modo `development`, CORS vacío). No guardar contraseñas de PostgreSQL en archivos versionados; los scripts técnicos la solicitan como valor seguro sólo durante su ejecución. Los scripts localizan `psql` y `pg_isready` en el PATH o, si el instalador no actualizó la sesión actual, en `C:\Program Files\PostgreSQL\*\bin` sin modificar PATH global.
 
 ### PostgreSQL nativo
 

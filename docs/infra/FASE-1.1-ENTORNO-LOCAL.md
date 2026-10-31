@@ -16,18 +16,18 @@ Esta entrega prepara el entorno reproducible de desarrollo nativo: Node.js, PNPM
 | Virtualización de firmware | Desactivada; no es requisito del modo nativo |
 | WSL / Docker Desktop | No instalados; por decisión del propietario no se instalan ni se solicitan cambios de BIOS/UEFI |
 | Node.js / PNPM | `24.20.0` / `11.25.0`, disponibles |
-| PostgreSQL nativo | No instalado: sin binario `psql`, servicio, registro de instalación ni escucha en `5432`/`5433` |
+| PostgreSQL nativo | PostgreSQL `17.11-5` instalado; `psql` y `pg_isready` disponibles en `C:\Program Files\PostgreSQL\17\bin`; servicio `postgresql-x64-17` automático y en ejecución |
 | Puertos iniciales | `3000`, `5173`, `5174`, `5175`, `5432` y `5433` libres durante la inspección |
-| Instalador propuesto | PostgreSQL `17.11-5` oficial, `PostgreSQL.PostgreSQL.17` de Winget; SHA-256 `612c7f5400a003aaffa0372cb273eed52278f93c680ab911eb9cb2229e329072`; no descargado ni ejecutado |
+| Instalador verificado | PostgreSQL `17.11-5` oficial, `PostgreSQL.PostgreSQL.17` de Winget; SHA-256 `612c7f5400a003aaffa0372cb273eed52278f93c680ab911eb9cb2229e329072` y firma Authenticode válida de EnterpriseDB Corporation |
 
-El equipo satisface el perfil de PostgreSQL 17. La instalación gráfica oficial requiere privilegios de administrador y la contraseña inicial se debe introducir localmente, nunca en un archivo versionado ni en esta documentación. Antes de ejecutar el instalador elevado se requiere autorización adicional del propietario. Se prevé instalar sólo el servidor y herramientas de línea de comandos, en `C:\Program Files\PostgreSQL\17` con datos en `C:\Program Files\PostgreSQL\17\data`; el servicio y la escucha se verificarán y se restringirán a `127.0.0.1` antes de usarlo.
+El equipo satisface el perfil de PostgreSQL 17. El instalador elevado se ejecutó tras autorización expresa; la contraseña inicial se introdujo localmente por el propietario y no se leyó, imprimió ni guardó en el repositorio. PostgreSQL quedó en `C:\Program Files\PostgreSQL\17`, con datos en `C:\Program Files\PostgreSQL\17\data`. Se respaldó `postgresql.conf` antes de cambiar únicamente `listen_addresses` a `127.0.0.1`; el servicio se reinició mediante UAC sin modificar firewall ni otros servicios.
 
 ## Servicios y límites
 
 | Servicio | Estado en Fase 1.1 | Acceso |
 | --- | --- | --- |
 | `api` NestJS | Operativo técnicamente; sólo `GET /api/v1/system/health` y `GET /api/v1/system/status` | Host local `127.0.0.1:${API_PORT}` |
-| PostgreSQL nativo | Pendiente de instalación; sin esquema, migraciones ni datos de negocio | Sólo `127.0.0.1:5432` tras la configuración |
+| PostgreSQL nativo | Servicio autenticado, sin esquema/migraciones/datos de negocio; base vacía `restaurant_dev` preparada | Sólo `127.0.0.1:5432` |
 
 El backend no declara una conexión o una base de datos lista: el estado informa literalmente `preliminary-infrastructure-only`. La futura autoridad transaccional seguirá siendo PostgreSQL, pero integrarla es trabajo de la Fase 1.2 autorizada por separado.
 
@@ -36,9 +36,9 @@ El backend no declara una conexión o una base de datos lista: el estado informa
 ### Modo A — Desarrollo nativo Windows (oficial actualmente)
 
 - Node.js, PNPM y NestJS se ejecutan directamente en Windows; la API valida host, puerto, modo y CORS por variables de entorno.
-- PostgreSQL 17 será un servicio local de Windows y escuchará exclusivamente en `127.0.0.1:5432`; no se abrirán reglas de firewall ni accesos externos.
+- PostgreSQL 17 es un servicio local de Windows y escucha exclusivamente en `127.0.0.1:5432`; no se abrieron reglas de firewall ni accesos externos.
 - Administración, KDS y POS se ejecutan en `127.0.0.1:5173`, `127.0.0.1:5174` y `127.0.0.1:5175`, respectivamente. `strictPort` evita que Vite cambie de puerto sin dejar evidencia.
-- La prueba de persistencia crea el esquema temporal aislado `phase_1_1_technical_verification`, reinicia únicamente el servicio PostgreSQL detectado y elimina ese esquema sólo después de confirmar el marcador. No toca tablas de negocio.
+- La prueba de persistencia creó el esquema temporal aislado `phase_1_1_technical_verification` y el marcador `phase-1.1` en la base administrativa `postgres`, reinició únicamente PostgreSQL, confirmó el marcador y limpió el esquema. `restaurant_dev` permanece vacía; no se tocaron tablas de negocio.
 
 ### Modo B — Docker Compose (alternativo, no obligatorio)
 

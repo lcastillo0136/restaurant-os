@@ -61,6 +61,16 @@ function Get-RestaurantNativePostgreSqlService([string]$ServiceName) {
   $candidates[0]
 }
 
+function Get-RestaurantPostgreSqlCommand([string]$Name) {
+  $command = Get-Command $Name -ErrorAction SilentlyContinue
+  if ($null -ne $command) { return $command.Source }
+
+  $candidates = @(Get-ChildItem -Path "C:\Program Files\PostgreSQL\*\bin\$Name.exe" -File -ErrorAction SilentlyContinue |
+    Sort-Object FullName -Descending)
+  if ($candidates.Count -eq 0) { throw "No se encontró el ejecutable PostgreSQL requerido: $Name." }
+  $candidates[0].FullName
+}
+
 function Assert-RestaurantPortAvailable([int]$Port) {
   $listener = Get-NetTCPConnection -State Listen -LocalPort $Port -ErrorAction SilentlyContinue | Select-Object -First 1
   if ($null -ne $listener) { throw "El puerto local $Port ya está ocupado por el proceso $($listener.OwningProcess)." }

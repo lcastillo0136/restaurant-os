@@ -23,7 +23,7 @@ $plainPassword = $null
 try {
   $plainPassword = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer)
   $env:PGPASSWORD = $plainPassword
-  $psql = (Get-Command psql -ErrorAction Stop).Source
+  $psql = Get-RestaurantPostgreSqlCommand 'psql'
   $psqlBase = @('-X', '--no-password', '-h', '127.0.0.1', '-p', $PostgreSqlPort, '-U', $DatabaseUser, '-d', 'postgres', '-v', 'ON_ERROR_STOP=1')
 
   $listenAddresses = (& $psql @psqlBase '-tAc' 'SHOW listen_addresses;').Trim()
@@ -54,7 +54,7 @@ try {
     Restart-Service -Name $service.Name -ErrorAction Stop
     $deadline = (Get-Date).AddSeconds(60)
     do {
-      & (Get-Command pg_isready -ErrorAction Stop).Source -h 127.0.0.1 -p $PostgreSqlPort -U $DatabaseUser -d postgres | Out-Null
+      & (Get-RestaurantPostgreSqlCommand 'pg_isready') -h 127.0.0.1 -p $PostgreSqlPort -U $DatabaseUser -d postgres | Out-Null
       if ($LASTEXITCODE -eq 0) { break }
       Start-Sleep -Milliseconds 750
     } while ((Get-Date) -lt $deadline)
