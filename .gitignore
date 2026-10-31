@@ -15,6 +15,7 @@ coverage/
 .env
 .env.*
 !.env.example
+!.env.database.example
 *.local
 infra/.data/
 *.db
@@ -23,6 +24,7 @@ infra/.data/
 *.dump
 *.backup
 backups/
+apps/api/src/generated/
 
 # Private keys, certificates, signing material and credentials
 *.pem

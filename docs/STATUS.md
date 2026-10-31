@@ -1,5 +1,5 @@
 # Estado de proyecto
-Fecha: 2026-10-30
+Fecha: 2026-10-31
 - [x] Documentación de fuente de verdad inicial preparada.
 - [x] Replanteo plataforma móvil/tablet como Flutter.
 - [x] Las cuatro referencias PNG son la fuente de verdad visual oficial; SHA-256 originales suministrados por el propietario y coincidentes, documentados en `docs/design/REFERENCIAS-VISUALES.md`.
@@ -30,9 +30,14 @@ Fecha: 2026-10-30
 - [x] Fase 1.1 aprobada formalmente por el propietario con condición operativa pendiente. El modo oficial de cierre es desarrollo nativo Windows; Docker Compose queda conservado como alternativa futura no obligatoria.
 - [x] ADR-010 aprobado: no instalar Docker Desktop ni WSL 2, ni solicitar cambios de BIOS/UEFI para Fase 1.1.
 - [x] Fase 1.1: PostgreSQL 17.11-5 nativo instalado y validado; servicio `postgresql-x64-17`, healthcheck, autenticación local, base vacía `restaurant_dev`, reinicio y persistencia técnica aislada correctos. La prueba física aislada sin WAN permanece no evaluada y no se simuló.
+- [x] Fase 1.2 (2026-10-31): Prisma 7.10.1 con adaptador PostgreSQL quedó configurado en `apps/api`; `restaurant_app` autenticó contra `restaurant_dev` en `127.0.0.1:5432` con privilegios de esquema mínimos. La migración `20261031000100_initial_foundation` creó organizaciones, sucursales, identidades sin contraseñas, RBAC y auditoría técnica, con UUID, claves foráneas, índices, UTC y restricciones de alcance por sucursal. El primer intento se detuvo antes de crear tablas porque incluía un `CREATE SCHEMA` redundante que requería privilegio global; se retiró, el intento se marcó revertido y la migración corregida se aplicó correctamente. Seed idempotente: 1 organización y 1 sucursal ficticias; 0 usuarios, roles, permisos y eventos. `migrate status`, 8 pruebas API y la prueba real NestJS–PostgreSQL pasaron. Respaldo custom local de 22,228 bytes y `pg_restore --list` correctos; no se restauró sobre ninguna base.
+- [x] Ajuste Fase 1.2 (2026-10-31): `user_roles` ahora identifica explícitamente su organización y exige por FK compuesta que una sucursal de alcance `BRANCH` pertenezca a ella. La corrección se entrega en la migración incremental `20261031000200_user_roles_organization_isolation`; no modifica la migración inicial. Typecheck, build y la prueba transaccional de aislamiento pasaron; esta última rechazó una sucursal de otra organización y revirtió sus datos técnicos, dejando `0 users`, `0 roles` y `0 user_roles`.
 - [x] Fase 1.1 aprobada por el propietario para integración mediante Pull Request hacia `Master`, en modo nativo Windows sin Docker. GitHub Actions del Pull Request #3 ejecutó y aprobó los jobs de integridad/diseño, React, API, Flutter y seguridad. La única limitación aceptada pendiente es la prueba física con WAN aislada; no autoriza Fase 1.2.
-- [ ] Fase 1.2 y siguientes: no autorizadas.
-- [ ] Migraciones y API ejecutadas.
+- [x] Integración oficial de Fase 1.1: Pull Request #3 fusionado mediante merge commit `214d8920a46b50f658ac223abaff20ca7ba87a49`; `Master` local/remoto coinciden y la etiqueta anotada `foundation-v1.1-approved` fue publicada sobre ese merge. La rama origen `feature/phase-1-foundation` se conserva.
+- [x] Rama `feature/phase-1.2-database` creada desde `Master` integrado; conserva la implementación aprobada de Fase 1.2 y está autorizada para publicarse mediante Pull Request.
+- [x] Fase 1.2 aprobada formalmente por el propietario el 2026-10-31. La integración GitHub permanece pendiente de Pull Request, checks reales y revisión; Fase 1.3 no ha iniciado.
+- [x] Integración de Fase 1.2 autorizada formalmente por el propietario el 2026-10-31: publicación de la rama, Pull Request hacia `Master`, checks obligatorios de GitHub Actions, merge commit condicionado a resultados exitosos, sincronización de `Master`, etiqueta verificable y preparación local de `feature/phase-1.3-backend`, sin iniciar su implementación.
+- [x] Migración Prisma inicial, seed ficticio idempotente y comprobación NestJS–PostgreSQL ejecutados contra `restaurant_dev` nativo en loopback.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
 
@@ -124,4 +129,4 @@ Fecha: 2026-10-30
 
 ## Próxima revisión
 
-La Fase 0 está cerrada, aprobada e integrada en `Master`, con línea base `design-v0.7.1-approved`. Fase 1, desarrollo funcional, módulos de negocio e integraciones continúan sin iniciar y requieren autorización expresa separada.
+La Fase 1.2 está aprobada y autorizada para integración desde `feature/phase-1.2-database`, condicionada a los checks obligatorios de GitHub Actions y a la ausencia de conflictos, secretos, cambios inesperados o vulnerabilidades altas/críticas nuevas. No se iniciaron módulos comerciales ni Fase 1.3.

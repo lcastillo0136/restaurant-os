@@ -2,7 +2,9 @@ packages:
   - apps/*
   - packages/*
 allowBuilds:
+  '@prisma/engines': true
   esbuild: true
+  prisma: true
 overrides:
   multer@2.4.0: 2.5.0
   webpack@5.106.2: 5.112.2

@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
+import { loadDatabaseEnvironment } from './database/database-environment.js';
 import { AppModule } from './app.module.js';
 import { resolveApiEnvironment } from './environment.js';
 
 async function bootstrap(): Promise<void> {
+  loadDatabaseEnvironment();
   const environment = resolveApiEnvironment();
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api/v1');

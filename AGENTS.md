@@ -57,6 +57,99 @@ No debe intentar ejecutar exhaustivamente todas las pruebas disponibles por defe
 
 Esta política aplica a todas las fases futuras.
 
+## Prohibición de control del equipo
+
+Codex no tiene autorización para controlar ni administrar directamente la computadora del propietario.
+
+### Prohibiciones
+
+- No abrir aplicaciones de escritorio como pgAdmin.
+- No controlar ventanas, teclado, ratón ni interfaces gráficas del sistema.
+- No instalar ni desinstalar software.
+- No modificar configuraciones de Windows, BIOS o UEFI.
+- No iniciar, detener ni reiniciar servicios del sistema.
+- No crear ni modificar usuarios del sistema o cuentas de PostgreSQL.
+- No modificar reglas del firewall.
+- No acceder a gestores de contraseñas ni credenciales.
+- No ejecutar comandos administrativos ni solicitar UAC.
+- No modificar bases de datos locales sin autorización específica.
+
+### Actividades permitidas
+
+- Leer y modificar archivos de código y documentación del proyecto.
+- Crear scripts para que el propietario los revise y ejecute.
+- Desarrollar modelos y migraciones Prisma sin aplicarlos automáticamente.
+- Realizar análisis estático y pruebas del código que no alteren servicios ni datos locales.
+- Preparar instrucciones claras para operaciones que el propietario realizará manualmente.
+
+### Excepciones
+
+Cualquier operación que interactúe con servicios, datos o configuraciones del equipo requiere una autorización nueva, explícita y específica.
+
+No interpretar autorizaciones anteriores como permisos permanentes.
+
+### Política adicional
+
+Mantener vigente la política de pruebas eficientes.
+
+No ejecutar pruebas extensivas ni operaciones administrativas por defecto.
+
+No modificar archivos ajenos al proyecto.
+
+## Integración automática de fases aprobadas
+
+Cuando el propietario apruebe formalmente una fase de Restaurant OS, dicha aprobación autoriza:
+
+1. Registrar la aprobación en la documentación.
+2. Publicar la rama de desarrollo correspondiente.
+3. Crear un Pull Request hacia `Master`.
+4. Ejecutar las validaciones obligatorias de GitHub Actions.
+5. Fusionar el Pull Request mediante **merge commit**, siempre que se cumplan todas las condiciones de integración.
+6. Sincronizar `Master` local con `origin/Master`.
+7. Conservar una referencia verificable de la versión integrada.
+8. Preparar la rama de la siguiente fase, sin comenzar su implementación.
+
+No solicitar una segunda autorización para fusionar una fase que ya fue aprobada.
+
+### Condiciones obligatorias para fusionar
+
+La integración queda autorizada únicamente cuando:
+
+- Todos los checks obligatorios de GitHub Actions concluyan con éxito.
+- El Pull Request no tenga conflictos.
+- No existan vulnerabilidades nuevas de severidad alta o crítica sin resolver.
+- No existan secretos ni archivos privados expuestos.
+- Los cambios correspondan al alcance aprobado.
+- No haya modificaciones inesperadas en el Pull Request.
+- La rama de destino sea exactamente `Master`.
+- Se utilice merge commit, sin squash, rebase ni force push.
+
+Si alguna condición falla, detener la integración y reportar el problema.
+
+No omitir pruebas obligatorias para forzar una fusión.
+
+### Política de pruebas eficientes
+
+Mantener las reglas existentes de pruebas eficientes:
+
+- No repetir pruebas locales previamente aprobadas sin cambios relevantes.
+- Utilizar GitHub Actions como validación final del Pull Request.
+- Ejecutar pruebas adicionales únicamente cuando el riesgo del cambio lo justifique.
+- No realizar pruebas destructivas o innecesarias.
+
+### Restricciones permanentes
+
+- No iniciar automáticamente la fase siguiente.
+- No modificar configuraciones del equipo del propietario.
+- No abrir ni controlar aplicaciones de escritorio.
+- No instalar software sin autorización específica.
+- No acceder a credenciales privadas.
+- No ejecutar migraciones sobre bases de datos locales sin autorización específica.
+- No eliminar ramas, etiquetas ni historial de Git automáticamente.
+- No cambiar el nombre de la rama principal `Master`.
+
+La autorización de integración se refiere exclusivamente al repositorio Git y GitHub, no al control del equipo ni a despliegues productivos.
+
 ## Flujo Git vinculante
 1. `Master` contiene únicamente líneas base y entregas aprobadas.
 2. Todo desarrollo nuevo ocurre en ramas `feature/*`; las correcciones aisladas usan `fix/*`.

@@ -6,6 +6,9 @@ import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 
 const applicationRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..');
+const testDatabaseUrl = new URL('postgresql://127.0.0.1:5432/restaurant_dev?schema=public');
+testDatabaseUrl.username = 'restaurant_app';
+testDatabaseUrl.password = 'ci-test-password';
 
 async function waitForHealth(url, options = undefined) {
   const deadline = Date.now() + 10_000;
@@ -33,6 +36,7 @@ test('arranca la API y responde health en loopback', async (context) => {
       API_PORT: String(port),
       API_EXECUTION_MODE: 'test',
       API_ALLOWED_ORIGINS: 'http://localhost:5173',
+      DATABASE_URL: testDatabaseUrl.toString(),
     },
     stdio: 'pipe',
   });
@@ -52,7 +56,7 @@ test('arranca la API y responde health en loopback', async (context) => {
   assert.deepEqual(await response.json(), {
     service: 'restaurant-os-api',
     status: 'ok',
-    phase: '1.1',
+    phase: '1.2',
   });
   assert.equal(response.headers.get('access-control-allow-origin'), 'http://localhost:5173');
 

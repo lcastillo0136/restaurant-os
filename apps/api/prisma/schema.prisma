@@ -1,0 +1,149 @@
+generator client {
+  provider   = "prisma-client"
+  output     = "../src/generated/prisma"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum LifecycleStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+}
+
+enum RoleScope {
+  ORGANIZATION
+  BRANCH
+}
+
+model Organization {
+  id          String          @id @default(uuid()) @db.Uuid
+  code        String          @unique @db.VarChar(64)
+  displayName String          @map("display_name") @db.VarChar(160)
+  status      LifecycleStatus @default(ACTIVE)
+  createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+  branches    Branch[]
+  userRoles   UserRole[]
+  auditEvents AuditEvent[]
+
+  @@map("organizations")
+}
+
+model Branch {
+  id             String          @id @default(uuid()) @db.Uuid
+  organizationId String          @map("organization_id") @db.Uuid
+  code           String          @db.VarChar(64)
+  displayName    String          @map("display_name") @db.VarChar(160)
+  timeZone       String          @default("America/Mexico_City") @map("time_zone") @db.VarChar(64)
+  status         LifecycleStatus @default(ACTIVE)
+  createdAt      DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  userRoles      UserRole[]
+  auditEvents    AuditEvent[]
+
+  @@unique([organizationId, code])
+  @@unique([id, organizationId])
+  @@index([organizationId, status])
+  @@map("branches")
+}
+
+model AppUser {
+  id              String       @id @default(uuid()) @db.Uuid
+  identitySource  String       @map("identity_source") @db.VarChar(64)
+  identitySubject String       @map("identity_subject") @db.VarChar(160)
+  displayName     String?      @map("display_name") @db.VarChar(160)
+  status          UserStatus   @default(ACTIVE)
+  createdAt       DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
+  userRoles       UserRole[]
+  auditEvents     AuditEvent[]
+
+  @@unique([identitySource, identitySubject])
+  @@index([status])
+  @@map("users")
+}
+
+model Role {
+  id          String           @id @default(uuid()) @db.Uuid
+  code        String           @unique @db.VarChar(64)
+  displayName String           @map("display_name") @db.VarChar(120)
+  status      LifecycleStatus  @default(ACTIVE)
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  permissions RolePermission[]
+  userRoles   UserRole[]
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(uuid()) @db.Uuid
+  code        String           @unique @db.VarChar(96)
+  description String?          @db.VarChar(240)
+  status      LifecycleStatus  @default(ACTIVE)
+  createdAt   DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime         @updatedAt @map("updated_at") @db.Timestamptz(6)
+  roles       RolePermission[]
+
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String     @map("role_id") @db.Uuid
+  permissionId String     @map("permission_id") @db.Uuid
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Restrict)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model UserRole {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  roleId         String       @map("role_id") @db.Uuid
+  scope          RoleScope    @default(BRANCH)
+  branchId       String?      @map("branch_id") @db.Uuid
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  user           AppUser      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  role           Role         @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  branch         Branch?      @relation(fields: [branchId], references: [id], onDelete: Restrict)
+
+  @@index([userId, branchId])
+  @@index([roleId, branchId])
+  @@index([organizationId, userId, branchId])
+  @@map("user_roles")
+}
+
+model AuditEvent {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  branchId       String?      @map("branch_id") @db.Uuid
+  actorUserId    String?      @map("actor_user_id") @db.Uuid
+  eventType      String       @map("event_type") @db.VarChar(96)
+  entityType     String       @map("entity_type") @db.VarChar(96)
+  entityId       String       @map("entity_id") @db.Uuid
+  metadata       Json         @default("{}") @db.JsonB
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  branch         Branch?      @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  actorUser      AppUser?     @relation(fields: [actorUserId], references: [id], onDelete: Restrict)
+
+  @@index([organizationId, createdAt])
+  @@index([branchId, createdAt])
+  @@index([entityType, entityId])
+  @@map("audit_events")
+}
