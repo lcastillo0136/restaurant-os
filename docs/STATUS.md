@@ -31,6 +31,8 @@ Fecha: 2026-10-30
 - [x] ADR-010 aprobado: no instalar Docker Desktop ni WSL 2, ni solicitar cambios de BIOS/UEFI para Fase 1.1.
 - [x] Fase 1.1: PostgreSQL 17.11-5 nativo instalado y validado; servicio `postgresql-x64-17`, healthcheck, autenticación local, base vacía `restaurant_dev`, reinicio y persistencia técnica aislada correctos. La prueba física aislada sin WAN permanece no evaluada y no se simuló.
 - [x] Fase 1.1 aprobada por el propietario para integración mediante Pull Request hacia `Master`, en modo nativo Windows sin Docker. GitHub Actions del Pull Request #3 ejecutó y aprobó los jobs de integridad/diseño, React, API, Flutter y seguridad. La única limitación aceptada pendiente es la prueba física con WAN aislada; no autoriza Fase 1.2.
+- [x] Integración oficial de Fase 1.1: Pull Request #3 fusionado mediante merge commit `214d8920a46b50f658ac223abaff20ca7ba87a49`; `Master` local/remoto coinciden y la etiqueta anotada `foundation-v1.1-approved` fue publicada sobre ese merge. La rama origen `feature/phase-1-foundation` se conserva.
+- [x] Rama local `feature/phase-1.2-database` preparada desde `Master` integrado; no se publicó ni contiene implementación de Fase 1.2.
 - [ ] Fase 1.2 y siguientes: no autorizadas.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
