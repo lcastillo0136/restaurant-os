@@ -27,4 +27,4 @@ El backend continúa como monolito modular. No se crearon controladores, servici
 
 `PrismaService` es el único punto de acceso base. Se inicializa dentro del ciclo NestJS en modo de conexión diferida: el proceso puede responder liveness sin una consulta a PostgreSQL y `GET /system/database` realiza el `SELECT 1` de readiness. Al cerrar la aplicación, `onModuleDestroy` desconecta el cliente.
 
-No se modificó `schema.prisma`, no se creó migración y no se ejecutó operación alguna sobre `restaurant_dev` durante esta fase.
+No se modificó `schema.prisma`, no se creó migración ni se escribió dato alguno en `restaurant_dev`. La prueba aislada de readiness ejecutó únicamente `SELECT 1` mediante NestJS y Prisma.

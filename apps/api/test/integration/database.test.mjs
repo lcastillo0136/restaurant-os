@@ -49,7 +49,7 @@ test('conecta NestJS con PostgreSQL mediante la cuenta de aplicación local', as
   assert.deepEqual(await response.json(), {
     service: 'restaurant-os-api',
     status: 'ok',
-    phase: '1.2',
+    phase: '1.3',
     database: 'reachable',
   }, output.join(''));
 });
