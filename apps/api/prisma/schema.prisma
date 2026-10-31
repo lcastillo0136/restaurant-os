@@ -31,6 +31,7 @@ model Organization {
   createdAt   DateTime        @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime        @updatedAt @map("updated_at") @db.Timestamptz(6)
   branches    Branch[]
+  userRoles   UserRole[]
   auditEvents AuditEvent[]
 
   @@map("organizations")
@@ -50,6 +51,7 @@ model Branch {
   auditEvents    AuditEvent[]
 
   @@unique([organizationId, code])
+  @@unique([id, organizationId])
   @@index([organizationId, status])
   @@map("branches")
 }
@@ -108,18 +110,21 @@ model RolePermission {
 }
 
 model UserRole {
-  id        String    @id @default(uuid()) @db.Uuid
-  userId    String    @map("user_id") @db.Uuid
-  roleId    String    @map("role_id") @db.Uuid
-  scope     RoleScope @default(BRANCH)
-  branchId  String?   @map("branch_id") @db.Uuid
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  user      AppUser   @relation(fields: [userId], references: [id], onDelete: Restrict)
-  role      Role      @relation(fields: [roleId], references: [id], onDelete: Restrict)
-  branch    Branch?   @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String       @map("organization_id") @db.Uuid
+  userId         String       @map("user_id") @db.Uuid
+  roleId         String       @map("role_id") @db.Uuid
+  scope          RoleScope    @default(BRANCH)
+  branchId       String?      @map("branch_id") @db.Uuid
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  user           AppUser      @relation(fields: [userId], references: [id], onDelete: Restrict)
+  role           Role         @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  branch         Branch?      @relation(fields: [branchId], references: [id], onDelete: Restrict)
 
   @@index([userId, branchId])
   @@index([roleId, branchId])
+  @@index([organizationId, userId, branchId])
   @@map("user_roles")
 }
 

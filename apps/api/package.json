@@ -15,7 +15,8 @@
     "test": "pnpm build && node --test test/unit/environment.test.mjs test/unit/database-environment.test.mjs test/unit/system.controller.test.mjs test/unit/database.controller.test.mjs test/integration/health.test.mjs",
     "test:unit": "pnpm build && node --test test/unit/environment.test.mjs test/unit/database-environment.test.mjs test/unit/system.controller.test.mjs test/unit/database.controller.test.mjs",
     "test:integration": "pnpm build && node --test test/integration/health.test.mjs",
-    "test:database": "pnpm build && node --test test/integration/database.test.mjs"
+    "test:database": "pnpm build && node --test test/integration/database.test.mjs",
+    "test:database-isolation": "pnpm build && node --test test/integration/user-role-isolation.test.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",

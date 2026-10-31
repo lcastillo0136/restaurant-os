@@ -24,6 +24,10 @@ pnpm --filter @restaurant-os/api db:seed
 
 No se utiliza `prisma migrate dev` contra `restaurant_dev`: ese comando requiere una base sombra y privilegios de creación globales que la cuenta de aplicación no posee ni necesita.
 
+## Aislamiento de asignaciones RBAC
+
+`20261031000200_user_roles_organization_isolation` es una migración incremental. Añade `organization_id` obligatorio a `user_roles`, la FK de organización y la FK compuesta que vincula cada sucursal con esa organización. También ajusta la unicidad de asignación para que una misma identidad pueda tener el mismo rol en organizaciones distintas sin cruzar su alcance. No modifica la migración inicial ni datos existentes; la base de Fase 1.2 no contiene asignaciones de rol.
+
 ## Cambios futuros
 
 1. Diseñar el cambio aprobado en `schema.prisma`.
