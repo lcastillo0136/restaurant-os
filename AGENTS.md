@@ -57,6 +57,45 @@ No debe intentar ejecutar exhaustivamente todas las pruebas disponibles por defe
 
 Esta política aplica a todas las fases futuras.
 
+## Prohibición de control del equipo
+
+Codex no tiene autorización para controlar ni administrar directamente la computadora del propietario.
+
+### Prohibiciones
+
+- No abrir aplicaciones de escritorio como pgAdmin.
+- No controlar ventanas, teclado, ratón ni interfaces gráficas del sistema.
+- No instalar ni desinstalar software.
+- No modificar configuraciones de Windows, BIOS o UEFI.
+- No iniciar, detener ni reiniciar servicios del sistema.
+- No crear ni modificar usuarios del sistema o cuentas de PostgreSQL.
+- No modificar reglas del firewall.
+- No acceder a gestores de contraseñas ni credenciales.
+- No ejecutar comandos administrativos ni solicitar UAC.
+- No modificar bases de datos locales sin autorización específica.
+
+### Actividades permitidas
+
+- Leer y modificar archivos de código y documentación del proyecto.
+- Crear scripts para que el propietario los revise y ejecute.
+- Desarrollar modelos y migraciones Prisma sin aplicarlos automáticamente.
+- Realizar análisis estático y pruebas del código que no alteren servicios ni datos locales.
+- Preparar instrucciones claras para operaciones que el propietario realizará manualmente.
+
+### Excepciones
+
+Cualquier operación que interactúe con servicios, datos o configuraciones del equipo requiere una autorización nueva, explícita y específica.
+
+No interpretar autorizaciones anteriores como permisos permanentes.
+
+### Política adicional
+
+Mantener vigente la política de pruebas eficientes.
+
+No ejecutar pruebas extensivas ni operaciones administrativas por defecto.
+
+No modificar archivos ajenos al proyecto.
+
 ## Flujo Git vinculante
 1. `Master` contiene únicamente líneas base y entregas aprobadas.
 2. Todo desarrollo nuevo ocurre en ramas `feature/*`; las correcciones aisladas usan `fix/*`.
