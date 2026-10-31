@@ -34,10 +34,12 @@ Fecha: 2026-10-31
 - [x] Ajuste Fase 1.2 (2026-10-31): `user_roles` ahora identifica explícitamente su organización y exige por FK compuesta que una sucursal de alcance `BRANCH` pertenezca a ella. La corrección se entrega en la migración incremental `20261031000200_user_roles_organization_isolation`; no modifica la migración inicial. Typecheck, build y la prueba transaccional de aislamiento pasaron; esta última rechazó una sucursal de otra organización y revirtió sus datos técnicos, dejando `0 users`, `0 roles` y `0 user_roles`.
 - [x] Fase 1.1 aprobada por el propietario para integración mediante Pull Request hacia `Master`, en modo nativo Windows sin Docker. GitHub Actions del Pull Request #3 ejecutó y aprobó los jobs de integridad/diseño, React, API, Flutter y seguridad. La única limitación aceptada pendiente es la prueba física con WAN aislada; no autoriza Fase 1.2.
 - [x] Integración oficial de Fase 1.1: Pull Request #3 fusionado mediante merge commit `214d8920a46b50f658ac223abaff20ca7ba87a49`; `Master` local/remoto coinciden y la etiqueta anotada `foundation-v1.1-approved` fue publicada sobre ese merge. La rama origen `feature/phase-1-foundation` se conserva.
-- [x] Rama `feature/phase-1.2-database` creada desde `Master` integrado; conserva la implementación aprobada de Fase 1.2 y está autorizada para publicarse mediante Pull Request.
-- [x] Fase 1.2 aprobada formalmente por el propietario el 2026-10-31. La integración GitHub permanece pendiente de Pull Request, checks reales y revisión; Fase 1.3 no ha iniciado.
+- [x] Rama `feature/phase-1.2-database` conserva la implementación aprobada de Fase 1.2 y se mantiene publicada después de la integración.
+- [x] Fase 1.2 aprobada formalmente por el propietario el 2026-10-31 e integrada en `Master` mediante el Pull Request #4. Fase 1.3 no ha iniciado.
 - [x] Integración de Fase 1.2 autorizada formalmente por el propietario el 2026-10-31: publicación de la rama, Pull Request hacia `Master`, checks obligatorios de GitHub Actions, merge commit condicionado a resultados exitosos, sincronización de `Master`, etiqueta verificable y preparación local de `feature/phase-1.3-backend`, sin iniciar su implementación.
 - [x] Migración Prisma inicial, seed ficticio idempotente y comprobación NestJS–PostgreSQL ejecutados contra `restaurant_dev` nativo en loopback.
+- [x] Integración oficial de Fase 1.2: Pull Request #4 fusionado mediante merge commit `1fa4c00222dc874139228aca9f0b7677f961b999`; los cinco checks de GitHub Actions aprobaron. `Master` local/remoto coinciden y la etiqueta anotada `database-v1.2-approved` fue publicada sobre ese merge. La rama origen `feature/phase-1.2-database` se conserva.
+- [x] Rama local `feature/phase-1.3-backend` preparada desde `Master` integrado; no se publicó ni contiene implementación de Fase 1.3.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
 
@@ -129,4 +131,4 @@ Fecha: 2026-10-31
 
 ## Próxima revisión
 
-La Fase 1.2 está aprobada y autorizada para integración desde `feature/phase-1.2-database`, condicionada a los checks obligatorios de GitHub Actions y a la ausencia de conflictos, secretos, cambios inesperados o vulnerabilidades altas/críticas nuevas. No se iniciaron módulos comerciales ni Fase 1.3.
+La Fase 1.2 está integrada en `Master` con la etiqueta `database-v1.2-approved`. La rama local `feature/phase-1.3-backend` existe únicamente como preparación; no se iniciaron módulos comerciales ni Fase 1.3. La siguiente autorización deberá delimitar el módulo funcional posterior y las políticas RBAC/auditoría necesarias.
