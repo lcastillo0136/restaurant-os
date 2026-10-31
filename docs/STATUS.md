@@ -127,4 +127,4 @@ Fecha: 2026-10-30
 
 ## Próxima revisión
 
-La Fase 0 está cerrada, aprobada e integrada en `Master`, con línea base `design-v0.7.1-approved`. Fase 1, desarrollo funcional, módulos de negocio e integraciones continúan sin iniciar y requieren autorización expresa separada.
+La Fase 1.2 está implementada y validada localmente en `feature/phase-1.2-database`, pendiente de revisión expresa del propietario. No se publicó la rama ni se abrió Pull Request; no se iniciaron módulos comerciales ni Fase 1.3. La siguiente autorización deberá delimitar el módulo funcional posterior y las políticas RBAC/auditoría necesarias.
