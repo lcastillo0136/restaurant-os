@@ -30,6 +30,7 @@ Fecha: 2026-10-30
 - [x] Fase 1.1 aprobada formalmente por el propietario con condición operativa pendiente. El modo oficial de cierre es desarrollo nativo Windows; Docker Compose queda conservado como alternativa futura no obligatoria.
 - [x] ADR-010 aprobado: no instalar Docker Desktop ni WSL 2, ni solicitar cambios de BIOS/UEFI para Fase 1.1.
 - [x] Fase 1.1: PostgreSQL 17.11-5 nativo instalado y validado; servicio `postgresql-x64-17`, healthcheck, autenticación local, base vacía `restaurant_dev`, reinicio y persistencia técnica aislada correctos. Sólo quedan pendientes la prueba física aislada sin WAN y la ejecución real futura de GitHub Actions, que no se simularon.
+- [x] Fase 1.1 aprobada por el propietario para integración mediante Pull Request hacia `Master`, en modo nativo Windows sin Docker. Limitaciones aceptadas y registradas: prueba física con WAN aislada no evaluada y GitHub Actions pendiente de ejecución real sobre el Pull Request; no autorizan Fase 1.2.
 - [ ] Fase 1.2 y siguientes: no autorizadas.
 - [ ] Migraciones y API ejecutadas.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
