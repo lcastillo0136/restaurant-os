@@ -1,5 +1,5 @@
 # Estado de proyecto
-Fecha: 2026-10-30
+Fecha: 2026-10-31
 - [x] Documentación de fuente de verdad inicial preparada.
 - [x] Replanteo plataforma móvil/tablet como Flutter.
 - [x] Las cuatro referencias PNG son la fuente de verdad visual oficial; SHA-256 originales suministrados por el propietario y coincidentes, documentados en `docs/design/REFERENCIAS-VISUALES.md`.
@@ -36,6 +36,7 @@ Fecha: 2026-10-30
 - [x] Integración oficial de Fase 1.1: Pull Request #3 fusionado mediante merge commit `214d8920a46b50f658ac223abaff20ca7ba87a49`; `Master` local/remoto coinciden y la etiqueta anotada `foundation-v1.1-approved` fue publicada sobre ese merge. La rama origen `feature/phase-1-foundation` se conserva.
 - [x] Rama `feature/phase-1.2-database` creada desde `Master` integrado; conserva la implementación aprobada de Fase 1.2 y está autorizada para publicarse mediante Pull Request.
 - [x] Fase 1.2 aprobada formalmente por el propietario el 2026-10-31. La integración GitHub permanece pendiente de Pull Request, checks reales y revisión; Fase 1.3 no ha iniciado.
+- [x] Integración de Fase 1.2 autorizada formalmente por el propietario el 2026-10-31: publicación de la rama, Pull Request hacia `Master`, checks obligatorios de GitHub Actions, merge commit condicionado a resultados exitosos, sincronización de `Master`, etiqueta verificable y preparación local de `feature/phase-1.3-backend`, sin iniciar su implementación.
 - [x] Migración Prisma inicial, seed ficticio idempotente y comprobación NestJS–PostgreSQL ejecutados contra `restaurant_dev` nativo en loopback.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
@@ -128,4 +129,4 @@ Fecha: 2026-10-30
 
 ## Próxima revisión
 
-La Fase 1.2 está aprobada y autorizada para revisión mediante Pull Request desde `feature/phase-1.2-database`. La integración en `Master` depende de checks reales y revisión posterior; no se iniciaron módulos comerciales ni Fase 1.3. La siguiente autorización deberá delimitar el módulo funcional posterior y las políticas RBAC/auditoría necesarias.
+La Fase 1.2 está aprobada y autorizada para integración desde `feature/phase-1.2-database`, condicionada a los checks obligatorios de GitHub Actions y a la ausencia de conflictos, secretos, cambios inesperados o vulnerabilidades altas/críticas nuevas. No se iniciaron módulos comerciales ni Fase 1.3.
