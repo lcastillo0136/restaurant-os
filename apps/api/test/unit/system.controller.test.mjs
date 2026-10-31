@@ -7,13 +7,13 @@ test('expone health técnico sin estado de negocio', () => {
   assert.deepEqual(controller.health(), {
     service: 'restaurant-os-api',
     status: 'ok',
-    phase: '1.2',
+    phase: '1.3',
   });
   assert.deepEqual(controller.status(), {
     service: 'restaurant-os-api',
     status: 'environment-ready',
-    phase: '1.2',
-    database: 'migration-managed',
-    status: 'database-foundation-ready',
+    phase: '1.3',
+    database: 'readiness-endpoint-available',
+    status: 'backend-core-ready',
   });
 });

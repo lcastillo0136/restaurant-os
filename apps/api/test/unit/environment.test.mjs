@@ -8,6 +8,7 @@ test('resuelve configuración local segura por defecto', () => {
     port: 3000,
     executionMode: 'development',
     allowedOrigins: [],
+    bodyLimitBytes: 65536,
   });
 });
 
@@ -28,4 +29,9 @@ test('rechaza puertos y orígenes inseguros o inválidos', () => {
   assert.throws(() => resolveApiEnvironment({ API_PORT: '3000.5' }), /API_PORT/);
   assert.throws(() => resolveApiEnvironment({ API_ALLOWED_ORIGINS: '*' }), /API_ALLOWED_ORIGINS/);
   assert.throws(() => resolveApiEnvironment({ API_HOST: 'https://example.test' }), /API_HOST/);
+  assert.throws(() => resolveApiEnvironment({ API_BODY_LIMIT_BYTES: '100' }), /API_BODY_LIMIT_BYTES/);
+  assert.throws(
+    () => resolveApiEnvironment({ API_EXECUTION_MODE: 'production', API_HOST: '0.0.0.0' }),
+    /loopback/,
+  );
 });

@@ -7,7 +7,7 @@ export class SystemController {
     return {
       service: 'restaurant-os-api',
       status: 'ok',
-      phase: '1.2',
+      phase: '1.3',
     };
   }
 
@@ -15,9 +15,9 @@ export class SystemController {
   status() {
     return {
       service: 'restaurant-os-api',
-      phase: '1.2',
-      status: 'database-foundation-ready',
-      database: 'migration-managed',
+      phase: '1.3',
+      status: 'backend-core-ready',
+      database: 'readiness-endpoint-available',
     };
   }
 }

@@ -6,12 +6,12 @@ export class DatabaseController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Get('database')
-  async health() {
+  async readiness() {
     await this.prisma.ping();
     return {
       service: 'restaurant-os-api',
       status: 'ok',
-      phase: '1.2',
+      phase: '1.3',
       database: 'reachable',
     };
   }

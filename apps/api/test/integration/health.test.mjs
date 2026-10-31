@@ -56,10 +56,27 @@ test('arranca la API y responde health en loopback', async (context) => {
   assert.deepEqual(await response.json(), {
     service: 'restaurant-os-api',
     status: 'ok',
-    phase: '1.2',
+    phase: '1.3',
   });
   assert.equal(response.headers.get('access-control-allow-origin'), 'http://localhost:5173');
+  assert.match(response.headers.get('x-request-id') ?? '', /^[0-9a-f-]{36}$/i);
+  assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  assert.equal(response.headers.get('x-frame-options'), 'DENY');
 
   const missingRoute = await fetch(`http://127.0.0.1:${port}/api/v1/not-a-route`);
   assert.equal(missingRoute.status, 404, output.join(''));
+  const missingBody = await missingRoute.json();
+  assert.deepEqual({
+    statusCode: missingBody.statusCode,
+    code: missingBody.code,
+    message: missingBody.message,
+    path: missingBody.path,
+  }, {
+    statusCode: 404,
+    code: 'NOT_FOUND',
+    message: 'Recurso no encontrado.',
+    path: '/api/v1/not-a-route',
+  });
+  assert.match(missingBody.requestId, /^[0-9a-f-]{36}$/i);
+  assert.equal(missingRoute.headers.get('x-request-id'), missingBody.requestId);
 });

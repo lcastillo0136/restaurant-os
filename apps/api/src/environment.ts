@@ -1,13 +1,14 @@
-export type ApiExecutionMode = 'development' | 'docker' | 'test';
+export type ApiExecutionMode = 'development' | 'docker' | 'test' | 'production';
 
 export type ApiEnvironment = Readonly<{
   host: string;
   port: number;
   executionMode: ApiExecutionMode;
   allowedOrigins: string[];
+  bodyLimitBytes: number;
 }>;
 
-const allowedExecutionModes = new Set<ApiExecutionMode>(['development', 'docker', 'test']);
+const allowedExecutionModes = new Set<ApiExecutionMode>(['development', 'docker', 'test', 'production']);
 
 function requiredValue(name: string, value: string | undefined, fallback: string): string {
   const resolved = value?.trim() || fallback;
@@ -22,6 +23,15 @@ function parsePort(value: string): number {
     throw new Error('API_PORT debe ser un entero entre 1 y 65535.');
   }
   return port;
+}
+
+function parseBodyLimit(value: string): number {
+  if (!/^\d+$/.test(value)) throw new Error('API_BODY_LIMIT_BYTES debe ser un entero entre 1024 y 1048576.');
+  const limit = Number(value);
+  if (!Number.isSafeInteger(limit) || limit < 1024 || limit > 1_048_576) {
+    throw new Error('API_BODY_LIMIT_BYTES debe ser un entero entre 1024 y 1048576.');
+  }
+  return limit;
 }
 
 function parseAllowedOrigins(value: string | undefined): string[] {
@@ -57,7 +67,10 @@ export function resolveApiEnvironment(environment: NodeJS.ProcessEnv = process.e
 
   const executionMode = requiredValue('API_EXECUTION_MODE', environment.API_EXECUTION_MODE, 'development');
   if (!allowedExecutionModes.has(executionMode as ApiExecutionMode)) {
-    throw new Error('API_EXECUTION_MODE debe ser development, docker o test.');
+    throw new Error('API_EXECUTION_MODE debe ser development, docker, test o production.');
+  }
+  if (executionMode === 'production' && host !== '127.0.0.1' && host !== '::1') {
+    throw new Error('API_HOST debe permanecer en loopback en production hasta aprobar TLS LAN y aprovisionamiento de dispositivos.');
   }
 
   return Object.freeze({
@@ -65,5 +78,6 @@ export function resolveApiEnvironment(environment: NodeJS.ProcessEnv = process.e
     port: parsePort(requiredValue('API_PORT', environment.API_PORT, '3000')),
     executionMode: executionMode as ApiExecutionMode,
     allowedOrigins: parseAllowedOrigins(environment.API_ALLOWED_ORIGINS),
+    bodyLimitBytes: parseBodyLimit(requiredValue('API_BODY_LIMIT_BYTES', environment.API_BODY_LIMIT_BYTES, '65536')),
   });
 }
