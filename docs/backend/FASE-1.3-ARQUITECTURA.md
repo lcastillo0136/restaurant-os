@@ -16,11 +16,11 @@ El backend continúa como monolito modular. No se crearon controladores, servici
 
 ## Flujo HTTP
 
-1. Se genera un `x-request-id` y se añaden encabezados de seguridad.
+1. Se genera un `x-request-id` y se añaden encabezados de seguridad antes del parser JSON.
 2. Express limita y parsea JSON; un cuerpo excesivo recibe error seguro `413`.
 3. Nest aplica `ValidationPipe` global con transformación controlada, whitelist y rechazo de propiedades adicionales.
 4. El controlador usa servicios; los controladores no contienen acceso directo a Prisma.
-5. El interceptor registra solo método, ruta sin query, estado, duración e identificador de solicitud.
+5. Al terminar la respuesta, el interceptor registra una sola vez solo método, ruta sin query, estado final, duración e identificador de solicitud.
 6. El filtro global normaliza excepciones y nunca devuelve trazas, consultas, variables ni cadenas de conexión.
 
 ## Prisma

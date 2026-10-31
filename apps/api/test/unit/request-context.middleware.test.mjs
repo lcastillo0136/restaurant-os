@@ -28,14 +28,20 @@ test('crea identificador por solicitud y encabezados de seguridad', () => {
   assert.equal(target.headers.get('X-Frame-Options'), 'DENY');
 });
 
-test('convierte cuerpos excesivos en un error seguro y consistente', () => {
+test('convierte un JSON excesivo en 413 seguro con encabezados e identificador de solicitud', () => {
   const target = response();
-  target.locals.requestId = 'request-safe-id';
+  requestContextMiddleware({}, target, () => {});
+  securityHeadersMiddleware({}, target, () => {});
+  const requestId = target.headers.get('x-request-id');
   bodyLimitExceptionMiddleware({ status: 413, type: 'entity.too.large' }, { path: '/api/v1/system/health' }, target, () => {
     throw new Error('no debe continuar');
   });
 
   assert.equal(target.statusCode, 413);
   assert.equal(target.body.code, 'PAYLOAD_TOO_LARGE');
-  assert.equal(target.body.requestId, 'request-safe-id');
+  assert.equal(target.body.requestId, requestId);
+  assert.equal(target.headers.get('X-Content-Type-Options'), 'nosniff');
+  assert.equal(target.headers.get('X-Frame-Options'), 'DENY');
+  assert.equal(target.headers.get('Referrer-Policy'), 'no-referrer');
+  assert.equal(target.headers.get('Permissions-Policy'), 'camera=(), geolocation=(), microphone=()');
 });

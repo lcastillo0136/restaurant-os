@@ -9,4 +9,4 @@ El paquete `restaurant-os-fase-1.3-revision.zip` contiene únicamente:
 
 Se excluyen `.env.database`, secretos, respaldos, bases, `node_modules`, `dist`, cachés, ZIP anteriores y referencias visuales privadas.
 
-Evidencia técnica: typecheck y build correctos; pruebas focalizadas de validación, errores seguros, logging, límites, health y readiness Prisma correctas tras correcciones de inicialización de `reflect-metadata` y expectativa de fase; auditoría de producción sin vulnerabilidades conocidas.
+Evidencia técnica: typecheck y build correctos; pruebas focalizadas de validación, errores seguros, logging, límites, health y readiness Prisma correctas tras correcciones de inicialización de `reflect-metadata`, expectativa de fase y el registro del estado HTTP final; auditoría de producción sin vulnerabilidades conocidas.

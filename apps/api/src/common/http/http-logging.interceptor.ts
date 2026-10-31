@@ -1,6 +1,6 @@
 import { CallHandler, ExecutionContext, Injectable, Logger, NestInterceptor } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { getRequestId } from './request-context.middleware.js';
 
 export type HttpLogEntry = Readonly<{
@@ -36,14 +36,14 @@ export class HttpLoggingInterceptor implements NestInterceptor {
     const request = http.getRequest<Request>();
     const response = http.getResponse<Response>();
     const startedAt = performance.now();
-    const log = (level: 'log' | 'warn') => this.logger[level](JSON.stringify(createHttpLogEntry(request, response, startedAt)));
+    const log = (): void => {
+      const level = response.statusCode >= 400 ? 'warn' : 'log';
+      this.logger[level](JSON.stringify(createHttpLogEntry(request, response, startedAt)));
+    };
 
-    return next.handle().pipe(
-      tap(() => log('log')),
-      catchError((error: unknown) => {
-        log('warn');
-        return throwError(() => error);
-      }),
-    );
+    // El filtro global puede definir el estado después de que el observable propaga
+    // una excepción. `finish` ocurre cuando Express ya envió la respuesta final.
+    response.once('finish', log);
+    return next.handle();
   }
 }

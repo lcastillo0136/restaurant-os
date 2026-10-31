@@ -21,9 +21,9 @@ async function bootstrap(): Promise<void> {
   app.setGlobalPrefix('api/v1');
   app.enableShutdownHooks();
   app.use(requestContextMiddleware);
+  app.use(securityHeadersMiddleware);
   app.use(json({ limit: environment.bodyLimitBytes }));
   app.use(bodyLimitExceptionMiddleware);
-  app.use(securityHeadersMiddleware);
   app.useGlobalPipes(createValidationPipe() as ValidationPipe);
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new HttpLoggingInterceptor());
