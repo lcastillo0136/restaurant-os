@@ -12,7 +12,7 @@
     "db:seed": "prisma db seed",
     "build": "pnpm db:generate && nest build",
     "typecheck": "pnpm db:generate && tsc --noEmit",
-    "test": "pnpm build && node --test test/unit/environment.test.mjs test/unit/database-environment.test.mjs test/unit/system.controller.test.mjs test/unit/database.controller.test.mjs test/unit/validation.pipe.test.mjs test/unit/http-exception.filter.test.mjs test/unit/http-logging.interceptor.test.mjs test/unit/request-context.middleware.test.mjs test/integration/health.test.mjs test/integration/payload-limit.test.mjs",
+    "test": "pnpm build && node --test test/unit/environment.test.mjs test/unit/database-environment.test.mjs test/unit/system.controller.test.mjs test/unit/database.controller.test.mjs test/unit/validation.pipe.test.mjs test/unit/http-exception.filter.test.mjs test/unit/http-logging.interceptor.test.mjs test/unit/request-context.middleware.test.mjs test/unit/password.service.test.mjs test/unit/auth.service.test.mjs test/unit/auth.guard.test.mjs test/unit/authorization.guard.test.mjs test/unit/session.service.test.mjs test/unit/authorization.service.test.mjs test/unit/security-audit.service.test.mjs test/integration/health.test.mjs test/integration/payload-limit.test.mjs",
     "test:unit": "pnpm build && node --test test/unit/environment.test.mjs test/unit/database-environment.test.mjs test/unit/system.controller.test.mjs test/unit/database.controller.test.mjs test/unit/validation.pipe.test.mjs test/unit/http-exception.filter.test.mjs test/unit/http-logging.interceptor.test.mjs test/unit/request-context.middleware.test.mjs",
     "test:integration": "pnpm build && node --test test/integration/health.test.mjs",
     "test:database": "pnpm build && node --test test/integration/database.test.mjs",

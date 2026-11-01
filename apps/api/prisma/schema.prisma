@@ -33,6 +33,7 @@ model Organization {
   branches    Branch[]
   userRoles   UserRole[]
   auditEvents AuditEvent[]
+  securityAuditEvents SecurityAuditEvent[]
 
   @@map("organizations")
 }
@@ -49,6 +50,7 @@ model Branch {
   organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Restrict)
   userRoles      UserRole[]
   auditEvents    AuditEvent[]
+  securityAuditEvents SecurityAuditEvent[]
 
   @@unique([organizationId, code])
   @@unique([id, organizationId])
@@ -66,10 +68,67 @@ model AppUser {
   updatedAt       DateTime     @updatedAt @map("updated_at") @db.Timestamptz(6)
   userRoles       UserRole[]
   auditEvents     AuditEvent[]
+  credential      UserCredential?
+  authSessions    AuthSession[]
+  securityAuditEvents SecurityAuditEvent[]
 
   @@unique([identitySource, identitySubject])
   @@index([status])
   @@map("users")
+}
+
+model UserCredential {
+  id              String   @id @default(uuid()) @db.Uuid
+  userId          String   @unique @map("user_id") @db.Uuid
+  passwordHash    String   @map("password_hash") @db.VarChar(512)
+  passwordChangedAt DateTime @default(now()) @map("password_changed_at") @db.Timestamptz(6)
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt       DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user            AppUser  @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@map("user_credentials")
+}
+
+model AuthSession {
+  id                String    @id @default(uuid()) @db.Uuid
+  userId            String    @map("user_id") @db.Uuid
+  familyId          String    @map("family_id") @db.Uuid
+  accessTokenHash   String    @unique @map("access_token_hash") @db.Char(64)
+  accessExpiresAt   DateTime  @map("access_expires_at") @db.Timestamptz(6)
+  refreshTokenHash  String    @unique @map("refresh_token_hash") @db.Char(64)
+  refreshExpiresAt  DateTime  @map("refresh_expires_at") @db.Timestamptz(6)
+  revokedAt         DateTime? @map("revoked_at") @db.Timestamptz(6)
+  lastUsedAt        DateTime? @map("last_used_at") @db.Timestamptz(6)
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user              AppUser   @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId, revokedAt])
+  @@index([familyId])
+  @@index([accessExpiresAt])
+  @@index([refreshExpiresAt])
+  @@map("auth_sessions")
+}
+
+model SecurityAuditEvent {
+  id             String       @id @default(uuid()) @db.Uuid
+  organizationId String?      @map("organization_id") @db.Uuid
+  branchId       String?      @map("branch_id") @db.Uuid
+  actorUserId    String?      @map("actor_user_id") @db.Uuid
+  eventType      String       @map("event_type") @db.VarChar(96)
+  result         String       @db.VarChar(24)
+  requestId      String?      @map("request_id") @db.VarChar(64)
+  metadata       Json         @default("{}") @db.JsonB
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  branch         Branch?      @relation(fields: [branchId], references: [id], onDelete: Restrict)
+  actorUser      AppUser?     @relation(fields: [actorUserId], references: [id], onDelete: Restrict)
+
+  @@index([actorUserId, createdAt])
+  @@index([organizationId, createdAt])
+  @@index([branchId, createdAt])
+  @@index([eventType, createdAt])
+  @@map("security_audit_events")
 }
 
 model Role {

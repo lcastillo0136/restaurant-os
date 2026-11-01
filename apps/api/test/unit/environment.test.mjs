@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { resolveApiEnvironment } from '../../dist/environment.js';
+import { resolveApiEnvironment, resolveAuthEnvironment } from '../../dist/environment.js';
 
 test('resuelve configuración local segura por defecto', () => {
   assert.deepEqual(resolveApiEnvironment({}), {
@@ -34,4 +34,15 @@ test('rechaza puertos y orígenes inseguros o inválidos', () => {
     () => resolveApiEnvironment({ API_EXECUTION_MODE: 'production', API_HOST: '0.0.0.0' }),
     /loopback/,
   );
+});
+
+test('resuelve expiraciones y límite de intentos de autenticación con límites seguros', () => {
+  assert.deepEqual(resolveAuthEnvironment({}), {
+    accessTokenTtlSeconds: 900,
+    refreshTokenTtlSeconds: 604800,
+    loginAttemptLimit: 5,
+    loginAttemptWindowSeconds: 900,
+  });
+  assert.throws(() => resolveAuthEnvironment({ AUTH_ACCESS_TOKEN_TTL_SECONDS: '0' }), /AUTH_ACCESS_TOKEN_TTL_SECONDS/);
+  assert.throws(() => resolveAuthEnvironment({ AUTH_ACCESS_TOKEN_TTL_SECONDS: '3600', AUTH_REFRESH_TOKEN_TTL_SECONDS: '3600' }), /mayor/);
 });

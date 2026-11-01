@@ -13,3 +13,14 @@ Todas las respuestas incluyen `x-request-id`. No se introdujo una envoltura de �
 ## Errores
 
 Los errores tienen `statusCode`, `code`, `message`, `requestId`, `timestamp` y `path`. Solo los errores de validación incorporan `details` con nombre de campo y reglas incumplidas. No hay endpoints comerciales ni documentación OpenAPI interactiva: la documentación estática describe exclusivamente estas rutas reales.
+
+## Autenticación (Fase 1.4)
+
+| Ruta | Método | Protección | Contrato seguro |
+| --- | --- | --- | --- |
+| `/api/v1/auth/login` | `POST` | Pública con límite local | Recibe `identifier` y `password`; responde usuario seguro, token de acceso y token de renovación con sus expiraciones. Credenciales inválidas y usuario suspendido devuelven el mismo `401`. |
+| `/api/v1/auth/refresh` | `POST` | Pública con límite local | Recibe solo `refreshToken`; rota ambos tokens y rechaza reutilización, revocación o expiración con `401`. |
+| `/api/v1/auth/logout` | `POST` | Bearer de acceso vigente | Revoca la sesión actual y responde `204`. |
+| `/api/v1/auth/me` | `GET` | Bearer de acceso vigente | Devuelve la identidad segura y asignaciones RBAC resueltas por el servidor. |
+
+Los tokens, hashes, contraseñas y cabeceras de autorización no se registran ni se incluyen en errores. Los clientes no declaran como autoridad el rol, organización o sucursal: los guards consultan las asignaciones persistidas.
