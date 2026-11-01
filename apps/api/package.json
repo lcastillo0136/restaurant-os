@@ -17,7 +17,8 @@
     "test:integration": "pnpm build && node --test test/integration/health.test.mjs",
     "test:database": "pnpm build && node --test test/integration/database.test.mjs",
     "test:database-isolation": "pnpm build && node --test test/integration/user-role-isolation.test.mjs",
-    "test:realtime": "pnpm build && node --test test/unit/environment.test.mjs test/unit/realtime.contracts.test.mjs test/unit/realtime.gateway.test.mjs test/integration/health.test.mjs test/integration/payload-limit.test.mjs"
+    "test:realtime": "pnpm build && node --test test/unit/environment.test.mjs test/unit/realtime.contracts.test.mjs test/unit/realtime.gateway.test.mjs test/integration/health.test.mjs test/integration/payload-limit.test.mjs",
+    "test:integration:foundation": "pnpm build && node --test test/integration/migration-layout.test.mjs test/integration/foundation-authentication.test.mjs test/integration/foundation-realtime.test.mjs test/integration/health.test.mjs test/integration/payload-limit.test.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",

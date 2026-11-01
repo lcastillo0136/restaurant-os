@@ -34,3 +34,5 @@
 - Fase 1.5: aprobar la matriz de permisos que habilitará tipos de evento comerciales. Solo `technical.connection` está implementado y exige `auth.session.read`; no se sembraron permisos ni se habilitó ningún evento comercial.
 - Fase 1.5: definir por recurso el endpoint REST de snapshot, la política de recuperación y la persistencia/confirmación de eventos antes de afirmar entrega garantizada o añadir pedidos, cocina, pagos o caja.
 - Fase 1.5: realizar pruebas físicas autorizadas de LAN, WSS, pérdida/reconexión Wi-Fi y funcionamiento sin WAN después de aplicar la migración de autenticación y aprovisionar una cuenta de prueba; no se simuló ninguna de ellas.
+- Fase 1.6: autorizar una base PostgreSQL temporal aislada antes de ejecutar migraciones, integridad referencial, autenticación persistida, RBAC real o readiness contra PostgreSQL. No usar `restaurant_dev` ni eliminar recursos temporales sin autorización específica.
+- Fase 1.6: autorizar por separado restauración temporal, certificados TLS, WSS/LAN, Android, red física y prueba sin WAN. Las pruebas en memoria y loopback no sustituyen esas evidencias.
