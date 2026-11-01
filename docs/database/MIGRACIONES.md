@@ -36,3 +36,9 @@ No se utiliza `prisma migrate dev` contra `restaurant_dev`: ese comando requiere
 4. Ejecutar `db:migrate:status`, aplicar con `db:migrate:deploy` y probar solo el módulo afectado.
 
 No ejecutar `prisma migrate reset`, no eliminar volúmenes ni borrar bases de datos existentes.
+
+## Autenticación y sesiones — Fase 1.4
+
+`20261101000100_authentication_authorization` agrega de forma incremental `user_credentials`, `auth_sessions` y `security_audit_events`. Las contraseñas usan hash Argon2id en aplicación; los tokens opacos de acceso y renovación se almacenan únicamente como SHA-256, con índices para validación, expiración, rotación y revocación. La auditoría de seguridad admite eventos sin usuario u organización conocidos para no falsificar datos durante intentos fallidos.
+
+La migración fue revisada estáticamente y **no se aplicó** contra `restaurant_dev`. Su aplicación, creación de una cuenta inicial y cualquier prueba que escriba sesiones requieren autorización específica del propietario.

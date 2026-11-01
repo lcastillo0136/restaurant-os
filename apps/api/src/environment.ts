@@ -8,6 +8,13 @@ export type ApiEnvironment = Readonly<{
   bodyLimitBytes: number;
 }>;
 
+export type AuthEnvironment = Readonly<{
+  accessTokenTtlSeconds: number;
+  refreshTokenTtlSeconds: number;
+  loginAttemptLimit: number;
+  loginAttemptWindowSeconds: number;
+}>;
+
 const allowedExecutionModes = new Set<ApiExecutionMode>(['development', 'docker', 'test', 'production']);
 
 function requiredValue(name: string, value: string | undefined, fallback: string): string {
@@ -32,6 +39,16 @@ function parseBodyLimit(value: string): number {
     throw new Error('API_BODY_LIMIT_BYTES debe ser un entero entre 1024 y 1048576.');
   }
   return limit;
+}
+
+function parseBoundedInteger(name: string, value: string | undefined, fallback: string, minimum: number, maximum: number): number {
+  const resolved = requiredValue(name, value, fallback);
+  if (!/^\d+$/.test(resolved)) throw new Error(`${name} debe ser un entero entre ${minimum} y ${maximum}.`);
+  const parsed = Number(resolved);
+  if (!Number.isSafeInteger(parsed) || parsed < minimum || parsed > maximum) {
+    throw new Error(`${name} debe ser un entero entre ${minimum} y ${maximum}.`);
+  }
+  return parsed;
 }
 
 function parseAllowedOrigins(value: string | undefined): string[] {
@@ -79,5 +96,19 @@ export function resolveApiEnvironment(environment: NodeJS.ProcessEnv = process.e
     executionMode: executionMode as ApiExecutionMode,
     allowedOrigins: parseAllowedOrigins(environment.API_ALLOWED_ORIGINS),
     bodyLimitBytes: parseBodyLimit(requiredValue('API_BODY_LIMIT_BYTES', environment.API_BODY_LIMIT_BYTES, '65536')),
+  });
+}
+
+export function resolveAuthEnvironment(environment: NodeJS.ProcessEnv = process.env): AuthEnvironment {
+  const accessTokenTtlSeconds = parseBoundedInteger('AUTH_ACCESS_TOKEN_TTL_SECONDS', environment.AUTH_ACCESS_TOKEN_TTL_SECONDS, '900', 60, 3600);
+  const refreshTokenTtlSeconds = parseBoundedInteger('AUTH_REFRESH_TOKEN_TTL_SECONDS', environment.AUTH_REFRESH_TOKEN_TTL_SECONDS, '604800', 3600, 2_592_000);
+  if (refreshTokenTtlSeconds <= accessTokenTtlSeconds) {
+    throw new Error('AUTH_REFRESH_TOKEN_TTL_SECONDS debe ser mayor que AUTH_ACCESS_TOKEN_TTL_SECONDS.');
+  }
+  return Object.freeze({
+    accessTokenTtlSeconds,
+    refreshTokenTtlSeconds,
+    loginAttemptLimit: parseBoundedInteger('AUTH_LOGIN_ATTEMPT_LIMIT', environment.AUTH_LOGIN_ATTEMPT_LIMIT, '5', 1, 20),
+    loginAttemptWindowSeconds: parseBoundedInteger('AUTH_LOGIN_ATTEMPT_WINDOW_SECONDS', environment.AUTH_LOGIN_ATTEMPT_WINDOW_SECONDS, '900', 60, 3600),
   });
 }
