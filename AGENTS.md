@@ -103,7 +103,7 @@ Cuando el propietario apruebe formalmente una fase de Restaurant OS, dicha aprob
 1. Registrar la aprobación en la documentación.
 2. Publicar la rama de desarrollo correspondiente.
 3. Crear un Pull Request hacia `Master`.
-4. Ejecutar las validaciones obligatorias de GitHub Actions.
+4. Ejecutar GitHub Actions únicamente a solicitud expresa del propietario.
 5. Fusionar el Pull Request mediante **merge commit**, siempre que se cumplan todas las condiciones de integración.
 6. Sincronizar `Master` local con `origin/Master`.
 7. Conservar una referencia verificable de la versión integrada.
@@ -115,7 +115,7 @@ No solicitar una segunda autorización para fusionar una fase que ya fue aprobad
 
 La integración queda autorizada únicamente cuando:
 
-- Todos los checks obligatorios de GitHub Actions concluyan con éxito.
+- Si el propietario solicitó GitHub Actions para esa integración, todos los checks obligatorios concluyan con éxito.
 - El Pull Request no tenga conflictos.
 - No existan vulnerabilidades nuevas de severidad alta o crítica sin resolver.
 - No existan secretos ni archivos privados expuestos.
@@ -126,14 +126,15 @@ La integración queda autorizada únicamente cuando:
 
 Si alguna condición falla, detener la integración y reportar el problema.
 
-No omitir pruebas obligatorias para forzar una fusión.
+No omitir validaciones de GitHub Actions que el propietario haya solicitado expresamente para esa integración.
 
 ### Política de pruebas eficientes
 
 Mantener las reglas existentes de pruebas eficientes:
 
 - No repetir pruebas locales previamente aprobadas sin cambios relevantes.
-- Utilizar GitHub Actions como validación final del Pull Request.
+- Ejecutar GitHub Actions únicamente a solicitud expresa del propietario; los workflows se activan manualmente mediante `workflow_dispatch`.
+- La publicación de cambios, la creación o actualización de Pull Requests y los merge commits no ejecutan GitHub Actions automáticamente.
 - Ejecutar pruebas adicionales únicamente cuando el riesgo del cambio lo justifique.
 - No realizar pruebas destructivas o innecesarias.
 
