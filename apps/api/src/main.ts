@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { readFileSync } from 'node:fs';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { json } from 'express';
@@ -12,12 +13,23 @@ import {
 import { createValidationPipe } from './common/http/validation.pipe.js';
 import { loadDatabaseEnvironment } from './database/database-environment.js';
 import { AppModule } from './app.module.js';
-import { resolveApiEnvironment } from './environment.js';
+import { resolveApiEnvironment, resolveTransportSecurityEnvironment, resolveWebsocketEnvironment } from './environment.js';
+import { RestaurantSocketIoAdapter } from './realtime/restaurant-socket-io.adapter.js';
 
 async function bootstrap(): Promise<void> {
   loadDatabaseEnvironment();
   const environment = resolveApiEnvironment();
-  const app = await NestFactory.create(AppModule, { bodyParser: false });
+  const transportSecurity = resolveTransportSecurityEnvironment();
+  const app = await NestFactory.create(AppModule, {
+    bodyParser: false,
+    httpsOptions: transportSecurity.enabled
+      ? {
+        key: readFileSync(transportSecurity.keyPath!),
+        cert: readFileSync(transportSecurity.certificatePath!),
+      }
+      : undefined,
+  });
+  app.useWebSocketAdapter(new RestaurantSocketIoAdapter(app, resolveWebsocketEnvironment()));
   app.setGlobalPrefix('api/v1');
   app.enableShutdownHooks();
   app.use(requestContextMiddleware);
@@ -42,6 +54,7 @@ async function bootstrap(): Promise<void> {
     host: environment.host,
     port: environment.port,
     executionMode: environment.executionMode,
+    transportSecurity: transportSecurity.enabled ? 'tls' : 'http-loopback-only',
   }));
 }
 

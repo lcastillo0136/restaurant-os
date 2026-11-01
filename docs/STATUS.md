@@ -1,5 +1,5 @@
 # Estado de proyecto
-Fecha: 2026-10-31
+Fecha: 2026-11-01
 - [x] Documentación de fuente de verdad inicial preparada.
 - [x] Replanteo plataforma móvil/tablet como Flutter.
 - [x] Las cuatro referencias PNG son la fuente de verdad visual oficial; SHA-256 originales suministrados por el propietario y coincidentes, documentados en `docs/design/REFERENCIAS-VISUALES.md`.
@@ -47,6 +47,7 @@ Fecha: 2026-10-31
 - [x] Corrección puntual Fase 1.4: `AuthorizationGuard` rechaza ahora una política RBAC ausente, vacía o con alcance incompleto. `RequirePermissions` instala automáticamente los guards de autenticación/autorización para reducir el riesgo de omisión en controladores futuros. Los grants descartan roles, permisos, organizaciones o sucursales inactivos, y cualquier sucursal cuya organización no coincida. Build de API y 5 pruebas RBAC focalizadas correctos; no se aplicaron migraciones ni se modificó PostgreSQL local.
 - [x] Último ajuste de aislamiento Fase 1.4: aun con grant `ORGANIZATION`, una solicitud que incluya `branchId` valida una vez en servidor que la sucursal está activa y pertenece a la organización solicitada antes de autorizar. Se conserva el acceso organizacional sin sucursal. Build de API y 3 pruebas focalizadas de `AuthorizationService` correctas para sucursal válida, inactiva y de otra organización; sin migraciones ni acceso a PostgreSQL local.
 - [x] Corrección de integración Fase 1.4: el primer run CI falló en los dos tests HTTP porque Nest intentaba inyectar como dependencias los perfiles opcionales de contraseña, sesión y rate limiting. Se sustituyeron por tokens opcionales con valores seguros por defecto. Build, los dos tests HTTP de loopback (2/2) y las seis pruebas unitarias relacionadas (6/6) pasaron; no se aplicaron migraciones ni se accedió a PostgreSQL local.
+- [x] Fase 1.5 (2026-11-01): infraestructura técnica local de Socket.IO integrada en NestJS bajo `/realtime`, con autenticación de sesiones opacas, revalidación periódica, salas generadas por servidor para organización/sucursal/tipo técnico, control de tamaño y conexiones, rechazo de tokens en query string y limpieza al desconectar. Se mantiene loopback por defecto; una escucha LAN exige reconocimiento explícito del propietario, TLS y orígenes definidos. Solo existe el evento técnico restringido `technical.connection`; no hay eventos, pantallas, migraciones ni flujos comerciales. Build y 15 pruebas focalizadas correctas (contratos, sesiones autorizada/expirada/revocada, aislamiento, origen, límites, limpieza, health y 413); `pnpm audit --prod --audit-level high` no reportó vulnerabilidades conocidas. No se usó PostgreSQL local ni se ejecutó GitHub Actions. La fase queda pendiente de revisión, aprobación e integración.
 - [x] Pruebas de scaffold React/Nest ejecutadas; resultados documentados abajo.
 - [ ] MVP construido.
 
@@ -138,4 +139,4 @@ Fecha: 2026-10-31
 
 ## Próxima revisión
 
-La Fase 1.4 está integrada y etiquetada como `auth-v1.4-approved`. La rama local `feature/phase-1.5-lan-websocket` se preparó desde `Master` actualizado, sin implementación ni publicación de Fase 1.5. Los módulos comerciales siguen sin iniciar.
+La Fase 1.5 está implementada localmente en `feature/phase-1.5-lan-websocket`, pendiente de revisión y aprobación del propietario; no se publicó ni se creó Pull Request. Los módulos comerciales y la Fase 1.6 siguen sin iniciar.
