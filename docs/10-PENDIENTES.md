@@ -41,3 +41,4 @@
 - Fase 2.1: autorizar y supervisar el primer aprovisionamiento persistido, seguido por login, refresh, logout/revocación y revisión de auditoría. La CLI preparada no constituye una cuenta real ni una autorización para ejecutarla.
 - Fase 2.1: definir retención, acceso, exportación y respuesta a incidentes de `security_audit_events`; definir RPO/RTO, cifrado/ubicación/retención de respaldos y responsables de restauración.
 - Fase 2.1 (ajuste cosmético no bloqueante): revisar en una entrega posterior la duplicación visual potencial del prompt de contraseña interactiva. No modifica las barreras ni el comportamiento aprobado del bootstrap.
+- Fase 2.2: aprobar la matriz definitiva y siembra controlada de `organizations.read/manage` y `branches.read/manage`; definir el flujo de plataforma para creación inicial de organizaciones. No habilitar escritura real ni asignaciones hasta esa autorización.
