@@ -61,6 +61,17 @@ export class AuthorizationService {
 
   async hasPermissions(userId: string, requiredPermissions: string[], scope: RequestedScope): Promise<boolean> {
     if (requiredPermissions.length === 0 || !scope.organizationId) return false;
+    if (scope.branchId) {
+      const requestedBranch = await this.prisma.branch.findFirst({
+        where: {
+          id: scope.branchId,
+          organizationId: scope.organizationId,
+          status: 'ACTIVE',
+        },
+        select: { id: true },
+      });
+      if (!requestedBranch) return false;
+    }
     const grants = await this.getGrants(userId);
     return requiredPermissions.every((permission) => grants.some((grant) => (
       grant.permissions.includes(permission)

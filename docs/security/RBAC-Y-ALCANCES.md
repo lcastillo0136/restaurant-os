@@ -9,7 +9,7 @@
 @RequireAuthorizationScope({ organizationParam: 'organizationId', branchParam: 'branchId' })
 ```
 
-El valor de ruta solo selecciona el ámbito candidato; nunca concede autoridad. Una asignación `ORGANIZATION` concede un permiso en la organización exacta. Una asignación `BRANCH` exige además la sucursal exacta, activa y perteneciente a la organización activa de la asignación. La FK compuesta de Fase 1.2 ya prueba esa relación; el servicio la vuelve a comprobar defensivamente al construir grants.
+El valor de ruta solo selecciona el ámbito candidato; nunca concede autoridad. Cuando una solicitud incluye `branchId`, el servidor hace una única comprobación indexada de que esa sucursal existe, está activa y pertenece al `organizationId` solicitado antes de resolver grants. Esta comprobación también es obligatoria para una asignación `ORGANIZATION`; sin `branchId`, el acceso organizacional válido se conserva. Una asignación `BRANCH` exige además la sucursal exacta, activa y perteneciente a la organización activa de la asignación. La FK compuesta de Fase 1.2 ya prueba esa relación; el servicio la vuelve a comprobar defensivamente al construir grants.
 
 No hay endpoints comerciales protegidos ficticiamente en esta fase. Los futuros controladores deben usar el guard, no reglas repartidas en cada acción.
 
