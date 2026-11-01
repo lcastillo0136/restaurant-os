@@ -141,4 +141,9 @@ Fecha: 2026-11-01
 
 ## Próxima revisión
 
-La Fase 1 está cerrada técnicamente y el PR #9 queda autorizado para completar su integración. La siguiente fase del proyecto requiere autorización expresa; no hay implementación de fase posterior ni módulos comerciales iniciados.
+La Fase 2.1 — Preparación operativa y persistencia está preparada para revisión, sin operar PostgreSQL ni aprovisionar una identidad real. La rama propuesta es `feature/phase-2.1-operational-persistence`; su publicación y Pull Request hacia `Master` quedan autorizados, pero no su fusión. No se inicia Fase 2.2.
+
+- [x] Fase 2.1 (2026-11-01): diagnóstico estático de Prisma, migraciones, autenticación, sesiones, RBAC, auditoría y configuración. No se consultó el estado de PostgreSQL.
+- [x] Fase 2.1: CLI local de primer administrador preparada con destino explícito fuera de `restaurant_dev`, terminal interactiva, Argon2id, rol/permisos exactos, transacción serializable, advisory lock, denegación de duplicados y auditoría sin secretos. No se ejecutó contra una base.
+- [x] Fase 2.1: documentación de estrategia, migraciones seguras, RBAC propuesto, respaldo/restauración, evidencias y pruebas diferidas añadida bajo `docs/operations/`.
+- [x] Fase 2.1: `pnpm --filter @restaurant-os/api test:phase-2.1` pasó con 4/4 pruebas en memoria; no se ejecutaron PostgreSQL, migraciones, restore, red, dispositivos, React, Flutter, Android ni GitHub Actions.
