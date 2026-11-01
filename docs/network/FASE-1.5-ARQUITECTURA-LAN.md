@@ -20,13 +20,13 @@ El proceso solo acepta `127.0.0.1` o `::1` por defecto. El código rechaza una d
 | Ubicación | Responsabilidad |
 | --- | --- |
 | `apps/api/src/realtime/restaurant-socket-io.adapter.ts` | Socket.IO, WebSocket puro como transporte, validación de `Origin`, rechazo de credenciales en query y límites de trama. |
-| `apps/api/src/realtime/realtime.gateway.ts` | Handshake autenticado, límite de conexiones, suscripción validada, revalidación de sesión y limpieza. |
+| `apps/api/src/realtime/realtime.gateway.ts` | Handshake autenticado, límite de conexiones, suscripción validada, revalidación de sesión y RBAC, abandono de salas revocadas y limpieza. |
 | `apps/api/src/realtime/realtime.contracts.ts` | Protocolo v1, validación de solicitudes y nombre interno de salas. |
 | `apps/api/src/environment.ts` | Variables de host, TLS, CORS, tamaño, ping, máximo de conexiones y revalidación. |
 
 `RealtimeGateway` reutiliza `AuthService.authenticate()`: cada validación consulta la sesión persistida, verifica expiración, revocación y usuario activo. La credencial solo se recibe en `handshake.auth.accessToken`, permanece en memoria privada durante la conexión para revalidarla y nunca se escribe en logs, eventos ni respuestas. El identificador, organización, sucursal y permisos nunca proceden de afirmaciones del cliente.
 
-El gateway vuelve a validar cada conexión cada 60 segundos por defecto. Si falla, envía solo `SESSION_INVALID`, desconecta el socket y elimina sus recursos. Al desconectar se elimina la entrada de conexión; Socket.IO abandona sus salas. El máximo por defecto es 100 conexiones y los mensajes técnicos se limitan a 16 KiB.
+El gateway vuelve a validar cada conexión y cada suscripción cada 60 segundos por defecto. El intervalo se configura mediante `API_WS_SESSION_REVALIDATION_SECONDS`, con mínimo de 30 y máximo de 900 segundos: esa es la ventana máxima configurada para detectar una revocación, no una promesa de revocación instantánea. Si la sesión deja de ser válida, envía solo `SESSION_INVALID`, desconecta el socket y elimina sus recursos. Si una consulta RBAC ya no permite una suscripción (rol/permiso, organización, sucursal o alcance), abandona solo esa sala y emite `SUBSCRIPTION_REVOKED`; si no puede revalidar la autorización de forma segura, desconecta con `AUTHORIZATION_REVALIDATION_FAILED`. Al desconectar se elimina la entrada de conexión; Socket.IO abandona sus salas. El máximo por defecto es 100 conexiones y los mensajes técnicos se limitan a 16 KiB.
 
 ## REST y estado
 

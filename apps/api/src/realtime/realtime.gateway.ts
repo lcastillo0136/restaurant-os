@@ -30,7 +30,7 @@ type ActiveConnection = {
   client: RealtimeSocket;
   accessToken: string;
   identity: AuthenticatedIdentity;
-  rooms: Set<string>;
+  subscriptions: Map<string, RealtimeSubscriptionRequest>;
 };
 
 export const websocketEnvironmentToken = Symbol('websocket-environment');
@@ -85,7 +85,7 @@ export class RealtimeGateway implements OnGatewayInit<Namespace>, OnGatewayConne
       client,
       accessToken: token,
       identity,
-      rooms: new Set<string>(),
+      subscriptions: new Map<string, RealtimeSubscriptionRequest>(),
     });
   }
 
@@ -124,13 +124,19 @@ export class RealtimeGateway implements OnGatewayInit<Namespace>, OnGatewayConne
       return;
     }
     for (const eventType of request.eventTypes) {
-      const room = roomForSubscription({
+      const subscription: RealtimeSubscriptionRequest = {
         organizationId: request.organizationId,
         ...(request.branchId ? { branchId: request.branchId } : {}),
+        eventTypes: [eventType],
+        ...(request.correlationId ? { correlationId: request.correlationId } : {}),
+      };
+      const room = roomForSubscription({
+        organizationId: subscription.organizationId,
+        ...(subscription.branchId ? { branchId: subscription.branchId } : {}),
         eventType,
       });
       await client.join(room);
-      connection.rooms.add(room);
+      connection.subscriptions.set(room, subscription);
       client.emit('server.realtime.event', createRealtimeEvent('technical.subscription.confirmed', {
         eventType,
       }, {
@@ -147,15 +153,24 @@ export class RealtimeGateway implements OnGatewayInit<Namespace>, OnGatewayConne
 
   async revalidateConnections(): Promise<void> {
     await Promise.all([...this.connections.values()].map(async (connection) => {
+      let identity: AuthenticatedIdentity;
       try {
-        const identity = await this.auth.authenticate(connection.accessToken);
+        identity = await this.auth.authenticate(connection.accessToken);
         if (identity.sessionId !== connection.identity.sessionId || identity.userId !== connection.identity.userId) {
           throw new Error('session changed');
         }
-        connection.identity = identity;
-        connection.client.data.identity = identity;
       } catch {
         this.reject(connection.client, 'SESSION_INVALID');
+        connection.client.disconnect(true);
+        this.connections.delete(connection.client.id);
+        return;
+      }
+      try {
+        connection.identity = identity;
+        connection.client.data.identity = identity;
+        await this.revalidateSubscriptions(connection);
+      } catch {
+        this.reject(connection.client, 'AUTHORIZATION_REVALIDATION_FAILED');
         connection.client.disconnect(true);
         this.connections.delete(connection.client.id);
       }
@@ -179,6 +194,15 @@ export class RealtimeGateway implements OnGatewayInit<Namespace>, OnGatewayConne
       organizationId: request.organizationId,
       ...(request.branchId ? { branchId: request.branchId } : {}),
     });
+  }
+
+  private async revalidateSubscriptions(connection: ActiveConnection): Promise<void> {
+    for (const [room, subscription] of connection.subscriptions) {
+      if (await this.isSubscriptionAllowed(connection.identity, subscription)) continue;
+      await connection.client.leave(room);
+      connection.subscriptions.delete(room);
+      this.reject(connection.client, 'SUBSCRIPTION_REVOKED', subscription.correlationId);
+    }
   }
 
   private reject(client: RealtimeSocket, code: string, correlationId?: string): void {

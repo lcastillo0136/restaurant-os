@@ -44,7 +44,7 @@ async function bootstrap(): Promise<void> {
     app.enableCors({
       origin: environment.allowedOrigins,
       credentials: false,
-      methods: ['GET', 'HEAD', 'OPTIONS'],
+      methods: ['GET', 'HEAD', 'OPTIONS', 'POST'],
     });
   }
 

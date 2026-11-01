@@ -29,9 +29,9 @@ Un proxy inverso (por ejemplo Caddy) sigue siendo una opción posterior de infra
 
 ## Controles aplicados
 
-- REST conserva CORS explícito sin comodines y `credentials: false`.
+- REST conserva CORS explícito sin comodines y `credentials: false`; permite `GET`, `HEAD`, `OPTIONS` y `POST` para los endpoints de autenticación ya existentes, solo desde orígenes aprobados.
 - Socket.IO valida `Origin` con la misma lista, rechaza origins browser no incluidos y no acepta tokens en query strings.
 - La identidad se resuelve desde una sesión opaca persistida; los usuarios inactivos, sesiones expiradas o revocadas se desconectan.
-- Las rooms no son accesibles por nombre del cliente; una suscripción requiere RBAC y comprobación de organización/sucursal activa.
+- Las rooms no son accesibles por nombre del cliente; una suscripción requiere RBAC y comprobación de organización/sucursal activa, que se repite periódicamente para abandonar una sala cuando se revoca su permiso o alcance.
 - Se aplican límite de conexiones, tamaño de mensaje, ping/timeout, limpieza y errores canónicos sin secretos.
 - Si en el futuro web usa cookies, será necesaria una política aprobada de `HttpOnly`, `Secure`, `SameSite` y CSRF. CORS no sustituye ninguno de esos controles.

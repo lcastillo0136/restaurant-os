@@ -28,15 +28,18 @@ function environment(overrides = {}) {
 function socket(id = 'socket-1', token = accessToken) {
   const events = [];
   const rooms = [];
+  const leftRooms = [];
   return {
     id,
     handshake: { auth: token ? { accessToken: token } : {}, query: {} },
     data: {},
     events,
     rooms,
+    leftRooms,
     disconnected: false,
     emit: (event, payload) => events.push({ event, payload }),
     join: async (room) => { rooms.push(room); },
+    leave: async (room) => { leftRooms.push(room); },
     disconnect(force) { this.disconnected = force; },
   };
 }
@@ -127,6 +130,57 @@ test('revalida sesiones activas, desconecta una revocada y limpia recursos', asy
   assert.equal(realtime.activeConnectionCount, 0);
   realtime.handleDisconnect(client);
   assert.equal(realtime.activeConnectionCount, 0);
+});
+
+test('abandona una suscripción revocada y conserva una suscripción que sigue autorizada', async () => {
+  let subscriptionAuthorized = true;
+  const calls = [];
+  const realtime = new RealtimeGateway(
+    { authenticate: async () => identity },
+    { hasPermissions: async (userId, permissions, scope) => {
+      calls.push({ userId, permissions, scope });
+      return subscriptionAuthorized;
+    } },
+    environment(),
+  );
+  const client = socket();
+  await realtime.authenticateHandshake(client);
+  await realtime.handleSubscribe(client, { organizationId, branchId, eventTypes: ['technical.connection'] });
+  const room = client.rooms[0];
+
+  await realtime.revalidateConnections();
+  assert.deepEqual(client.leftRooms, []);
+  assert.equal(client.disconnected, false);
+  assert.equal(realtime.activeConnectionCount, 1);
+
+  subscriptionAuthorized = false;
+  await realtime.revalidateConnections();
+  assert.deepEqual(client.leftRooms, [room]);
+  assert.equal(client.disconnected, false);
+  assert.equal(client.events.at(-1).payload.data.code, 'SUBSCRIPTION_REVOKED');
+  assert.deepEqual(calls.at(-1), {
+    userId: 'user-1',
+    permissions: ['auth.session.read'],
+    scope: { organizationId, branchId },
+  });
+});
+
+test('abandona suscripciones cuando AuthorizationService detecta organización o sucursal desactivada', async () => {
+  for (const reason of ['organization-inactive', 'branch-inactive']) {
+    let active = true;
+    const realtime = new RealtimeGateway(
+      { authenticate: async () => identity },
+      { hasPermissions: async () => active },
+      environment(),
+    );
+    const client = socket(`socket-${reason}`);
+    await realtime.authenticateHandshake(client);
+    await realtime.handleSubscribe(client, { organizationId, branchId, eventTypes: ['technical.connection'] });
+    active = false;
+    await realtime.revalidateConnections();
+    assert.equal(client.leftRooms.length, 1, reason);
+    assert.equal(client.events.at(-1).payload.data.code, 'SUBSCRIPTION_REVOKED', reason);
+  }
 });
 
 test('limita conexiones simultáneas sin registrar credenciales', async () => {

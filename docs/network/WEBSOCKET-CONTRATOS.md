@@ -40,6 +40,8 @@ Tipos disponibles:
 
 `eventId` identifica el mensaje técnico, no confirma ninguna operación comercial. La entrega de Socket.IO es **best-effort**: no hay persistencia, ack de negocio ni reenvío garantizado.
 
+Los errores de comunicación usan códigos canónicos sin tokens ni detalles internos: `SESSION_INVALID` desconecta una sesión expirada, revocada o inconsistente; `SUBSCRIPTION_REVOKED` confirma que el servidor abandonó una sala que ya no pasó RBAC; `AUTHORIZATION_REVALIDATION_FAILED` desconecta por denegación segura cuando no se puede reevaluar. La revocación de una sala se revisa en el intervalo configurado, no de forma instantánea.
+
 ## Suscripción
 
 Evento cliente: `client.realtime.subscribe`.
