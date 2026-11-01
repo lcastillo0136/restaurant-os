@@ -2,15 +2,14 @@
 
 ## Motor implementado
 
-`AuthorizationService` obtiene roles activos, permisos activos y `user_roles.organization_id` desde PostgreSQL. `AuthorizationGuard` deniega por defecto y requiere ambos decoradores:
+`AuthorizationService` obtiene roles y permisos activos, además de organización y sucursal activas, desde PostgreSQL. `AuthorizationGuard` deniega por defecto: rechaza permisos ausentes o vacíos, metadatos de alcance incompletos, parámetros faltantes y cualquier grant incongruente. `RequirePermissions` instala automáticamente `AuthGuard` y `AuthorizationGuard`, de modo que un futuro controlador que declare permisos no puede olvidar activar ambos guards.
 
 ```ts
-@UseGuards(AuthGuard, AuthorizationGuard)
 @RequirePermissions('tables.open')
 @RequireAuthorizationScope({ organizationParam: 'organizationId', branchParam: 'branchId' })
 ```
 
-El valor de ruta solo selecciona el ámbito candidato; nunca concede autoridad. Una asignación `ORGANIZATION` concede un permiso en la organización exacta. Una asignación `BRANCH` exige además la sucursal exacta. La FK compuesta de Fase 1.2 ya prueba que esa sucursal pertenece a la organización de la asignación.
+El valor de ruta solo selecciona el ámbito candidato; nunca concede autoridad. Una asignación `ORGANIZATION` concede un permiso en la organización exacta. Una asignación `BRANCH` exige además la sucursal exacta, activa y perteneciente a la organización activa de la asignación. La FK compuesta de Fase 1.2 ya prueba esa relación; el servicio la vuelve a comprobar defensivamente al construir grants.
 
 No hay endpoints comerciales protegidos ficticiamente en esta fase. Los futuros controladores deben usar el guard, no reglas repartidas en cada acción.
 

@@ -4,4 +4,4 @@ El paquete `restaurant-os-fase-1.4-revision.zip` incluye únicamente código Nes
 
 Se excluyen `.env` reales, contraseñas, tokens, bases, respaldos, `node_modules`, `dist`, cachés, binarios y referencias visuales privadas.
 
-Evidencia técnica: generación Prisma y build de API correctos; 10 pruebas aisladas correctas de Argon2id, login, usuario suspendido, rate limiting, tokens manipulados/expirados, rotación/revocación, configuración, RBAC entre organizaciones/sucursales y auditoría segura. No se ejecutaron migraciones ni operaciones contra PostgreSQL local.
+Evidencia técnica: generación Prisma y build de API correctos; 10 pruebas aisladas de autenticación y 5 pruebas RBAC correctas. Estas cubren Argon2id, login, usuario suspendido, rate limiting, tokens manipulados/expirados, rotación/revocación, configuración, auditoría segura y denegación de política/alcance/organización/sucursal inválidos. No se ejecutaron migraciones ni operaciones contra PostgreSQL local.

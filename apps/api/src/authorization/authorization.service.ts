@@ -23,8 +23,11 @@ export class AuthorizationService {
       where: {
         userId,
         role: { status: 'ACTIVE' },
+        organization: { status: 'ACTIVE' },
       },
       include: {
+        organization: true,
+        branch: true,
         role: {
           include: {
             permissions: { include: { permission: true } },
@@ -32,15 +35,28 @@ export class AuthorizationService {
         },
       },
     });
-    return assignments.map((assignment) => ({
-      organizationId: assignment.organizationId,
-      branchId: assignment.branchId,
-      scope: assignment.scope,
-      roleCode: assignment.role.code,
-      permissions: assignment.role.permissions
-        .filter(({ permission }) => permission.status === 'ACTIVE')
-        .map(({ permission }) => permission.code),
-    }));
+    return assignments
+      .filter((assignment) => (
+        assignment.organization.status === 'ACTIVE'
+        && (
+          (assignment.scope === 'ORGANIZATION' && assignment.branchId === null)
+          || (
+            assignment.scope === 'BRANCH'
+            && assignment.branch !== null
+            && assignment.branch.status === 'ACTIVE'
+            && assignment.branch.organizationId === assignment.organizationId
+          )
+        )
+      ))
+      .map((assignment) => ({
+        organizationId: assignment.organizationId,
+        branchId: assignment.branchId,
+        scope: assignment.scope,
+        roleCode: assignment.role.code,
+        permissions: assignment.role.permissions
+          .filter(({ permission }) => permission.status === 'ACTIVE')
+          .map(({ permission }) => permission.code),
+      }));
   }
 
   async hasPermissions(userId: string, requiredPermissions: string[], scope: RequestedScope): Promise<boolean> {

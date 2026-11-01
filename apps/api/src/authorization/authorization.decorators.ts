@@ -1,12 +1,12 @@
-import { SetMetadata } from '@nestjs/common';
+import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '../auth/auth.guard.js';
+import { AuthorizationGuard } from './authorization.guard.js';
+import { authorizationScopeKey, AuthorizationScope, requiredPermissionsKey } from './authorization.metadata.js';
 
-export const requiredPermissionsKey = 'restaurant-os:required-permissions';
-export const authorizationScopeKey = 'restaurant-os:authorization-scope';
+export { authorizationScopeKey, AuthorizationScope, requiredPermissionsKey } from './authorization.metadata.js';
 
-export type AuthorizationScope = Readonly<{
-  organizationParam: string;
-  branchParam?: string;
-}>;
-
-export const RequirePermissions = (...permissions: string[]) => SetMetadata(requiredPermissionsKey, permissions);
+export const RequirePermissions = (...permissions: string[]) => applyDecorators(
+  SetMetadata(requiredPermissionsKey, permissions),
+  UseGuards(AuthGuard, AuthorizationGuard),
+);
 export const RequireAuthorizationScope = (scope: AuthorizationScope) => SetMetadata(authorizationScopeKey, scope);
