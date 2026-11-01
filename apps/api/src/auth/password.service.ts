@@ -1,5 +1,5 @@
 import * as crypto from 'node:crypto';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { promisify } from 'node:util';
 
 export type PasswordProfile = Readonly<{
@@ -8,6 +8,8 @@ export type PasswordProfile = Readonly<{
   parallelism: number;
   tagLength: number;
 }>;
+
+export const passwordProfileToken = Symbol('password-profile');
 
 type NodeArgon2 = (
   algorithm: 'argon2id',
@@ -33,7 +35,9 @@ function encode(value: Buffer): string {
 
 @Injectable()
 export class PasswordService {
-  constructor(private readonly profile: PasswordProfile = productionPasswordProfile) {}
+  constructor(
+    @Optional() @Inject(passwordProfileToken) private readonly profile: PasswordProfile = productionPasswordProfile,
+  ) {}
 
   async hash(password: string): Promise<string> {
     const salt = crypto.randomBytes(16);

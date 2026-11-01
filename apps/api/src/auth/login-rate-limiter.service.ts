@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { resolveAuthEnvironment } from '../environment.js';
 
 export type LoginRateLimitPolicy = Readonly<{
@@ -6,15 +6,19 @@ export type LoginRateLimitPolicy = Readonly<{
   windowMs: number;
 }>;
 
+export const loginRateLimitPolicyToken = Symbol('login-rate-limit-policy');
+
 @Injectable()
 export class LoginRateLimiterService {
   private readonly attempts = new Map<string, number[]>();
   private readonly policy: LoginRateLimitPolicy;
 
-  constructor(policy: LoginRateLimitPolicy = {
-    limit: resolveAuthEnvironment().loginAttemptLimit,
-    windowMs: resolveAuthEnvironment().loginAttemptWindowSeconds * 1000,
-  }) {
+  constructor(
+    @Optional() @Inject(loginRateLimitPolicyToken) policy: LoginRateLimitPolicy = {
+      limit: resolveAuthEnvironment().loginAttemptLimit,
+      windowMs: resolveAuthEnvironment().loginAttemptWindowSeconds * 1000,
+    },
+  ) {
     this.policy = policy;
   }
 

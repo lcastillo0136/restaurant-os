@@ -1,5 +1,5 @@
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Optional } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service.js';
 import { resolveAuthEnvironment } from '../environment.js';
 import { AuthenticatedIdentity, IssuedTokens } from './auth.types.js';
@@ -8,6 +8,8 @@ export type SessionPolicy = Readonly<{
   accessTokenTtlSeconds: number;
   refreshTokenTtlSeconds: number;
 }>;
+
+export const sessionPolicyToken = Symbol('session-policy');
 
 type SessionUser = Readonly<{
   id: string;
@@ -31,7 +33,7 @@ export class SessionService {
 
   constructor(
     private readonly prisma: PrismaService,
-    policy: SessionPolicy = resolveAuthEnvironment(),
+    @Optional() @Inject(sessionPolicyToken) policy: SessionPolicy = resolveAuthEnvironment(),
   ) {
     this.policy = policy;
   }
