@@ -8,10 +8,10 @@ test('expone únicamente el estado técnico después de confirmar PostgreSQL', a
     ping: async () => { pinged = true; },
   });
 
-  assert.deepEqual(await controller.health(), {
+  assert.deepEqual(await controller.readiness(), {
     service: 'restaurant-os-api',
     status: 'ok',
-    phase: '1.2',
+    phase: '1.3',
     database: 'reachable',
   });
   assert.equal(pinged, true);

@@ -25,3 +25,5 @@
 - Fase 1.1: antes de integrar una app web con la API, aprobar los orígenes concretos de `API_ALLOWED_ORIGINS` junto con el dominio/certificado LAN. Mientras tanto CORS permanece desactivado por defecto.
 - Fase 1.2: definir las políticas concretas de roles y permisos, el proveedor de identidad, el ciclo de vida de sesiones y qué operaciones escribirán eventos de auditoría antes de crear módulos funcionales. La estructura RBAC/auditoría existe, pero no se sembraron políticas ni identidades reales.
 - Fase 1.2: una restauración física solo podrá comprobarse contra una base temporal nueva y vacía con autorización explícita para crearla y, en su caso, eliminarla. El respaldo custom y su lectura con `pg_restore --list` ya fueron verificados sin sobrescribir bases.
+- Fase 1.3: definir qué recursos y alcance deben documentarse con OpenAPI antes de incorporar una interfaz interactiva; por ahora solo existe documentación estática de endpoints técnicos reales.
+- Fase 1.3: antes de exponer el backend fuera de loopback, aprobar TLS LAN, dominio/certificados, orígenes CORS, dispositivos y política de autenticación/autorización de Fase 1.4.
