@@ -1,13 +1,13 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '../generated/prisma/client.js';
 import { PasswordService } from '../auth/password.service.js';
+import { safeBootstrapErrorMessage } from './bootstrap-error.js';
 import { parseFirstAdminCommand, resolveAuthorizedBootstrapUrl } from './first-admin-command.js';
 import { FirstAdminProvisioner, FirstAdminProvisioningError, type FirstAdminRepository } from './first-admin-provisioner.js';
+import { assertInteractiveTerminal, readHiddenLine } from './terminal-input.js';
 
 async function readLine(prompt: string, hidden = false): Promise<string> {
-  if (!process.stdin.isTTY || !process.stdout.isTTY) {
-    throw new FirstAdminProvisioningError('El bootstrap exige una terminal interactiva; no acepta secretos redirigidos.');
-  }
+  assertInteractiveTerminal(process.stdin, process.stdout);
   process.stdout.write(prompt);
   if (!hidden) {
     const { createInterface } = await import('node:readline/promises');
@@ -18,34 +18,7 @@ async function readLine(prompt: string, hidden = false): Promise<string> {
       reader.close();
     }
   }
-  return new Promise((resolve, reject) => {
-    let value = '';
-    const input = process.stdin;
-    const finish = (): void => {
-      input.off('data', onData);
-      input.setRawMode(false);
-      process.stdout.write('\n');
-      resolve(value);
-    };
-    const onData = (chunk: Buffer): void => {
-      const character = chunk.toString('utf8');
-      if (character === '\r' || character === '\n') return finish();
-      if (character === '\u0003') {
-        input.off('data', onData);
-        input.setRawMode(false);
-        reject(new FirstAdminProvisioningError('Bootstrap cancelado por el operador.'));
-        return;
-      }
-      if (character === '\u0008' || character === '\u007f') {
-        value = value.slice(0, -1);
-        return;
-      }
-      value += character;
-    };
-    input.setRawMode(true);
-    input.resume();
-    input.on('data', onData);
-  });
+  return readHiddenLine(process.stdin, process.stdout, prompt);
 }
 
 async function main(): Promise<void> {
@@ -79,7 +52,6 @@ async function main(): Promise<void> {
 }
 
 main().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : 'Error no identificable durante el bootstrap.';
-  process.stderr.write(`Bootstrap rechazado: ${message}\n`);
+  process.stderr.write(`Bootstrap rechazado: ${safeBootstrapErrorMessage(error)}\n`);
   process.exitCode = 1;
 });

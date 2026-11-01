@@ -10,7 +10,7 @@
 
 | Comando | Resultado real | Alcance |
 | --- | --- | --- |
-| `pnpm --filter @restaurant-os/api test:phase-2.1` | Correcto: build Prisma/Nest y 4/4 pruebas | Repositorio ficticio en memoria; no abre PostgreSQL. |
+| `pnpm --filter @restaurant-os/api test:phase-2.1` | Correcto: build Prisma/Nest y 6/6 pruebas | Repositorio ficticio en memoria; no abre PostgreSQL. Incluye rechazo de `--branch-id` duplicado, lectura oculta por bloques/restauración de TTY y ocultamiento de errores internos. |
 
 No se ejecutaron la batería general, React, Flutter, Android, GitHub Actions, migraciones, backup, restore, conexiones a PostgreSQL ni la CLI de bootstrap.
 

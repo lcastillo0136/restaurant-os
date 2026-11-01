@@ -23,6 +23,8 @@ La configuración habitual de desarrollo resuelve `DATABASE_URL` para `restauran
 
 El aprovisionador abre una transacción `Serializable` y toma un advisory lock PostgreSQL. Sólo continúa si hay cero identidades; crea la identidad `LOCAL`, hash Argon2id, una única asignación de rol con organización y sucursal si aplica, y un evento `ADMIN_BOOTSTRAP` sin contraseña, token ni URL. Las ejecuciones repetidas o simultáneas se rechazan.
 
+La CLI sólo expone texto de `FirstAdminProvisioningError`, cuyos mensajes son rechazos controlados. Cualquier error inesperado de Prisma, PostgreSQL o la terminal se reduce a un mensaje interno genérico, sin URL, credenciales, SQL ni detalle de driver.
+
 No hay actualmente matriz RBAC definitiva aprobada ni datos RBAC sembrados. Por ello la CLI está implementada pero no está autorizada para ejecutarse: el rol y los permisos a proporcionar deberán provenir de una aprobación posterior.
 
 ## Límites y riesgos

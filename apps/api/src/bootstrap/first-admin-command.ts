@@ -21,6 +21,13 @@ function requiredOption(options: ReadonlyMap<string, string[]>, name: string): s
   return values[0].trim();
 }
 
+function optionalSingleOption(options: ReadonlyMap<string, string[]>, name: string): string | undefined {
+  const values = options.get(name) ?? [];
+  if (values.length === 0) return undefined;
+  if (values.length !== 1 || !values[0]?.trim()) throw new FirstAdminProvisioningError(`${name} debe declararse como máximo una vez y con un valor no vacío.`);
+  return values[0].trim();
+}
+
 /** Parses only non-secret, explicit operator intent. Passwords are prompted, never parsed. */
 export function parseFirstAdminCommand(argumentsList: readonly string[]): FirstAdminCommand {
   const options = new Map<string, string[]>();
@@ -41,13 +48,17 @@ export function parseFirstAdminCommand(argumentsList: readonly string[]): FirstA
   if (confirmation !== `BOOTSTRAP-FIRST-ADMIN:${targetName}`) {
     throw new FirstAdminProvisioningError('La confirmación explícita no coincide con la base objetivo.');
   }
-  const approvedPermissionCodes = (options.get('--permission') ?? []).map((value) => value.trim()).filter(Boolean);
+  const approvedPermissionCodes = (options.get('--permission') ?? []).map((value) => {
+    const permission = value.trim();
+    if (!permission) throw new FirstAdminProvisioningError('--permission no admite valores vacíos.');
+    return permission;
+  });
   if (approvedPermissionCodes.length === 0) throw new FirstAdminProvisioningError('Debe indicar al menos un --permission.');
 
   return Object.freeze({
     targetName,
     organizationId: requiredOption(options, '--organization-id'),
-    branchId: options.get('--branch-id')?.[0]?.trim() || undefined,
+    branchId: optionalSingleOption(options, '--branch-id'),
     roleCode: requiredOption(options, '--role-code'),
     approvedPermissionCodes,
     approvalReference: requiredOption(options, '--approval-reference'),

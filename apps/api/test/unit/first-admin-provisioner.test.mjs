@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import test from 'node:test';
+import { safeBootstrapErrorMessage } from '../../dist/bootstrap/bootstrap-error.js';
 import { parseFirstAdminCommand, resolveAuthorizedBootstrapUrl } from '../../dist/bootstrap/first-admin-command.js';
-import { FirstAdminProvisioner } from '../../dist/bootstrap/first-admin-provisioner.js';
+import { FirstAdminProvisioner, FirstAdminProvisioningError } from '../../dist/bootstrap/first-admin-provisioner.js';
+import { readHiddenLine } from '../../dist/bootstrap/terminal-input.js';
 import { PasswordService } from '../../dist/auth/password.service.js';
 
 const passwordProfile = { memory: 8192, passes: 1, parallelism: 1, tagLength: 32 };
@@ -108,4 +110,67 @@ test('exige destino explícito y bloquea restaurant_dev antes de abrir una conex
   assert.equal(resolveAuthorizedBootstrapUrl(`postgresql://user:secret@127.0.0.1:5432/${targetName}`, targetName).includes(targetName), true);
   assert.throws(() => resolveAuthorizedBootstrapUrl('postgresql://user:secret@127.0.0.1:5432/restaurant_dev', 'restaurant_dev'), /bloqueada/);
   assert.throws(() => parseFirstAdminCommand(['--target-name', targetName]), /exactamente una vez/);
+  assert.throws(() => parseFirstAdminCommand([
+    '--target-name', targetName,
+    '--organization-id', randomUUID(),
+    '--branch-id', randomUUID(),
+    '--branch-id', randomUUID(),
+    '--role-code', 'ORG_ADMIN_BOOTSTRAP',
+    '--permission', 'auth.session.read',
+    '--approval-reference', 'owner-approved-2026-11-01',
+    '--confirm-first-administrator', `BOOTSTRAP-FIRST-ADMIN:${targetName}`,
+  ]), /--branch-id/);
+  assert.throws(() => parseFirstAdminCommand([
+    '--target-name', targetName,
+    '--organization-id', randomUUID(),
+    '--role-code', 'ORG_ADMIN_BOOTSTRAP',
+    '--permission', '',
+    '--approval-reference', 'owner-approved-2026-11-01',
+    '--confirm-first-administrator', `BOOTSTRAP-FIRST-ADMIN:${targetName}`,
+  ]), /--permission/);
+});
+
+class FakeTerminalInput {
+  constructor() {
+    this.isTTY = true;
+    this.listeners = new Map();
+    this.rawModes = [];
+    this.resumed = false;
+  }
+
+  on(event, listener) { this.listeners.set(event, listener); }
+  off(event) { this.listeners.delete(event); }
+  setRawMode(enabled) { this.rawModes.push(enabled); }
+  resume() { this.resumed = true; }
+  emitData(value) { this.listeners.get('data')?.(Buffer.from(value)); }
+}
+
+class FakeTerminalOutput {
+  constructor() { this.isTTY = true; this.output = ''; }
+  write(value) { this.output += value; }
+}
+
+test('lee contraseña por bloques sin eco y restaura raw mode al confirmar o cancelar', async () => {
+  const input = new FakeTerminalInput();
+  const output = new FakeTerminalOutput();
+  const read = readHiddenLine(input, output, 'Contraseña: ');
+  input.emitData('parte');
+  input.emitData('1\x7F2\r');
+  assert.equal(await read, 'parte2');
+  assert.equal(input.resumed, true);
+  assert.deepEqual(input.rawModes, [true, false]);
+  assert.equal(output.output.includes('parte2'), false);
+
+  const cancelledInput = new FakeTerminalInput();
+  const cancelledOutput = new FakeTerminalOutput();
+  const cancelled = readHiddenLine(cancelledInput, cancelledOutput, 'Contraseña: ');
+  cancelledInput.emitData('pegado\u0003');
+  await assert.rejects(() => cancelled, /cancelado/);
+  assert.deepEqual(cancelledInput.rawModes, [true, false]);
+  assert.equal(cancelledOutput.output.includes('pegado'), false);
+});
+
+test('solo muestra mensajes controlados; oculta errores internos', () => {
+  assert.equal(safeBootstrapErrorMessage(new Error('postgresql://user:secret@host SQL SELECT 1')), 'El bootstrap no pudo completarse por un error interno. No se muestran detalles sensibles.');
+  assert.equal(safeBootstrapErrorMessage(new FirstAdminProvisioningError('Destino controlado inválido.')), 'Destino controlado inválido.');
 });

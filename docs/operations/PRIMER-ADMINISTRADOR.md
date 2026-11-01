@@ -33,6 +33,9 @@ Use `--branch-id <uuid>` sólo si el rol aprobado es de sucursal. La lista repet
 
 - rechaza opciones incompletas, destino implícito, URL que no coincida con el destino y `restaurant_dev`;
 - rechaza terminal no interactiva y no admite contraseña por argumento;
+- procesa la contraseña oculta por bloques, incluyendo pegado, Backspace, Enter y Ctrl+C, sin eco y restaurando el modo normal de la terminal;
+- muestra detalles sólo para rechazos controlados; los errores internos se reducen a un mensaje genérico sin URL, credenciales ni SQL;
+- rechaza `--branch-id` vacío o repetido; `--permission` continúa siendo repetible y no admite valores vacíos;
 - no crea roles/permisos, no asume autoridad administrativa y no expone endpoint HTTP;
 - adquiere advisory lock y usa aislamiento serializable;
 - rechaza la operación cuando ya existe cualquier identidad, rol inactivo, permisos distintos, organización/sucursal inválida o identidad duplicada;
