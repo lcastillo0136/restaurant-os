@@ -141,9 +141,10 @@ Fecha: 2026-11-01
 
 ## Próxima revisión
 
-La Fase 2.1 — Preparación operativa y persistencia está preparada para revisión, sin operar PostgreSQL ni aprovisionar una identidad real. La rama propuesta es `feature/phase-2.1-operational-persistence`; su publicación y Pull Request hacia `Master` quedan autorizados, pero no su fusión. No se inicia Fase 2.2.
+La Fase 2.1 — Preparación operativa y persistencia fue aprobada formalmente por el propietario el 2026-11-01. Su integración mediante el PR #10 hacia `Master` está autorizada. El bootstrap del primer administrador está implementado, pero no se ejecutó contra PostgreSQL; los procedimientos de migraciones y restauración están preparados; y la matriz RBAC continúa siendo una propuesta pendiente de aprobación definitiva. La siguiente entrega prevista es Fase 2.2 — Organizaciones y sucursales, sin autorización aún para iniciarla.
 
 - [x] Fase 2.1 (2026-11-01): diagnóstico estático de Prisma, migraciones, autenticación, sesiones, RBAC, auditoría y configuración. No se consultó el estado de PostgreSQL.
 - [x] Fase 2.1: CLI local de primer administrador preparada con destino explícito fuera de `restaurant_dev`, terminal interactiva, Argon2id, rol/permisos exactos, transacción serializable, advisory lock, denegación de duplicados y auditoría sin secretos. No se ejecutó contra una base.
 - [x] Fase 2.1: documentación de estrategia, migraciones seguras, RBAC propuesto, respaldo/restauración, evidencias y pruebas diferidas añadida bajo `docs/operations/`.
 - [x] Fase 2.1: correcciones finales del PR #10 (2026-11-01): mensajes internos genéricos, lectura oculta robusta con restauración de TTY y rechazo de `--branch-id` duplicado. `pnpm --filter @restaurant-os/api test:phase-2.1` pasó con 6/6 pruebas en memoria; no se ejecutaron PostgreSQL, migraciones, restore, red, dispositivos, React, Flutter, Android ni GitHub Actions.
+- [x] Fase 2.1 aprobada formalmente (2026-11-01): autorizada la integración del PR #10 mediante merge commit y la etiqueta `operations-v2.1-approved`. Se conserva como observación cosmética no bloqueante que el prompt de contraseña puede imprimirse dos veces; queda diferida para una entrega posterior y no se modificó el código aprobado.
