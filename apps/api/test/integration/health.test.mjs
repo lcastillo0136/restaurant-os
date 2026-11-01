@@ -63,6 +63,26 @@ test('arranca la API y responde health en loopback', async (context) => {
   assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
   assert.equal(response.headers.get('x-frame-options'), 'DENY');
 
+  const preflight = await fetch(`http://127.0.0.1:${port}/api/v1/auth/login`, {
+    method: 'OPTIONS',
+    headers: {
+      Origin: 'http://localhost:5173',
+      'Access-Control-Request-Method': 'POST',
+    },
+  });
+  assert.equal(preflight.status, 204, output.join(''));
+  assert.equal(preflight.headers.get('access-control-allow-origin'), 'http://localhost:5173');
+  assert.match(preflight.headers.get('access-control-allow-methods') ?? '', /POST/);
+
+  const rejectedOrigin = await fetch(`http://127.0.0.1:${port}/api/v1/auth/login`, {
+    method: 'OPTIONS',
+    headers: {
+      Origin: 'https://not-authorized.example',
+      'Access-Control-Request-Method': 'POST',
+    },
+  });
+  assert.equal(rejectedOrigin.headers.get('access-control-allow-origin'), null);
+
   const missingRoute = await fetch(`http://127.0.0.1:${port}/api/v1/not-a-route`);
   assert.equal(missingRoute.status, 404, output.join(''));
   const missingBody = await missingRoute.json();

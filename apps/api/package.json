@@ -16,12 +16,15 @@
     "test:unit": "pnpm build && node --test test/unit/environment.test.mjs test/unit/database-environment.test.mjs test/unit/system.controller.test.mjs test/unit/database.controller.test.mjs test/unit/validation.pipe.test.mjs test/unit/http-exception.filter.test.mjs test/unit/http-logging.interceptor.test.mjs test/unit/request-context.middleware.test.mjs",
     "test:integration": "pnpm build && node --test test/integration/health.test.mjs",
     "test:database": "pnpm build && node --test test/integration/database.test.mjs",
-    "test:database-isolation": "pnpm build && node --test test/integration/user-role-isolation.test.mjs"
+    "test:database-isolation": "pnpm build && node --test test/integration/user-role-isolation.test.mjs",
+    "test:realtime": "pnpm build && node --test test/unit/environment.test.mjs test/unit/realtime.contracts.test.mjs test/unit/realtime.gateway.test.mjs test/integration/health.test.mjs test/integration/payload-limit.test.mjs"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/platform-socket.io": "11.2.8",
+    "@nestjs/websockets": "11.2.8",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "7.10.1",
     "class-transformer": "0.5.1",
@@ -30,7 +33,8 @@
     "express": "5.1.0",
     "pg": "8.16.3",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "socket.io": "4.8.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",
