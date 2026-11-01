@@ -96,20 +96,30 @@ No ejecutar pruebas extensivas ni operaciones administrativas por defecto.
 
 No modificar archivos ajenos al proyecto.
 
-## Integración automática de fases aprobadas
+## Publicación e integración de fases
+
+### Publicación tras autorización de desarrollo
+
+Cuando el propietario autorice desarrollar una fase de Restaurant OS, esa autorización también permite, al terminar la implementación y sus validaciones proporcionales:
+
+1. Crear los commits locales descriptivos necesarios.
+2. Publicar la rama de desarrollo correspondiente.
+3. Crear un Pull Request hacia `Master` con cambios, pruebas, riesgos y pendientes reales.
+
+Esta autorización de publicación no autoriza fusionar el Pull Request, iniciar la fase siguiente ni ejecutar GitHub Actions salvo solicitud expresa del propietario. La autorización concreta de cada fase puede imponer restricciones más estrictas y siempre prevalece.
+
+### Integración automática de fases aprobadas
 
 Cuando el propietario apruebe formalmente una fase de Restaurant OS, dicha aprobación autoriza:
 
 1. Registrar la aprobación en la documentación.
-2. Publicar la rama de desarrollo correspondiente.
-3. Crear un Pull Request hacia `Master`.
-4. Ejecutar GitHub Actions únicamente a solicitud expresa del propietario.
-5. Fusionar el Pull Request mediante **merge commit**, siempre que se cumplan todas las condiciones de integración.
-6. Sincronizar `Master` local con `origin/Master`.
-7. Conservar una referencia verificable de la versión integrada.
-8. Preparar la rama de la siguiente fase, sin comenzar su implementación.
+2. Ejecutar GitHub Actions únicamente a solicitud expresa del propietario.
+3. Fusionar el Pull Request mediante **merge commit**, siempre que se cumplan todas las condiciones de integración.
+4. Sincronizar `Master` local con `origin/Master`.
+5. Conservar una referencia verificable de la versión integrada.
+6. Preparar la rama de la siguiente fase, sin comenzar su implementación.
 
-No solicitar una segunda autorización para fusionar una fase que ya fue aprobada.
+La revisión y aprobación formal siguen siendo obligatorias antes de fusionar. No solicitar una segunda autorización para fusionar una fase que ya fue aprobada formalmente.
 
 ### Condiciones obligatorias para fusionar
 
