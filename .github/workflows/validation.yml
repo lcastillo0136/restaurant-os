@@ -1,10 +1,7 @@
 name: Validación
 
 on:
-  pull_request:
-    branches: [Master]
-  push:
-    branches: [Master]
+  workflow_dispatch:
 
 permissions:
   contents: read
