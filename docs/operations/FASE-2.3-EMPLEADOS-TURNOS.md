@@ -18,4 +18,8 @@ La migración no fue aplicada ni validada contra PostgreSQL. La revisión añadi
 
 ## Evidencia
 
-`pnpm --filter @restaurant-os/api build` pasó tras generar el cliente Prisma de forma estática. `pnpm --filter @restaurant-os/api test:phase-2.3` pasó 10/10 con fixture transaccional en memoria: inventario de esquema, creación auditada, rollback ante fallo simulado de auditoría, aislamiento de organización, asignación laboral activa, empleado inactivo, reactivación sin duplicar, cancelación auditada de turno/asignación, periodo inválido, DTO reales y metadatos de guards. No es evidencia de PostgreSQL real ni de HTTP integral.
+`pnpm --filter @restaurant-os/api build` pasó tras generar el cliente Prisma de forma estática. `pnpm --filter @restaurant-os/api test:phase-2.3` pasó 17/17 con fixture transaccional en memoria: inventario de esquema, creación auditada, rollback ante fallo simulado de auditoría también para asignaciones, aislamiento de organización, asignación laboral activa, empleado inactivo, reactivación sin duplicar, turno cancelado, DTO reales y `AuthorizationGuard` + `AuthorizationService` reales. El guard deniega falta de permiso, cruce de sucursal, otra organización y sucursal inactiva; permite el grant organizacional dentro de su organización. No es evidencia de PostgreSQL real ni de HTTP integral.
+
+## Concurrencia diferida
+
+La unicidad de las relaciones y el `upsert` evitan una segunda fila para la misma pareja empleado–turno o empleado–sucursal. Aun así, una carrera entre la lectura de estados activos y una cancelación o desactivación concurrente necesita validación contra PostgreSQL con el aislamiento y reintentos definitivos autorizados. El fixture en memoria no puede demostrar bloqueos, aislamiento ni conflictos de serialización; no se declara esa garantía como verificada.

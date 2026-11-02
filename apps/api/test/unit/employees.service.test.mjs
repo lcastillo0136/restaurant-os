@@ -13,7 +13,7 @@ async function validate(type, value) {
 
 function fixture({ failAudit = false } = {}) {
   const organizationId = randomUUID(); const otherOrganizationId = randomUUID(); const branchId = randomUUID();
-  const state = { employees: [], assignments: [], shifts: [], shiftAssignments: [], audits: [] };
+  const state = { employees: [], assignments: [], shifts: [], shiftAssignments: [], audits: [], failAudit };
   const transaction = async (work) => {
     const draft = structuredClone(state);
     const tx = {
@@ -38,7 +38,7 @@ function fixture({ failAudit = false } = {}) {
         findFirst: async ({ where }) => draft.shiftAssignments.find((item) => Object.entries(where).every(([key, value]) => item[key] === value)) ?? null,
         update: async ({ where, data }) => Object.assign(draft.shiftAssignments.find((item) => item.id === where.id), data),
       },
-      auditEvent: { create: async ({ data }) => { if (failAudit) throw new Error('simulated audit failure'); draft.audits.push(data); } },
+      auditEvent: { create: async ({ data }) => { if (draft.failAudit) throw new Error('simulated audit failure'); draft.audits.push(data); } },
     };
     const result = await work(tx);
     Object.assign(state, draft);
@@ -107,6 +107,40 @@ test('rechaza empleado inactivo y reactiva una asignación sin duplicarla', asyn
   await assert.rejects(() => service.assignShift(organizationId, branchId, shift.id, employee.id, actor), { status: 404 });
 });
 
+test('repetir asignación a turno no duplica el registro vigente', async () => {
+  const { service, state, organizationId, branchId } = fixture(); const actor = randomUUID();
+  const employee = await service.createEmployee(organizationId, { employeeCode: 'ana-01', displayName: 'Ana' }, actor);
+  const shift = await service.createShift(organizationId, branchId, { scheduledStart: '2026-11-03T09:00:00.000Z', scheduledEnd: '2026-11-03T17:00:00.000Z' }, actor);
+  await service.assignBranch(organizationId, branchId, employee.id, actor);
+  await service.assignShift(organizationId, branchId, shift.id, employee.id, actor);
+  await service.assignShift(organizationId, branchId, shift.id, employee.id, actor);
+  assert.equal(state.shiftAssignments.length, 1);
+  assert.equal(state.shiftAssignments[0].status, 'ACTIVE');
+});
+
+test('deniega asignar personal a turno cancelado', async () => {
+  const { service, organizationId, branchId } = fixture(); const actor = randomUUID();
+  const employee = await service.createEmployee(organizationId, { employeeCode: 'ana-01', displayName: 'Ana' }, actor);
+  const shift = await service.createShift(organizationId, branchId, { scheduledStart: '2026-11-03T09:00:00.000Z', scheduledEnd: '2026-11-03T17:00:00.000Z' }, actor);
+  await service.assignBranch(organizationId, branchId, employee.id, actor);
+  await service.cancelShift(organizationId, branchId, shift.id, actor);
+  await assert.rejects(() => service.assignShift(organizationId, branchId, shift.id, employee.id, actor), { status: 404 });
+});
+
+test('revierte asignación laboral y a turno si falla su auditoría', async () => {
+  const { service, state, organizationId, branchId } = fixture(); const actor = randomUUID();
+  const employee = await service.createEmployee(organizationId, { employeeCode: 'ana-01', displayName: 'Ana' }, actor);
+  state.failAudit = true;
+  await assert.rejects(() => service.assignBranch(organizationId, branchId, employee.id, actor));
+  assert.equal(state.assignments.length, 0);
+  state.failAudit = false;
+  await service.assignBranch(organizationId, branchId, employee.id, actor);
+  const shift = await service.createShift(organizationId, branchId, { scheduledStart: '2026-11-03T09:00:00.000Z', scheduledEnd: '2026-11-03T17:00:00.000Z' }, actor);
+  state.failAudit = true;
+  await assert.rejects(() => service.assignShift(organizationId, branchId, shift.id, employee.id, actor));
+  assert.equal(state.shiftAssignments.length, 0);
+});
+
 test('rechaza periodos de turno inválidos antes de escribir', async () => {
   const { service, state, organizationId, branchId } = fixture();
   await assert.rejects(() => service.createShift(organizationId, branchId, { scheduledStart: '2026-11-03T17:00:00.000Z', scheduledEnd: '2026-11-03T09:00:00.000Z' }, randomUUID()), { status: 409 });
@@ -121,6 +155,7 @@ test('ValidationPipe valida DTO de empleado y rechaza campos no autorizados', as
   assert.equal(absent.displayName, undefined);
   await assert.rejects(() => validate(CreateShiftDto, { scheduledStart: 'not-a-date', scheduledEnd: '2026-11-03T17:00:00.000Z' }), { status: 400 });
   await assert.rejects(() => validate(CreateShiftDto, { scheduledStart: '2026-11-03T09:00:00', scheduledEnd: '2026-11-03T17:00:00.000Z' }), { status: 400 });
+  assert.equal((await validate(CreateShiftDto, { scheduledStart: '2026-11-03T09:00:00.000Z', scheduledEnd: '2026-11-03T17:00:00+00:00' })).scheduledEnd, '2026-11-03T17:00:00+00:00');
   await assert.rejects(() => validate(UpdateShiftDto, { scheduledStart: null }), { status: 400 });
   await assert.rejects(() => validate(UpdateShiftDto, { id: randomUUID() }), { status: 400 });
 });
