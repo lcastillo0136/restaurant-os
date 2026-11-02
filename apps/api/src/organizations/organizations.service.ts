@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../database/prisma.service.js';
-import { CreateBranchDto, UpdateBranchDto } from './dto/branch.dto.js';
+import { ChangeBranchStatusDto, CreateBranchDto, UpdateBranchDto } from './dto/branch.dto.js';
 import { UpdateOrganizationDto } from './dto/organization.dto.js';
 
 const organizationSelect = { id: true, code: true, displayName: true, status: true, createdAt: true, updatedAt: true } as const;
@@ -61,10 +61,20 @@ export class OrganizationsService {
   async updateBranch(organizationId: string, branchId: string, dto: UpdateBranchDto, actorUserId: string) {
     if (dto.timeZone && !validTimeZone(dto.timeZone)) throw new ConflictException('Zona horaria inválida.');
     return this.prisma.$transaction(async (tx) => {
+      const existing = await tx.branch.findFirst({ where: { id: branchId, organizationId }, select: { id: true } });
+      if (!existing) throw new NotFoundException();
+      const branch = await tx.branch.update({ where: { id: branchId }, data: dto, select: branchSelect });
+      await tx.auditEvent.create({ data: { organizationId, branchId, actorUserId, eventType: 'BRANCH_UPDATED', entityType: 'BRANCH', entityId: branchId, metadata: {} } });
+      return branch;
+    });
+  }
+
+  async changeBranchStatus(organizationId: string, branchId: string, dto: ChangeBranchStatusDto, actorUserId: string) {
+    return this.prisma.$transaction(async (tx) => {
       const existing = await tx.branch.findFirst({ where: { id: branchId, organizationId }, select: { id: true, status: true } });
       if (!existing) throw new NotFoundException();
-      const eventType = dto.status && dto.status !== existing.status ? (dto.status === 'ACTIVE' ? 'BRANCH_ACTIVATED' : 'BRANCH_DEACTIVATED') : 'BRANCH_UPDATED';
-      const branch = await tx.branch.update({ where: { id: branchId }, data: dto, select: branchSelect });
+      const eventType = dto.status === existing.status ? 'BRANCH_UPDATED' : dto.status === 'ACTIVE' ? 'BRANCH_ACTIVATED' : 'BRANCH_DEACTIVATED';
+      const branch = await tx.branch.update({ where: { id: branchId }, data: { status: dto.status }, select: branchSelect });
       await tx.auditEvent.create({ data: { organizationId, branchId, actorUserId, eventType, entityType: 'BRANCH', entityId: branchId, metadata: {} } });
       return branch;
     });

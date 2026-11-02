@@ -144,6 +144,7 @@ Fecha: 2026-11-01
 La Fase 2.1 — Preparación operativa y persistencia fue aprobada e integrada el 2026-11-01. El bootstrap del primer administrador está implementado, pero no se ejecutó contra PostgreSQL; los procedimientos de migraciones y restauración están preparados; y la matriz RBAC continúa siendo una propuesta pendiente de aprobación definitiva. Fase 2.2 — Organizaciones y sucursales está en revisión; no autoriza Fase 2.3.
 
 - [x] Fase 2.2 (2026-11-01): backend administrativo de organizaciones y sucursales preparado con RBAC por alcance, DTO, auditoría transaccional y fixture en memoria. No se modificó Prisma, migraciones, PostgreSQL, interfaces ni módulos comerciales. `test:phase-2.2`: 1/1 correcto.
+- [x] Corrección PR #11 (2026-11-01): CORS permite PATCH sólo para orígenes explícitos; reactivación separada exige alcance ORGANIZATION; rutas/DTO rechazan UUID y valores inválidos. `test:phase-2.2`: 2/2 correcto en memoria.
 
 - [x] Fase 2.1 (2026-11-01): diagnóstico estático de Prisma, migraciones, autenticación, sesiones, RBAC, auditoría y configuración. No se consultó el estado de PostgreSQL.
 - [x] Fase 2.1: CLI local de primer administrador preparada con destino explícito fuera de `restaurant_dev`, terminal interactiva, Argon2id, rol/permisos exactos, transacción serializable, advisory lock, denegación de duplicados y auditoría sin secretos. No se ejecutó contra una base.

@@ -18,3 +18,7 @@ Los cuatro permisos son propuestas de contrato: no se sembraron permisos, roles 
 ## Evidencia
 
 `pnpm --filter @restaurant-os/api test:phase-2.2`: build API y 1/1 prueba en memoria correcta (creación, duplicado, aislamiento cruzado, inactivación y auditoría).
+
+## Corrección del PR #11
+
+PATCH se incluye sólo en la política CORS cuando existen orígenes explícitos; no hay wildcard ni CORS por defecto. El cambio de estado usa la ruta administrativa `PATCH /organizations/:organizationId/branches/:branchId/status`: exige `branches.manage`, un grant `ORGANIZATION` para esa organización y comprueba pertenencia antes de modificar. Las rutas ordinarias siguen requiriendo sucursal activa. UUID inválidos se rechazan antes de Prisma; DTO rechaza `null`, campos desconocidos, IDs/códigos inmutables y valores vacíos/espacios. La prueba HTTP de loopback no se pudo ejecutar por `ECONNREFUSED` del entorno; la política CORS se validó unitariamente.

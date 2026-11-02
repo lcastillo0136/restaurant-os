@@ -32,8 +32,10 @@ test('administra sucursales aisladas, valida duplicados y audita cambios', async
   assert.equal(created.organizationId, organizationId);
   await assert.rejects(() => service.createBranch(organizationId, { code: 'centro', displayName: 'Duplicada', timeZone: 'America/Mexico_City' }, actor), { status: 409 });
   await assert.rejects(() => service.branch(otherOrganizationId, created.id), { status: 404 });
-  const updated = await service.updateBranch(organizationId, created.id, { status: 'INACTIVE' }, actor);
+  const updated = await service.changeBranchStatus(organizationId, created.id, { status: 'INACTIVE' }, actor);
   assert.equal(updated.status, 'INACTIVE');
-  assert.deepEqual(audits.map((item) => item.eventType), ['BRANCH_CREATED', 'BRANCH_DEACTIVATED']);
+  const reactivated = await service.changeBranchStatus(organizationId, created.id, { status: 'ACTIVE' }, actor);
+  assert.equal(reactivated.status, 'ACTIVE');
+  assert.deepEqual(audits.map((item) => item.eventType), ['BRANCH_CREATED', 'BRANCH_DEACTIVATED', 'BRANCH_ACTIVATED']);
   assert.equal(branches.length, 1);
 });

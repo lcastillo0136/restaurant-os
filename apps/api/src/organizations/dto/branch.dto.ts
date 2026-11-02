@@ -9,7 +9,8 @@ export class CreateBranchDto {
 }
 
 export class UpdateBranchDto {
-  @IsOptional() @IsString() @MinLength(1) @MaxLength(160) displayName?: string;
-  @IsOptional() @IsString() @MinLength(1) @MaxLength(64) timeZone?: string;
-  @IsOptional() @IsIn(['ACTIVE', 'INACTIVE']) status?: 'ACTIVE' | 'INACTIVE';
+  @IsOptional() @IsString() @Matches(/.*\S.*/) @MinLength(1) @MaxLength(160) displayName?: string;
+  @IsOptional() @IsString() @Matches(/.*\S.*/) @MinLength(1) @MaxLength(64) timeZone?: string;
 }
+
+export class ChangeBranchStatusDto { @IsIn(['ACTIVE', 'INACTIVE']) status!: 'ACTIVE' | 'INACTIVE'; }
