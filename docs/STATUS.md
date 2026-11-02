@@ -141,7 +141,12 @@ Fecha: 2026-11-01
 
 ## Próxima revisión
 
-La Fase 2.1 — Preparación operativa y persistencia fue aprobada formalmente por el propietario el 2026-11-01. Su integración mediante el PR #10 hacia `Master` está autorizada. El bootstrap del primer administrador está implementado, pero no se ejecutó contra PostgreSQL; los procedimientos de migraciones y restauración están preparados; y la matriz RBAC continúa siendo una propuesta pendiente de aprobación definitiva. La siguiente entrega prevista es Fase 2.2 — Organizaciones y sucursales, sin autorización aún para iniciarla.
+La Fase 2.1 — Preparación operativa y persistencia fue aprobada e integrada el 2026-11-01. El bootstrap del primer administrador está implementado, pero no se ejecutó contra PostgreSQL; los procedimientos de migraciones y restauración están preparados; y la matriz RBAC continúa siendo una propuesta pendiente de aprobación definitiva. La Fase 2.2 — Organizaciones y sucursales fue aprobada formalmente el 2026-11-01 e integrada mediante el PR #11. Fase 2.3 — Empleados y turnos queda preparada sólo como rama local, sin autorización para iniciar desarrollo.
+
+- [x] Fase 2.2 (2026-11-01): backend administrativo de organizaciones y sucursales preparado con RBAC por alcance, DTO, auditoría transaccional y fixture en memoria. No se modificó Prisma, migraciones, PostgreSQL, interfaces ni módulos comerciales. `test:phase-2.2`: 1/1 correcto.
+- [x] Corrección PR #11 (2026-11-01): CORS permite PATCH sólo para orígenes explícitos; reactivación separada exige alcance ORGANIZATION; rutas/DTO rechazan UUID y valores inválidos. `test:phase-2.2`: 2/2 correcto en memoria.
+- [x] Ajuste final de validación PR #11 (2026-11-01): `UpdateBranchDto` rechaza `null` sin impedir campos ausentes; creación rechaza nombre en blanco; una prueba de controlador confirma que sólo un grant ORGANIZATION puede cambiar estado. `test:phase-2.2`: 4/4 correcto en memoria.
+- [x] Fase 2.2 aprobada formalmente (2026-11-01): autorizada la integración del PR #11 mediante merge commit y la etiqueta `organizations-v2.2-approved`. Se conservan todas las limitaciones de PostgreSQL, RBAC, CORS HTTP, rollback y operación LAN como pendientes.
 
 - [x] Fase 2.1 (2026-11-01): diagnóstico estático de Prisma, migraciones, autenticación, sesiones, RBAC, auditoría y configuración. No se consultó el estado de PostgreSQL.
 - [x] Fase 2.1: CLI local de primer administrador preparada con destino explícito fuera de `restaurant_dev`, terminal interactiva, Argon2id, rol/permisos exactos, transacción serializable, advisory lock, denegación de duplicados y auditoría sin secretos. No se ejecutó contra una base.

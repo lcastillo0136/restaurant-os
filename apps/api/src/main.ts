@@ -11,6 +11,7 @@ import {
   securityHeadersMiddleware,
 } from './common/http/request-context.middleware.js';
 import { createValidationPipe } from './common/http/validation.pipe.js';
+import { corsOptions } from './common/http/cors-policy.js';
 import { loadDatabaseEnvironment } from './database/database-environment.js';
 import { AppModule } from './app.module.js';
 import { resolveApiEnvironment, resolveTransportSecurityEnvironment, resolveWebsocketEnvironment } from './environment.js';
@@ -40,13 +41,8 @@ async function bootstrap(): Promise<void> {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new HttpLoggingInterceptor());
 
-  if (environment.allowedOrigins.length > 0) {
-    app.enableCors({
-      origin: environment.allowedOrigins,
-      credentials: false,
-      methods: ['GET', 'HEAD', 'OPTIONS', 'POST'],
-    });
-  }
+  const cors = corsOptions(environment.allowedOrigins);
+  if (cors) app.enableCors(cors);
 
   await app.listen(environment.port, environment.host);
   new Logger('Bootstrap').log(JSON.stringify({
