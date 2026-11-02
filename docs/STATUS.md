@@ -141,7 +141,7 @@ Fecha: 2026-11-01
 
 ## Próxima revisión
 
-- [ ] Fase 2.4 (2026-11-02): áreas, mesas y sesiones estructurales preparadas en `feature/phase-2.4-areas-tables`; migración no aplicada, sin flujos comerciales ni interfaces. `test:phase-2.4`: 3/3 estáticas/en memoria; pendiente revisión y aprobación.
+- [ ] Fase 2.4 (2026-11-02): áreas, mesas y sesiones estructurales preparadas en `feature/phase-2.4-areas-tables`; migración no aplicada, sin flujos comerciales ni interfaces. `test:phase-2.4`: 8/8 estáticas/en memoria; pendiente revisión y aprobación.
 
 La Fase 2.1 — Preparación operativa y persistencia fue aprobada e integrada el 2026-11-01. El bootstrap del primer administrador está implementado, pero no se ejecutó contra PostgreSQL; los procedimientos de migraciones y restauración están preparados; y la matriz RBAC continúa siendo una propuesta pendiente de aprobación definitiva. La Fase 2.2 — Organizaciones y sucursales fue aprobada formalmente el 2026-11-01 e integrada mediante el PR #11. Fase 2.3 — Empleados y turnos fue aprobada formalmente el 2026-11-02 para integrarse mediante el PR #12.
 
