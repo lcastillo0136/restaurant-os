@@ -120,6 +120,7 @@ test('ValidationPipe valida DTO de empleado y rechaza campos no autorizados', as
   const absent = await validate(UpdateEmployeeDto, {});
   assert.equal(absent.displayName, undefined);
   await assert.rejects(() => validate(CreateShiftDto, { scheduledStart: 'not-a-date', scheduledEnd: '2026-11-03T17:00:00.000Z' }), { status: 400 });
+  await assert.rejects(() => validate(CreateShiftDto, { scheduledStart: '2026-11-03T09:00:00', scheduledEnd: '2026-11-03T17:00:00.000Z' }), { status: 400 });
   await assert.rejects(() => validate(UpdateShiftDto, { scheduledStart: null }), { status: 400 });
   await assert.rejects(() => validate(UpdateShiftDto, { id: randomUUID() }), { status: 400 });
 });
