@@ -22,6 +22,19 @@ enum RoleScope {
   ORGANIZATION
   BRANCH
 }
+enum EmploymentStatus {
+  ACTIVE
+  INACTIVE
+}
+enum AssignmentStatus {
+  ACTIVE
+  INACTIVE
+  CANCELED
+}
+enum WorkShiftStatus {
+  SCHEDULED
+  CANCELED
+}
 
 model Organization {
   id          String          @id @default(uuid()) @db.Uuid
@@ -34,6 +47,8 @@ model Organization {
   userRoles   UserRole[]
   auditEvents AuditEvent[]
   securityAuditEvents SecurityAuditEvent[]
+  employees Employee[]
+  workShifts WorkShift[]
 
   @@map("organizations")
 }
@@ -51,6 +66,8 @@ model Branch {
   userRoles      UserRole[]
   auditEvents    AuditEvent[]
   securityAuditEvents SecurityAuditEvent[]
+  employeeAssignments EmployeeBranchAssignment[]
+  workShifts WorkShift[]
 
   @@unique([organizationId, code])
   @@unique([id, organizationId])
@@ -71,10 +88,70 @@ model AppUser {
   credential      UserCredential?
   authSessions    AuthSession[]
   securityAuditEvents SecurityAuditEvent[]
+  employee Employee?
 
   @@unique([identitySource, identitySubject])
   @@index([status])
   @@map("users")
+}
+
+model Employee {
+ id String @id @default(uuid()) @db.Uuid
+ organizationId String @map("organization_id") @db.Uuid
+ employeeCode String @map("employee_code") @db.VarChar(64)
+ displayName String @map("display_name") @db.VarChar(160)
+ status EmploymentStatus @default(ACTIVE)
+ userId String? @unique @map("user_id") @db.Uuid
+ createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+ updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+ organization Organization @relation(fields:[organizationId],references:[id],onDelete:Restrict)
+ user AppUser? @relation(fields:[userId],references:[id],onDelete:Restrict)
+ branchAssignments EmployeeBranchAssignment[]
+ shiftAssignments WorkShiftAssignment[]
+ @@unique([organizationId, employeeCode])
+ @@index([organizationId,status])
+ @@map("employees")
+}
+model EmployeeBranchAssignment {
+ id String @id @default(uuid()) @db.Uuid
+ organizationId String @map("organization_id") @db.Uuid
+ employeeId String @map("employee_id") @db.Uuid
+ branchId String @map("branch_id") @db.Uuid
+ status AssignmentStatus @default(ACTIVE)
+ createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+ updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+ employee Employee @relation(fields:[employeeId],references:[id],onDelete:Restrict)
+ branch Branch @relation(fields:[branchId],references:[id],onDelete:Restrict)
+ @@unique([employeeId,branchId])
+ @@index([organizationId,branchId,status])
+ @@map("employee_branch_assignments")
+}
+model WorkShift {
+ id String @id @default(uuid()) @db.Uuid
+ organizationId String @map("organization_id") @db.Uuid
+ branchId String @map("branch_id") @db.Uuid
+ scheduledStart DateTime @map("scheduled_start") @db.Timestamptz(6)
+ scheduledEnd DateTime @map("scheduled_end") @db.Timestamptz(6)
+ status WorkShiftStatus @default(SCHEDULED)
+ createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+ updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+ organization Organization @relation(fields:[organizationId],references:[id],onDelete:Restrict)
+ branch Branch @relation(fields:[branchId],references:[id],onDelete:Restrict)
+ assignments WorkShiftAssignment[]
+ @@index([organizationId,branchId,scheduledStart])
+ @@map("work_shifts")
+}
+model WorkShiftAssignment {
+ id String @id @default(uuid()) @db.Uuid
+ workShiftId String @map("work_shift_id") @db.Uuid
+ employeeId String @map("employee_id") @db.Uuid
+ status AssignmentStatus @default(ACTIVE)
+ createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+ updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+ workShift WorkShift @relation(fields:[workShiftId],references:[id],onDelete:Restrict)
+ employee Employee @relation(fields:[employeeId],references:[id],onDelete:Restrict)
+ @@unique([workShiftId,employeeId])
+ @@map("work_shift_assignments")
 }
 
 model UserCredential {

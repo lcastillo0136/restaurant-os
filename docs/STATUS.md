@@ -143,6 +143,8 @@ Fecha: 2026-11-01
 
 La Fase 2.1 — Preparación operativa y persistencia fue aprobada e integrada el 2026-11-01. El bootstrap del primer administrador está implementado, pero no se ejecutó contra PostgreSQL; los procedimientos de migraciones y restauración están preparados; y la matriz RBAC continúa siendo una propuesta pendiente de aprobación definitiva. La Fase 2.2 — Organizaciones y sucursales fue aprobada formalmente el 2026-11-01 e integrada mediante el PR #11. Fase 2.3 — Empleados y turnos queda preparada sólo como rama local, sin autorización para iniciar desarrollo.
 
+- [ ] Fase 2.3 (2026-11-01): modelo Prisma y migración incremental preparados estáticamente para empleados, asignaciones y turnos laborales; no aplicados. Servicios, endpoints, RBAC y auditoría siguen pendientes; no recomendar aprobación todavía.
+
 - [x] Fase 2.2 (2026-11-01): backend administrativo de organizaciones y sucursales preparado con RBAC por alcance, DTO, auditoría transaccional y fixture en memoria. No se modificó Prisma, migraciones, PostgreSQL, interfaces ni módulos comerciales. `test:phase-2.2`: 1/1 correcto.
 - [x] Corrección PR #11 (2026-11-01): CORS permite PATCH sólo para orígenes explícitos; reactivación separada exige alcance ORGANIZATION; rutas/DTO rechazan UUID y valores inválidos. `test:phase-2.2`: 2/2 correcto en memoria.
 - [x] Ajuste final de validación PR #11 (2026-11-01): `UpdateBranchDto` rechaza `null` sin impedir campos ausentes; creación rechaza nombre en blanco; una prueba de controlador confirma que sólo un grant ORGANIZATION puede cambiar estado. `test:phase-2.2`: 4/4 correcto en memoria.
