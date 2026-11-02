@@ -17,7 +17,7 @@
     "test:unit": "pnpm build && node --test test/unit/environment.test.mjs test/unit/database-environment.test.mjs test/unit/system.controller.test.mjs test/unit/database.controller.test.mjs test/unit/validation.pipe.test.mjs test/unit/http-exception.filter.test.mjs test/unit/http-logging.interceptor.test.mjs test/unit/request-context.middleware.test.mjs test/unit/first-admin-provisioner.test.mjs",
     "test:phase-2.1": "pnpm build && node --test test/unit/first-admin-provisioner.test.mjs",
     "test:phase-2.2": "pnpm build && node --test test/unit/organizations.service.test.mjs test/unit/cors-policy.test.mjs test/unit/organizations.validation.test.mjs",
-    "test:phase-2.3": "pnpm build && node --test test/unit/employees-schema.test.mjs",
+    "test:phase-2.3": "pnpm build && node --test test/unit/employees-schema.test.mjs test/unit/employees.service.test.mjs",
     "test:integration": "pnpm build && node --test test/integration/health.test.mjs",
     "test:database": "pnpm build && node --test test/integration/database.test.mjs",
     "test:database-isolation": "pnpm build && node --test test/integration/user-role-isolation.test.mjs",
