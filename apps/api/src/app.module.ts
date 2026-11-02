@@ -4,10 +4,11 @@ import { DatabaseModule } from './database/database.module.js';
 import { RealtimeModule } from './realtime/realtime.module.js';
 import { OrganizationsModule } from './organizations/organizations.module.js';
 import { EmployeesModule } from './employees/employees.module.js';
+import { FloorModule } from './floor/floor.module.js';
 import { SystemController } from './system.controller.js';
 
 @Module({
-  imports: [DatabaseModule, AuthModule, RealtimeModule, OrganizationsModule, EmployeesModule],
+  imports: [DatabaseModule, AuthModule, RealtimeModule, OrganizationsModule, EmployeesModule, FloorModule],
   controllers: [SystemController],
 })
 export class AppModule {}

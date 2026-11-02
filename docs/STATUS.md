@@ -141,6 +141,8 @@ Fecha: 2026-11-01
 
 ## Próxima revisión
 
+- [x] Fase 2.4 — Áreas y mesas aprobada formalmente el 2026-11-02; el PR #13 queda autorizado para integración. Validaciones focalizadas: `test:phase-2.4` 9/9 correctas según evidencia existente. No se ejecutaron PostgreSQL, migraciones, pruebas físicas ni HTTP integrales. Fase 2.5 no está autorizada para desarrollo.
+
 La Fase 2.1 — Preparación operativa y persistencia fue aprobada e integrada el 2026-11-01. El bootstrap del primer administrador está implementado, pero no se ejecutó contra PostgreSQL; los procedimientos de migraciones y restauración están preparados; y la matriz RBAC continúa siendo una propuesta pendiente de aprobación definitiva. La Fase 2.2 — Organizaciones y sucursales fue aprobada formalmente el 2026-11-01 e integrada mediante el PR #11. Fase 2.3 — Empleados y turnos fue aprobada formalmente el 2026-11-02 para integrarse mediante el PR #12.
 
 - [x] Fase 2.3 — Empleados y turnos aprobada formalmente el 2026-11-02 para integración mediante el PR #12. El módulo API incorpora DTO, rutas protegidas por RBAC, alcance de organización/sucursal y auditoría transaccional en código; la revisión focalizada ejecutó `AuthorizationGuard` y `AuthorizationService` reales contra fixtures: 17/17 pruebas correctas. La migración permanece sin aplicar y el vínculo `Employee`–`AppUser`, los solapamientos, las carreras de estado, pruebas HTTP integrales y PostgreSQL temporal siguen pendientes; la aprobación no declara esas actividades completadas.
