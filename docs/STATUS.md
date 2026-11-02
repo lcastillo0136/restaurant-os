@@ -141,7 +141,7 @@ Fecha: 2026-11-01
 
 ## Próxima revisión
 
-La Fase 2.1 — Preparación operativa y persistencia fue aprobada e integrada el 2026-11-01. El bootstrap del primer administrador está implementado, pero no se ejecutó contra PostgreSQL; los procedimientos de migraciones y restauración están preparados; y la matriz RBAC continúa siendo una propuesta pendiente de aprobación definitiva. La Fase 2.2 — Organizaciones y sucursales fue aprobada formalmente el 2026-11-01 e integrada mediante el PR #11. Fase 2.3 — Empleados y turnos queda preparada sólo como rama local, sin autorización para iniciar desarrollo.
+La Fase 2.1 — Preparación operativa y persistencia fue aprobada e integrada el 2026-11-01. El bootstrap del primer administrador está implementado, pero no se ejecutó contra PostgreSQL; los procedimientos de migraciones y restauración están preparados; y la matriz RBAC continúa siendo una propuesta pendiente de aprobación definitiva. La Fase 2.2 — Organizaciones y sucursales fue aprobada formalmente el 2026-11-01 e integrada mediante el PR #11. Fase 2.3 — Empleados y turnos está autorizada y en desarrollo en el PR #12; sigue pendiente de aprobación final.
 
 - [ ] Fase 2.3 (2026-11-01): modelo Prisma y migración incremental preparados estáticamente para empleados, asignaciones y turnos laborales; no aplicados. Servicios, endpoints, RBAC y auditoría siguen pendientes; no recomendar aprobación todavía.
 

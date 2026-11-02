@@ -109,6 +109,7 @@ model Employee {
  branchAssignments EmployeeBranchAssignment[]
  shiftAssignments WorkShiftAssignment[]
  @@unique([organizationId, employeeCode])
+  @@unique([id, organizationId])
  @@index([organizationId,status])
  @@map("employees")
 }
@@ -120,8 +121,8 @@ model EmployeeBranchAssignment {
  status AssignmentStatus @default(ACTIVE)
  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
- employee Employee @relation(fields:[employeeId],references:[id],onDelete:Restrict)
- branch Branch @relation(fields:[branchId],references:[id],onDelete:Restrict)
+ employee Employee @relation(fields:[employeeId,organizationId],references:[id,organizationId],onDelete:Restrict)
+ branch Branch @relation(fields:[branchId,organizationId],references:[id,organizationId],onDelete:Restrict)
  @@unique([employeeId,branchId])
  @@index([organizationId,branchId,status])
  @@map("employee_branch_assignments")
@@ -136,8 +137,9 @@ model WorkShift {
  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
  organization Organization @relation(fields:[organizationId],references:[id],onDelete:Restrict)
- branch Branch @relation(fields:[branchId],references:[id],onDelete:Restrict)
+ branch Branch @relation(fields:[branchId,organizationId],references:[id,organizationId],onDelete:Restrict)
  assignments WorkShiftAssignment[]
+ @@unique([id,organizationId,branchId])
  @@index([organizationId,branchId,scheduledStart])
  @@map("work_shifts")
 }
@@ -145,11 +147,13 @@ model WorkShiftAssignment {
  id String @id @default(uuid()) @db.Uuid
  workShiftId String @map("work_shift_id") @db.Uuid
  employeeId String @map("employee_id") @db.Uuid
+ organizationId String @map("organization_id") @db.Uuid
+ branchId String @map("branch_id") @db.Uuid
  status AssignmentStatus @default(ACTIVE)
  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
- workShift WorkShift @relation(fields:[workShiftId],references:[id],onDelete:Restrict)
- employee Employee @relation(fields:[employeeId],references:[id],onDelete:Restrict)
+ workShift WorkShift @relation(fields:[workShiftId,organizationId,branchId],references:[id,organizationId,branchId],onDelete:Restrict)
+ employee Employee @relation(fields:[employeeId,organizationId],references:[id,organizationId],onDelete:Restrict)
  @@unique([workShiftId,employeeId])
  @@map("work_shift_assignments")
 }
