@@ -141,7 +141,9 @@ Fecha: 2026-11-01
 
 ## Próxima revisión
 
-- [x] Fase 2.4 — Áreas y mesas aprobada formalmente el 2026-11-02; el PR #13 queda autorizado para integración. Validaciones focalizadas: `test:phase-2.4` 9/9 correctas según evidencia existente. No se ejecutaron PostgreSQL, migraciones, pruebas físicas ni HTTP integrales. Fase 2.5 no está autorizada para desarrollo.
+- [x] Fase 2.4 — Áreas y mesas aprobada formalmente el 2026-11-02; el PR #13 queda autorizado para integración. Validaciones focalizadas: `test:phase-2.4` 9/9 correctas según evidencia existente. No se ejecutaron PostgreSQL, migraciones, pruebas físicas ni HTTP integrales.
+
+- [x] Fase 2.5 — Panel administrativo funcional preparada para revisión el 2026-11-02 en modo `DEMOSTRACIÓN`. El panel React incorpora navegación administrativa horizontal, selector de sucursal, sucursales, empleados y asignaciones, turnos, áreas, mesas y sesiones estructurales con contratos tipados, `DemoRepository` en memoria y `RestRepository` de escritura bloqueada. Las pruebas focalizadas `test:phase-2.5` finalizaron 9/9 correctas y el build de Admin pasó. No se ejecutaron PostgreSQL, migraciones, API/HTTP real, GitHub Actions, pruebas físicas ni módulos comerciales; la fase queda pendiente de revisión formal y no implica aprobación o integración.
 
 La Fase 2.1 — Preparación operativa y persistencia fue aprobada e integrada el 2026-11-01. El bootstrap del primer administrador está implementado, pero no se ejecutó contra PostgreSQL; los procedimientos de migraciones y restauración están preparados; y la matriz RBAC continúa siendo una propuesta pendiente de aprobación definitiva. La Fase 2.2 — Organizaciones y sucursales fue aprobada formalmente el 2026-11-01 e integrada mediante el PR #11. Fase 2.3 — Empleados y turnos fue aprobada formalmente el 2026-11-02 para integrarse mediante el PR #12.
 

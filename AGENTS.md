@@ -18,6 +18,27 @@ Lee en este orden: `docs/00-FUENTE-DE-VERDAD.md`, `docs/01-ARQUITECTURA.md`, `do
 13. Al finalizar cada entrega, documenta archivos creados, comandos ejecutados, resultados reales, riesgos y decisiones nuevas. No declares tests que no ejecutaste.
 14. Cambios a la fuente de verdad únicamente mediante propuesta de ADR aprobada por el usuario.
 
+## Convenciones de desarrollo
+
+### Formato de código fuente
+
+Queda prohibido compactar o minificar el código fuente mantenido por desarrolladores.
+
+1. Utilizar formato multilínea, legible y consistente.
+2. No escribir componentes React, funciones, clases, interfaces, objetos o métodos completos en una sola línea.
+3. Mantener indentación uniforme y separar claramente las responsabilidades.
+4. Utilizar nombres descriptivos para funciones, variables y propiedades.
+5. Separar componentes extensos en archivos independientes cuando corresponda.
+6. Evitar expresiones JSX excesivamente largas o anidadas.
+7. No eliminar saltos de línea para reducir el tamaño de los archivos.
+8. Respetar las convenciones existentes de TypeScript, React, NestJS, Prisma y Flutter.
+9. No modificar código funcional únicamente para reducir su número de líneas.
+10. Antes de finalizar, revisar que los archivos modificados sean legibles y mantenibles.
+
+Esta regla aplica a componentes React y TSX, servicios NestJS, controladores, DTO, repositorios, pruebas, scripts y archivos de configuración editables. Los archivos generados automáticamente para distribución quedan exceptuados.
+
+No comprimir código para facilitar parches o ahorrar tokens. Si un archivo existente está compactado y requiere una modificación, se puede reformatear únicamente la sección afectada o el archivo completo cuando sea seguro, preservando su comportamiento.
+
 ## Política de pruebas eficientes
 
 **Objetivo:** reducir el tiempo y los recursos dedicados a pruebas innecesarias, sin comprometer la estabilidad ni la seguridad del proyecto.
