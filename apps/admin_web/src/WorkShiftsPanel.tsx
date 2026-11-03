@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useMemo, useState } from 'react';
 import type {
   AdminRepository,
   ApiError,
+  Branch,
   Employee,
   EmployeeBranchAssignment,
   Permission,
@@ -37,21 +38,161 @@ function errorMessage(error: unknown, fallback: string): string {
   return apiError.message ?? fallback;
 }
 
-function localValue(instant: string): string {
-  const date = new Date(instant);
-  const offset = date.getTimezoneOffset();
-  const localDate = new Date(date.getTime() - offset * 60_000);
+type BranchDateTimeParts = {
+  year: number;
+  month: number;
+  day: number;
+  hour: number;
+  minute: number;
+};
 
-  return localDate.toISOString().slice(0, 16);
+type BranchInstantResult =
+  | { instant: string }
+  | { error: string };
+
+const datetimeLocalPattern = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/;
+
+function branchDateTimeParts(
+  instant: number,
+  timeZone: string,
+): BranchDateTimeParts {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date(instant));
+
+  const values = new Map(
+    parts
+      .filter((part) => part.type !== 'literal')
+      .map((part) => [part.type, Number(part.value)]),
+  );
+
+  return {
+    year: values.get('year') ?? 0,
+    month: values.get('month') ?? 0,
+    day: values.get('day') ?? 0,
+    hour: values.get('hour') ?? 0,
+    minute: values.get('minute') ?? 0,
+  };
 }
 
-function utcInstant(localDateTime: string): string | null {
-  if (!localDateTime) {
+function dateTimeLocalValue(parts: BranchDateTimeParts): string {
+  const pad = (value: number) => String(value).padStart(2, '0');
+
+  return `${parts.year}-${pad(parts.month)}-${pad(parts.day)}T${pad(parts.hour)}:${pad(parts.minute)}`;
+}
+
+function sameBranchDateTime(
+  left: BranchDateTimeParts,
+  right: BranchDateTimeParts,
+): boolean {
+  return (
+    left.year === right.year &&
+    left.month === right.month &&
+    left.day === right.day &&
+    left.hour === right.hour &&
+    left.minute === right.minute
+  );
+}
+
+export function branchDateTimeInputValue(
+  instant: string,
+  timeZone: string,
+): string | null {
+  const milliseconds = new Date(instant).getTime();
+
+  if (Number.isNaN(milliseconds)) {
     return null;
   }
 
-  const date = new Date(localDateTime);
-  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+  try {
+    return dateTimeLocalValue(branchDateTimeParts(milliseconds, timeZone));
+  } catch {
+    return null;
+  }
+}
+
+export function branchIsoInstant(
+  localDateTime: string,
+  timeZone: string,
+): BranchInstantResult {
+  const match = datetimeLocalPattern.exec(localDateTime);
+
+  if (!match) {
+    return { error: 'Indica una fecha y hora válidas para la sucursal.' };
+  }
+
+  const target: BranchDateTimeParts = {
+    year: Number(match[1]),
+    month: Number(match[2]),
+    day: Number(match[3]),
+    hour: Number(match[4]),
+    minute: Number(match[5]),
+  };
+  const nominal = Date.UTC(
+    target.year,
+    target.month - 1,
+    target.day,
+    target.hour,
+    target.minute,
+  );
+
+  if (
+    Number.isNaN(nominal) ||
+    target.month < 1 ||
+    target.month > 12 ||
+    target.day < 1 ||
+    target.day > 31 ||
+    target.hour > 23 ||
+    target.minute > 59
+  ) {
+    return { error: 'Indica una fecha y hora válidas para la sucursal.' };
+  }
+
+  const candidates: number[] = [];
+
+  try {
+    for (
+      let candidate = nominal - 16 * 60 * 60 * 1000;
+      candidate <= nominal + 16 * 60 * 60 * 1000;
+      candidate += 60 * 1000
+    ) {
+      if (sameBranchDateTime(branchDateTimeParts(candidate, timeZone), target)) {
+        candidates.push(candidate);
+      }
+    }
+  } catch {
+    return { error: 'La zona horaria de la sucursal no es válida.' };
+  }
+
+  if (candidates.length === 0) {
+    return {
+      error:
+        'La hora no existe en la zona horaria de la sucursal por cambio de horario.',
+    };
+  }
+
+  if (candidates.length > 1) {
+    return {
+      error:
+        'La hora es ambigua en la zona horaria de la sucursal por cambio de horario.',
+    };
+  }
+
+  return { instant: new Date(candidates[0]).toISOString() };
+}
+
+export function formatBranchInstant(instant: string, timeZone: string): string {
+  return new Intl.DateTimeFormat('es-MX', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone,
+  }).format(new Date(instant));
 }
 
 const emptyForm: WorkShiftForm = {
@@ -66,6 +207,7 @@ export function WorkShiftsPanel({
   permissions,
 }: WorkShiftsPanelProps) {
   const [shifts, setShifts] = useState<WorkShift[]>([]);
+  const [branch, setBranch] = useState<Branch | null>(null);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [branchAssignments, setBranchAssignments] = useState<
     EmployeeBranchAssignment[]
@@ -116,6 +258,7 @@ export function WorkShiftsPanel({
   const refreshShifts = async () => {
     if (!branchId) {
       setShifts([]);
+      setBranch(null);
       setSelectedShift(null);
       setLoading(false);
       return;
@@ -125,9 +268,10 @@ export function WorkShiftsPanel({
     setError('');
 
     try {
-      const [shiftList, employeeList] = await Promise.all([
+      const [shiftList, employeeList, branchList] = await Promise.all([
         repository.workShifts(organizationId, branchId),
         repository.employees(organizationId),
+        repository.branches(organizationId),
       ]);
       const assignments = await Promise.all(
         employeeList.map((employee) =>
@@ -138,6 +282,9 @@ export function WorkShiftsPanel({
       setShifts(shiftList);
       setEmployees(employeeList);
       setBranchAssignments(assignments.flat());
+      setBranch(
+        branchList.find((candidate) => candidate.id === branchId) ?? null,
+      );
       setSelectedShift((current) =>
         current
           ? shiftList.find((shift) => shift.id === current.id) ?? null
@@ -199,15 +346,25 @@ export function WorkShiftsPanel({
     setError('');
     setMessage('');
 
-    const scheduledStart = utcInstant(form.scheduledStart);
-    const scheduledEnd = utcInstant(form.scheduledEnd);
-
-    if (!scheduledStart || !scheduledEnd) {
-      setError('Indica horarios válidos para el turno.');
+    if (!branch) {
+      setError('No fue posible obtener la zona horaria de la sucursal.');
       return;
     }
 
-    if (new Date(scheduledStart) >= new Date(scheduledEnd)) {
+    const startResult = branchIsoInstant(form.scheduledStart, branch.timeZone);
+    const endResult = branchIsoInstant(form.scheduledEnd, branch.timeZone);
+
+    if ('error' in startResult) {
+      setError(startResult.error);
+      return;
+    }
+
+    if ('error' in endResult) {
+      setError(endResult.error);
+      return;
+    }
+
+    if (new Date(startResult.instant) >= new Date(endResult.instant)) {
       setError('El fin debe ser posterior al inicio.');
       return;
     }
@@ -219,15 +376,15 @@ export function WorkShiftsPanel({
           organizationId,
           branchId,
           id: editing.id,
-          scheduledStart,
-          scheduledEnd,
+          scheduledStart: startResult.instant,
+          scheduledEnd: endResult.instant,
         });
       } else {
         await repository.createWorkShift({
           organizationId,
           branchId,
-          scheduledStart,
-          scheduledEnd,
+          scheduledStart: startResult.instant,
+          scheduledEnd: endResult.instant,
         });
       }
 
@@ -330,10 +487,29 @@ export function WorkShiftsPanel({
   };
 
   const beginEdit = (shift: WorkShift) => {
+    if (!branch) {
+      setError('No fue posible obtener la zona horaria de la sucursal.');
+      return;
+    }
+
+    const scheduledStart = branchDateTimeInputValue(
+      shift.scheduledStart,
+      branch.timeZone,
+    );
+    const scheduledEnd = branchDateTimeInputValue(
+      shift.scheduledEnd,
+      branch.timeZone,
+    );
+
+    if (!scheduledStart || !scheduledEnd) {
+      setError('No fue posible mostrar el turno en la zona horaria de la sucursal.');
+      return;
+    }
+
     setEditing(shift);
     setForm({
-      scheduledStart: localValue(shift.scheduledStart),
-      scheduledEnd: localValue(shift.scheduledEnd),
+      scheduledStart,
+      scheduledEnd,
     });
     setError('');
     setMessage('');
@@ -361,6 +537,7 @@ export function WorkShiftsPanel({
     <section aria-labelledby="work-shifts-title">
       <p className="eyebrow">Turnos laborales · demostración</p>
       <h2 id="work-shifts-title">Turnos de la sucursal seleccionada</h2>
+      {branch && <p>Zona horaria laboral: {branch.timeZone}</p>}
 
       {canManage && (
         <button className="sample-action" onClick={beginCreate} type="button">
@@ -393,8 +570,16 @@ export function WorkShiftsPanel({
             <tbody>
               {shifts.map((shift) => (
                 <tr key={shift.id}>
-                  <td>{new Date(shift.scheduledStart).toLocaleString()}</td>
-                  <td>{new Date(shift.scheduledEnd).toLocaleString()}</td>
+                  <td>
+                    {branch
+                      ? formatBranchInstant(shift.scheduledStart, branch.timeZone)
+                      : 'Zona horaria no disponible'}
+                  </td>
+                  <td>
+                    {branch
+                      ? formatBranchInstant(shift.scheduledEnd, branch.timeZone)
+                      : 'Zona horaria no disponible'}
+                  </td>
                   <td>{shift.status}</td>
                   <td>
                     <button onClick={() => setSelectedShift(shift)} type="button">

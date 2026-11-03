@@ -7,7 +7,8 @@ archivos necesarios para revisar el panel administrativo en modo demostración:
   `pnpm-lock.yaml` para el comando de pruebas focalizadas.
 - `apps/admin_web/src/App.tsx`, `styles.css`, `data.ts` y los paneles
   administrativos nuevos.
-- `apps/admin_web/test/phase-2.5/data.test.ts` y `app.test.tsx`.
+- `apps/admin_web/test/phase-2.5/data.test.ts`, `app.test.tsx` y
+  `panels.test.tsx`.
 - Esta documentación, `FASE-2.5-PANEL-ADMINISTRATIVO.md`, `STATUS.md` y
   `10-PENDIENTES.md`.
 

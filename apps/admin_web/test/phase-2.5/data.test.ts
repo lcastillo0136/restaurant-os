@@ -5,6 +5,10 @@ import {
   type ApiError,
   type HttpTransport,
 } from '../../src/data';
+import {
+  branchDateTimeInputValue,
+  branchIsoInstant,
+} from '../../src/WorkShiftsPanel';
 
 const organizationId = 'organization-demo';
 const centroBranchId = 'centro';
@@ -317,5 +321,167 @@ describe('RestRepository — adaptador bloqueado', () => {
     expect(calls).toEqual([
       `/organizations/${organizationId}/branches/${centroBranchId}/work-shifts`,
     ]);
+  });
+
+  it('consulta las rutas GET existentes y conserva el alcance organizacional y de sucursal', async () => {
+    const calls: string[] = [];
+    const transport: HttpTransport = async (path) => {
+      calls.push(path);
+
+      if (path === `/organizations/${organizationId}/branches`) {
+        return {
+          status: 200,
+          body: [
+            {
+              id: centroBranchId,
+              code: 'centro',
+              displayName: 'Centro',
+              timeZone: 'America/Mexico_City',
+              status: 'ACTIVE',
+            },
+          ],
+        };
+      }
+
+      if (path === `/organizations/${organizationId}/employees`) {
+        return {
+          status: 200,
+          body: [
+            {
+              id: 'employee-1',
+              organizationId,
+              employeeCode: 'emp-001',
+              displayName: 'Ana Morales',
+              status: 'ACTIVE',
+            },
+          ],
+        };
+      }
+
+      if (path === `/organizations/${organizationId}/branches/${centroBranchId}/employees`) {
+        return {
+          status: 200,
+          body: [
+            {
+              id: 'branch-assignment-1',
+              organizationId,
+              employeeId: 'employee-1',
+              branchId: centroBranchId,
+              status: 'ACTIVE',
+              employee: {
+                id: 'employee-1',
+                employeeCode: 'emp-001',
+              },
+            },
+          ],
+        };
+      }
+
+      if (path === `/organizations/${organizationId}/branches/${centroBranchId}/work-shifts`) {
+        return { status: 200, body: [] };
+      }
+
+      if (path === `/organizations/${organizationId}/branches/${centroBranchId}/work-shifts/shift-1/assignments`) {
+        return {
+          status: 200,
+          body: [
+            {
+              id: 'shift-assignment-1',
+              organizationId,
+              branchId: centroBranchId,
+              workShiftId: 'shift-1',
+              employeeId: 'employee-1',
+              status: 'ACTIVE',
+            },
+          ],
+        };
+      }
+
+      if (path === `/organizations/${organizationId}/branches/${centroBranchId}/areas`) {
+        return { status: 200, body: [] };
+      }
+
+      if (path === `/organizations/${organizationId}/branches/${centroBranchId}/tables`) {
+        return {
+          status: 200,
+          body: [
+            {
+              id: 'table-1',
+              organizationId,
+              branchId: centroBranchId,
+              areaId: 'area-1',
+              code: 'm-01',
+              capacity: 4,
+              status: 'AVAILABLE',
+            },
+          ],
+        };
+      }
+
+      if (path === `/organizations/${organizationId}/branches/${centroBranchId}/tables/table-1/sessions`) {
+        return { status: 200, body: [] };
+      }
+
+      if (path === `/organizations/${organizationId}/branches/${centroBranchId}/tables/table-1/sessions/current`) {
+        return { status: 404, body: null };
+      }
+
+      throw new Error(`Ruta inesperada: ${path}`);
+    };
+    const repository = new RestRepository(transport, true);
+
+    await expect(repository.branches(organizationId)).resolves.toHaveLength(1);
+    await expect(repository.employees(organizationId)).resolves.toHaveLength(1);
+    await expect(
+      repository.employeeBranchAssignments(organizationId, 'employee-1'),
+    ).resolves.toMatchObject([{ branchId: centroBranchId }]);
+    await expect(repository.workShifts(organizationId, centroBranchId)).resolves.toEqual([]);
+    await expect(
+      repository.workShiftAssignments(organizationId, centroBranchId, 'shift-1'),
+    ).resolves.toMatchObject([{ employeeId: 'employee-1' }]);
+    await expect(repository.areas(organizationId, centroBranchId)).resolves.toEqual([]);
+    await expect(
+      repository.tables(organizationId, centroBranchId, 'area-1'),
+    ).resolves.toHaveLength(1);
+    await expect(
+      repository.tableSessions(organizationId, centroBranchId, 'table-1'),
+    ).resolves.toEqual([]);
+    await expect(
+      repository.currentTableSession(organizationId, centroBranchId, 'table-1'),
+    ).resolves.toBeNull();
+
+    expect(calls).toEqual([
+      `/organizations/${organizationId}/branches`,
+      `/organizations/${organizationId}/employees`,
+      `/organizations/${organizationId}/branches`,
+      `/organizations/${organizationId}/branches/${centroBranchId}/employees`,
+      `/organizations/${organizationId}/branches/${centroBranchId}/work-shifts`,
+      `/organizations/${organizationId}/branches/${centroBranchId}/work-shifts/shift-1/assignments`,
+      `/organizations/${organizationId}/branches/${centroBranchId}/areas`,
+      `/organizations/${organizationId}/branches/${centroBranchId}/tables`,
+      `/organizations/${organizationId}/branches/${centroBranchId}/tables/table-1/sessions`,
+      `/organizations/${organizationId}/branches/${centroBranchId}/tables/table-1/sessions/current`,
+    ]);
+  });
+});
+
+describe('Zona horaria de turnos', () => {
+  it('convierte el horario laboral de una sucursal sin usar la zona horaria del equipo', () => {
+    const branchTimeZone = 'Europe/Madrid';
+    const converted = branchIsoInstant('2026-06-01T10:30', branchTimeZone);
+
+    expect(converted).toEqual({ instant: '2026-06-01T08:30:00.000Z' });
+    expect(
+      branchDateTimeInputValue('2026-06-01T08:30:00.000Z', branchTimeZone),
+    ).toBe('2026-06-01T10:30');
+  });
+
+  it('rechaza horas inexistentes y ambiguas antes de enviar el turno', () => {
+    expect(branchIsoInstant('2026-03-29T02:30', 'Europe/Madrid')).toMatchObject({
+      error: expect.stringContaining('no existe'),
+    });
+    expect(branchIsoInstant('2026-10-25T02:30', 'Europe/Madrid')).toMatchObject({
+      error: expect.stringContaining('ambigua'),
+    });
   });
 });

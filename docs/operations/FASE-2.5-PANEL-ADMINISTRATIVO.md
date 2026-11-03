@@ -24,8 +24,10 @@ responsabilidades acotadas:
 - `AdminUxFeedback.tsx`: conexión demo, recuperación explícita, acceso
   insuficiente y sesión expirada.
 
-Las secciones de menú y otros módulos comerciales aún no implementados se
-mantienen explícitamente deshabilitados.
+La navegación conserva los destinos documentados `/dashboard`, `/mesas`,
+`/pedidos`, `/menu`, `/personal`, `/cajas`, `/reportes` y `/ajustes`. Pedidos,
+Menú, Cajas y Reportes se presentan como no implementados y no ofrecen
+operaciones simuladas como si fueran comerciales reales.
 
 ## Repositorios y permisos
 
@@ -38,6 +40,12 @@ Una mutación sólo actualiza la interfaz después de su resolución satisfactor
 `RestRepository` conserva el mismo contrato para lecturas preparadas mediante
 un transporte inyectado. Las escrituras permanecen bloqueadas explícitamente;
 no contiene credenciales ni activa conexiones de red por defecto.
+
+Las lecturas REST usan exclusivamente las rutas GET de controladores existentes
+para sucursales, empleados, asignaciones por sucursal, turnos, asignaciones de
+turno, áreas, mesas y sesiones. El contrato actual no consume el detalle de la
+organización; para consultar asignaciones de un empleado recorre las sucursales
+de la organización porque el backend expone esas asignaciones por sucursal.
 
 Las acciones y paneles comprueban los permisos declarados por recurso
 (`branches`, `employees`, `work-shifts`, `areas`, `tables` y
@@ -57,25 +65,36 @@ puede abrir una sesión `OPEN` y pasa a `OCCUPIED`; el cierre exige la versión
 vigente, conserva historial, incrementa versión y lleva la mesa a `CLEANING`.
 No existen pedidos, pagos, propinas, tickets ni cierres comerciales.
 
+Los turnos se muestran y capturan en la zona IANA de la sucursal seleccionada,
+no en la zona del navegador. La conversión obtiene un instante ISO con `Z` antes
+de enviarlo al repositorio. Las horas inexistentes o ambiguas por cambios de
+horario de verano se rechazan con un mensaje explícito; no se ajustan
+silenciosamente. La implementación usa `Intl` disponible en el navegador y
+trabaja con precisión de minuto, que es la del campo `datetime-local` actual.
+
 ## Pruebas y validación ejecutadas
 
-Se añadieron `apps/admin_web/test/phase-2.5/data.test.ts` y
-`apps/admin_web/test/phase-2.5/app.test.tsx`, ejecutadas mediante:
+Se añadieron `apps/admin_web/test/phase-2.5/data.test.ts`,
+`apps/admin_web/test/phase-2.5/app.test.tsx` y
+`apps/admin_web/test/phase-2.5/panels.test.tsx`, ejecutadas mediante:
 
 ```text
 pnpm --filter @restaurant-os/admin-web test:phase-2.5
 ```
 
-Resultado real: 2 archivos de prueba correctos y 9 pruebas correctas. La primera
+Resultado real: 3 archivos de prueba correctos y 16 pruebas correctas. La primera
 ejecución dentro del sandbox no cargó las suites por un `EPERM` al renombrar la
 caché temporal de Vite; el mismo comando, autorizado fuera de ese sandbox,
 finalizó correctamente sin iniciar servicios ni red.
 
 La cobertura focalizada verifica aislamiento, validación y conflictos de
-sucursales; empleados y asignaciones; turnos y horarios; áreas, mesas y máquina
-de estados; sesiones versionadas e historial; bloqueo de escrituras REST; y
-navegación, DEMOSTRACIÓN, rechazo 409, recuperación, permiso insuficiente y
-sesión expirada en React.
+sucursales; empleados y asignaciones; turnos y horarios en una zona de sucursal
+distinta al equipo, incluidos cambios de horario; áreas, mesas y máquina de
+estados; sesiones versionadas e historial; bloqueo de escrituras REST y las
+rutas GET existentes de NestJS; y navegación, DEMOSTRACIÓN, rechazo 409,
+recuperación, permiso insuficiente y sesión expirada en React. Las pruebas de
+paneles ejercitan creación/edición de empleado, asignación, creación/cancelación
+de turno, creación de área y mesa, y apertura/cierre estructural de sesión.
 
 También se ejecutó:
 

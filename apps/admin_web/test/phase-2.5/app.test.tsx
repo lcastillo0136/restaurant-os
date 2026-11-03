@@ -17,6 +17,20 @@ describe('App — experiencia administrativa demo', () => {
         name: 'Funcionalidad pendiente de implementación',
       }),
     ).toBeTruthy();
+
+    expect(window.location.pathname).toBe('/menu');
+
+    for (const [label, route] of [
+      ['Pedidos', '/pedidos'],
+      ['Cajas', '/cajas'],
+      ['Reportes', '/reportes'],
+    ] as const) {
+      await user.click(screen.getByRole('button', { name: label }));
+      expect(window.location.pathname).toBe(route);
+      expect(
+        screen.getByText(new RegExp(`${label} aún no está implementado`)),
+      ).toBeTruthy();
+    }
   });
 
   it('preserva un formulario de sucursal cuando la mutación demo recibe 409', async () => {

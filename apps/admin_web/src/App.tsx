@@ -17,7 +17,15 @@ import {
   Permission,
 } from './data';
 
-type View = 'dashboard' | 'mesas' | 'personal' | 'ajustes' | 'pending';
+type View =
+  | 'dashboard'
+  | 'mesas'
+  | 'pedidos'
+  | 'menu'
+  | 'personal'
+  | 'cajas'
+  | 'reportes'
+  | 'ajustes';
 
 type BranchForm = {
   code: string;
@@ -48,10 +56,39 @@ const demoPermissions: ReadonlySet<Permission> = new Set([
 const navigation = [
   ['dashboard', 'Resumen', LayoutDashboard],
   ['mesas', 'Mesas', Table2],
-  ['pending', 'Menú', Building2],
+  ['pedidos', 'Pedidos', Building2],
+  ['menu', 'Menú', Building2],
   ['personal', 'Personal', Users],
+  ['cajas', 'Cajas', Building2],
+  ['reportes', 'Reportes', Building2],
   ['ajustes', 'Ajustes', Building2],
 ] as const;
+
+const routeByView: Record<View, string> = {
+  dashboard: '/dashboard',
+  mesas: '/mesas',
+  pedidos: '/pedidos',
+  menu: '/menu',
+  personal: '/personal',
+  cajas: '/cajas',
+  reportes: '/reportes',
+  ajustes: '/ajustes',
+};
+
+const pendingViewLabels: Partial<Record<View, string>> = {
+  pedidos: 'Pedidos',
+  menu: 'Menú',
+  cajas: 'Cajas',
+  reportes: 'Reportes',
+};
+
+function viewFromPath(pathname: string): View {
+  const match = (Object.entries(routeByView) as [View, string][]).find(
+    ([, route]) => route === pathname,
+  );
+
+  return match?.[0] ?? 'dashboard';
+}
 
 const emptyBranchForm: BranchForm = {
   code: '',
@@ -61,7 +98,7 @@ const emptyBranchForm: BranchForm = {
 };
 
 export function App() {
-  const [view, setView] = useState<View>('dashboard');
+  const [view, setView] = useState<View>(() => viewFromPath(window.location.pathname));
   const [branches, setBranches] = useState<Branch[]>([]);
   const [selectedBranchId, setSelectedBranchId] = useState('');
   const [selectedTableId, setSelectedTableId] = useState('');
@@ -100,6 +137,18 @@ export function App() {
     void refreshBranches();
   }, []);
 
+  useEffect(() => {
+    const synchronizeView = () => setView(viewFromPath(window.location.pathname));
+
+    window.addEventListener('popstate', synchronizeView);
+    return () => window.removeEventListener('popstate', synchronizeView);
+  }, []);
+
+  const navigateTo = (nextView: View) => {
+    window.history.pushState({}, '', routeByView[nextView]);
+    setView(nextView);
+  };
+
   const setDemoMode = (mode: DemoSimulationMode) => {
     repository.setSimulationMode(mode);
     setSimulationMode(mode);
@@ -119,7 +168,7 @@ export function App() {
   const returnToAccess = () => {
     setAccessScreen(true);
     setSelectedTableId('');
-    setView('dashboard');
+    navigateTo('dashboard');
   };
 
   const saveBranch = async (event: FormEvent<HTMLFormElement>) => {
@@ -194,7 +243,7 @@ export function App() {
                 view === id ? 'nav-item nav-item-active' : 'nav-item'
               }
               key={id}
-              onClick={() => setView(id)}
+              onClick={() => navigateTo(id)}
               type="button"
             >
               <Icon size={16} />
@@ -428,6 +477,19 @@ export function App() {
           ) : (
             <PermissionNotice permission="branches.read" />
           )
+        ) : pendingViewLabels[view] ? (
+          <>
+            <p className="eyebrow">
+              {branches.find((branch) => branch.id === selectedBranchId)
+                ?.displayName ?? 'Sucursal'}{' '}
+              · modo demostración
+            </p>
+            <h1>Funcionalidad pendiente de implementación</h1>
+            <p>
+              {pendingViewLabels[view]} aún no está implementado. Esta pantalla
+              demo no ofrece operaciones comerciales ni confirma datos reales.
+            </p>
+          </>
         ) : (
           <>
             <p className="eyebrow">
@@ -435,11 +497,7 @@ export function App() {
                 ?.displayName ?? 'Sucursal'}{' '}
               · modo demostración
             </p>
-            <h1>
-              {view === 'pending'
-                ? 'Funcionalidad pendiente de implementación'
-                : 'Resumen administrativo'}
-            </h1>
+            <h1>Resumen administrativo</h1>
             <p>
               Esta vista conserva datos ficticios y no confirma operaciones
               comerciales.
