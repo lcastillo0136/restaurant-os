@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "test:phase-2.5": "vitest run test/phase-2.5 --config vitest.config.ts",
+    "test:phase-2.6": "vitest run test/phase-2.6 --config vitest.config.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

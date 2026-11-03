@@ -51,3 +51,7 @@
 - Fase 2.5: definir idempotencia persistida y la política de recuperación para mutaciones estructurales. Los escenarios de conexión, error y recuperación del panel son simulaciones locales sin reintentos automáticos de escritura.
 - Fase 2.5: definir sesiones comerciales, pedidos, pagos, propinas, tickets y caja en fases posteriores; las sesiones actuales sólo controlan el ciclo estructural de una mesa.
 - Fase 2.5: aprobar TLS/WSS, LAN, dominios, certificados, dispositivos físicos, respaldo/restauración y la prueba física sin WAN antes de cualquier despliegue u operación conectada.
+- Fase 2.6: autorizar PostgreSQL temporal aislado antes de aplicar migraciones o validar restricciones SQL, índice parcial de sesión OPEN, rollback/auditoría persistida, concurrencia, bloqueos, serialización, reintentos o idempotencia. No usar `restaurant_dev`.
+- Fase 2.6: aprobar matriz RBAC definitiva y siembra controlada antes de validar revocación, permisos o identidades persistidas; la evidencia actual de guards usa fixtures simulados.
+- Fase 2.6: autorizar HTTP integral autenticado y adaptador REST real después de definir autenticación, CORS/orígenes y datos de prueba. El modo demo conserva las escrituras REST bloqueadas.
+- Fase 2.6: conservar pendientes TLS/WSS, LAN, hardware/dispositivos, accesibilidad física, prueba sin WAN, backup/restauración y sesiones comerciales; la revisión visual y jsdom no sustituyen esas validaciones.
