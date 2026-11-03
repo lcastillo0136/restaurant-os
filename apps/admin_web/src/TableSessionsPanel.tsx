@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type {
   AdminRepository,
   ApiError,
@@ -40,11 +40,14 @@ export function TableSessionsPanel({
   const [confirmClose, setConfirmClose] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const refreshGeneration = useRef(0);
 
   const canRead = permissions.has('table-sessions.read');
   const canManage = permissions.has('table-sessions.manage');
 
   const refresh = async () => {
+    const generation = ++refreshGeneration.current;
+
     if (!branchId || !tableId) {
       setTable(null);
       setSessions([]);
@@ -68,23 +71,36 @@ export function TableSessionsPanel({
         throw { status: 404, message: 'Mesa no encontrada en la sucursal.' } satisfies ApiError;
       }
 
+      if (generation !== refreshGeneration.current) {
+        return;
+      }
+
       setTable(selectedTable);
       setSessions(sessionList);
       setCurrentSession(activeSession);
     } catch (caughtError) {
-      setError(errorMessage(caughtError, 'No fue posible consultar las sesiones.'));
+      if (generation === refreshGeneration.current) {
+        setError(errorMessage(caughtError, 'No fue posible consultar las sesiones.'));
+      }
     } finally {
-      setLoading(false);
+      if (generation === refreshGeneration.current) {
+        setLoading(false);
+      }
     }
   };
 
   useEffect(() => {
     if (canRead) {
       void refresh();
-      return;
+    } else {
+      setLoading(false);
     }
 
-    setLoading(false);
+    return () => {
+      // Invalidate an outstanding read before another scope renders. This keeps
+      // a delayed response from overwriting a newer branch/table snapshot.
+      refreshGeneration.current += 1;
+    };
   }, [branchId, canRead, organizationId, tableId]);
 
   const openSession = async () => {

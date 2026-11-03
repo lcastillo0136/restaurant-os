@@ -1,5 +1,5 @@
 # Estado de proyecto
-Fecha: 2026-11-01
+Fecha: 2026-11-03
 - [x] Documentación de fuente de verdad inicial preparada.
 - [x] Replanteo plataforma móvil/tablet como Flutter.
 - [x] Las cuatro referencias PNG son la fuente de verdad visual oficial; SHA-256 originales suministrados por el propietario y coincidentes, documentados en `docs/design/REFERENCIAS-VISUALES.md`.
@@ -140,6 +140,8 @@ Fecha: 2026-11-01
 - Preparación Fase 1: rama local `feature/phase-1-foundation` creada desde el `Master` integrado; no publicada y sin implementación funcional.
 
 ## Próxima revisión
+
+- [x] Fase 2.6 — Validación integral implementada y preparada para revisión formal el 2026-11-03. La consolidación ejecutó `test:phase-2.6` de Admin con 28/28 pruebas correctas, build Admin, `test:phase-2.6-c` de API con 9/9 y typecheck API, todos sin PostgreSQL, migraciones, servidor NestJS, Actions ni red. La matriz conserva 45 casos validados con alcance real, 2 pendientes y 3 bloqueados por autorización. Se corrigió un defecto de snapshot React obsoleto entre sucursal/mesa y se conserva su regresión. Esta preparación no equivale a aprobación, integración ni preparación productiva.
 
 - [x] Fase 2.4 — Áreas y mesas aprobada formalmente el 2026-11-02; el PR #13 queda autorizado para integración. Validaciones focalizadas: `test:phase-2.4` 9/9 correctas según evidencia existente. No se ejecutaron PostgreSQL, migraciones, pruebas físicas ni HTTP integrales.
 
